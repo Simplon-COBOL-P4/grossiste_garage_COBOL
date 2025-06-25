@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Récupère le message du commit
+commit_msg_file="$1"
+commit_msg=$(cat "$commit_msg_file")
+
+# Vérifie la longueur totale du message
+max_length=80
+if [ "${#commit_msg}" -gt $max_length ]; then
+  echo "❌ Le message dépasse $max_length caractères (${#commit_msg})"
+  echo "   -> Limite = tout compris (type, crochets, message)"
+  exit 1
+fi
+
+# Vérifie le format du message avec regex
+regex="^\[(ajout|modif|fix|doc|nettoyage|test)\] .{5,}$"
+if [[ ! "$commit_msg" =~ $regex ]]; then
+  echo "❌ Format de commit invalide."
+  echo "✅ Format attendu : [type] Message clair en français"
+  echo "Types possibles : ajout / modif / fix / doc / nettoyage / test"
+  echo "Exemples :"
+  echo "  [ajout] Lecture du fichier client"
+  echo "  [fix] Corrige l’erreur de division par zéro"
+  exit 1
+fi
+
+exit 0
