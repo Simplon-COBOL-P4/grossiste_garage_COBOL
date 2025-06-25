@@ -2,16 +2,16 @@
       *                                                                *
       *                 DESCRIPTION DU SOUS-PROGRAMME                  *
       *                                                                *
-      *Sous-programme prenant en entrée les informations fournies pour *
-      *la création d'un utilisateur et les insère dans la table        *
-      *"Utilisateur" de la BDD SQL.                                    *
+      * Sous-programme prenant en entrée les informations fournies pour*
+      * la création d'un utilisateur et les insère dans la table       *
+      * "utilisateur" de la BDD SQL.                                   *
       *                                                                *
       *----------------------------------------------------------------*
       *                           TRIGRAMMES                           *
       *                                                                *
-      *creuti=Création utilisateur                                     *
-      *IDF=IDENTIFIANT; UTI=UTILISATEUR; MDP=MOT DE PASSE; ROL=ROLE;   *
-      *AFC=AFFECTATION; VAR=VARIABLE; DEB=DEBUT; INS=INSERTION         *
+      * creuti=Création utilisateur                                    *
+      * IDF=IDENTIFIANT; UTI=UTILISATEUR; MDP=MOT DE PASSE; ROL=ROLE;  *
+      * AFC=AFFECTATION; VAR=VARIABLE; DEB=DEBUT; INS=INSERTION        *
       ****************************************************************** 
        
        
@@ -23,7 +23,8 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
 
-      *Déclaration des variables correspondant aux attributs (identifiant, mot de passe et role) de la table Utilisateur
+      * Déclaration des variables correspondant aux attributs
+      * (identifiant, mot de passe et role) de la table utilisateur
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
 
        01 PG-IDF-UTI         PIC X(80).
@@ -32,10 +33,10 @@
        
        EXEC SQL END DECLARE SECTION END-EXEC.
        
-      *Inclusion des codes d'erreur SQLCA
+      * Inclusion des codes d'erreur SQLCA
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
-      *Déclaration des variables du sous-programme 
+      * Déclaration des variables du sous-programme 
        LINKAGE SECTION. 
        01 LK-IDF-UTI         PIC X(80).
        01 LK-MDP-UTI         PIC X(64).
@@ -48,12 +49,14 @@
                                 LK-ROL-UTI.
 
 
-      *Affectation des valeurs des variables du programme appelant dans les variables correspondant aux attributs SQL
+      * Affectation des valeurs des variables du programme appelant 
+      * dans les variables correspondant aux attributs SQL
 
            PERFORM 0100-AFC-VAR-DEB
               THRU 0100-AFC-VAR-FIN.
        
-      *Insertion des variables dans la table Utilisateur la base de donnée SQL
+      * Insertion des variables dans la table Utilisateur 
+      * la base de donnée SQL
            PERFORM 0150-INS-SQL-DEB
               THRU 0150-INS-SQL-FIN.
        
