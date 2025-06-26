@@ -9,7 +9,7 @@
       *----------------------------------------------------------------*
       *                           TRIGRAMMES                           *
       *                                                                *
-      * creuti=Création utilisateur                                    *
+      * creuti=Création utilisateur, CRE=création; UTI=utilisateur     *
       * IDF=IDENTIFIANT; UTI=UTILISATEUR; MDP=MOT DE PASSE; ROL=ROLE;  *
       * AFC=AFFECTATION; VAR=VARIABLE; DEB=DEBUT; INS=INSERTION        *
       ****************************************************************** 
@@ -28,7 +28,7 @@
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
 
        01 PG-IDF-UTI         PIC X(80).
-       01 PG-MDP-UTI         PIC X(64).
+       01 PG-MDP-UTI         PIC X(30).
        01 PG-ROL-UTI         PIC X(14).
        
        EXEC SQL END DECLARE SECTION END-EXEC.
@@ -39,7 +39,7 @@
       * Déclaration des variables du sous-programme 
        LINKAGE SECTION. 
        01 LK-IDF-UTI         PIC X(80).
-       01 LK-MDP-UTI         PIC X(64).
+       01 LK-MDP-UTI         PIC X(30).
        01 LK-ROL-UTI         PIC X(14).
 
        
@@ -93,11 +93,9 @@
            END-EXEC 
                
            IF SQLCODE = 0
-              DISPLAY "Insertion de l'utilisateur réussie." 
               EXEC SQL COMMIT END-EXEC 
        
            ELSE
-              DISPLAY "Erreur d'insertion SQLCODE: " SQLCODE
               EXEC SQL ROLLBACK END-EXEC 
            END-IF.
 
