@@ -5,15 +5,12 @@
       *                                                                *
       * TRIGRAMMES :                                                   *
       * CHOIX = CHX ; MESSAGE = MSG ; TEMPORAIRE = TMP ;               *
-      * ECRAN-MENU-ADMIN = E-MNU-ADM ; FONCTIONNALITE = FCT ;          *
-      * DEBUT = DEB                                                    *
+      * ECRAN = E ; MENU = MNU ; ADMIN = ADM ; FONCTIONNALITE = FCT ;          *
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ecradm.
-       AUTHOR Yassine.
-       DATE-WRITTEN 25-06-2025 (fr)
-
-       ENVIRONMENT DIVISION.
+       AUTHOR. Yassine.
+       DATE-WRITTEN 25-06-2025 (fr).
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
@@ -100,11 +97,11 @@
            05 LINE 24 COLUMN 30 VALUE "-------------------------------".
            05 LINE 24 COLUMN 61 VALUE "-------------------+".
 
-             
+      ******************************************************************       
        PROCEDURE DIVISION USING LK-CHX LK-MSG.
       
-           PERFORM  0100-CHX-FCT-DEB
-              THRU  0100-CHX-FCT-FIN. 
+           PERFORM 0100-CHX-FCT-DEB
+              THRU 0100-CHX-FCT-FIN. 
       
 
            EXIT PROGRAM.
@@ -113,7 +110,7 @@
       ******************************************************************
       *                           PARAGRAPHES                          *
       ******************************************************************
-           0100-CHX-FCT-DEB.
+       0100-CHX-FCT-DEB.
 
       * Boucle jusqu'à ce que l'utilisateur tape 0 pour déconnexion
            PERFORM UNTIL WS-TMP-CHX = 0
@@ -163,6 +160,6 @@
 
 
 
-           0100-CHX-FCT-FIN.
+       0100-CHX-FCT-FIN.
            EXIT.
               
