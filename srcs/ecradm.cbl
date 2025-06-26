@@ -10,7 +10,7 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ecradm.
        AUTHOR. Yassine.
-       DATE-WRITTEN 25-06-2025 (fr).
+       DATE-WRITTEN. 25-06-2025 (fr).
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
