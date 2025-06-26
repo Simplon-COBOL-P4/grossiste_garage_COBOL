@@ -24,7 +24,7 @@
        WORKING-STORAGE SECTION.
 
       * Déclaration des variables correspondant aux attributs
-      * (identifiant, mot de passe et role) de la table utilisateur
+      * (identifiant, mot de passe et role) de la table utilisateur.
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
 
        01 PG-IDF-UTI         PIC X(80).
@@ -33,10 +33,10 @@
        
        EXEC SQL END DECLARE SECTION END-EXEC.
        
-      * Inclusion des codes d'erreur SQLCA
+      * Inclusion des codes d'erreur SQLCA.
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
-      * Déclaration des variables du sous-programme 
+      * Déclaration des variables du sous-programme. 
        LINKAGE SECTION. 
        01 LK-IDF-UTI         PIC X(80).
        01 LK-MDP-UTI         PIC X(30).
@@ -50,13 +50,13 @@
 
 
       * Affectation des valeurs des variables du programme appelant 
-      * dans les variables correspondant aux attributs SQL
+      * dans les variables correspondant aux attributs SQL.
 
            PERFORM 0100-AFC-VAR-DEB
               THRU 0100-AFC-VAR-FIN.
        
       * Insertion des variables dans la table Utilisateur 
-      * la base de donnée SQL
+      * la base de donnée SQL.
            PERFORM 0150-INS-SQL-DEB
               THRU 0150-INS-SQL-FIN.
        
@@ -66,7 +66,7 @@
       *                         PARAGRAPHES                            * 
       ******************************************************************
 
-           0100-AFC-VAR-DEB.
+       0100-AFC-VAR-DEB.
 
            MOVE LK-IDF-UTI     
            TO   PG-IDF-UTI.
@@ -77,12 +77,12 @@
            MOVE LK-ROL-UTI   
            TO   PG-ROL-UTI.
        
-           0100-AFC-VAR-FIN.
+       0100-AFC-VAR-FIN.
            EXIT.
 
       *-----------------------------------------------------------------
 
-           0150-INS-SQL-DEB.
+       0150-INS-SQL-DEB.
                    
            EXEC SQL 
                INSERT INTO utilisateur(nom_uti, mdp_uti, role_uti)
@@ -99,7 +99,7 @@
               EXEC SQL ROLLBACK END-EXEC 
            END-IF.
 
-           0150-INS-SQL-FIN.
+       0150-INS-SQL-FIN.
            EXIT.
            
 
