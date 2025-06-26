@@ -4,16 +4,33 @@
       *de passe via un écran de saisie puis taper sur la touche ENTREE.
       *Seules 3 tentative de connexion sont autorisées.
       *
+      *Trigram:
+      *  APL = Application
+      *  CDR = Cadre
+      *  COD = Code
+      *  CON = Connexion
+      *  ECR = Ecran
+      *  EFC = Efface
+      *  FND = Fond
+      *  MDP = Mot De Passe
+      *  NBR = Nombre
+      *  NOM = nom
+      *  RET = Retour
+      *  RST = Reste
+      *  SSI = Saisie
+      *  TXT = Test
+      *  UTL = Utilisateur
+
       *WS-NOM-UTL > nom de l'utilisateur
       *WS-MDP-UTL > mot de passe de l'utilisateur 
-      *LK-CODE-RETOUR > code retour, 0=OK, 1=KO
+      *LK-COD-RET > code retour, 0=OK, 1=KO
       *WS-NBR-CON > nombre de connexions tentative
       *WS-NBR-RST > nombre de tentative restant
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. conexion.
+       PROGRAM-ID. conapl.
        AUTHOR.    Benoit.
-       DATE-WRITTEN. 25-06-2025.
+       DATE-WRITTEN. 25-06-2025 (fr).
 
       ******************************************************************
       *
@@ -27,8 +44,8 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
 
-       77  WS-COULEUR-TEXTE     PIC 9(01) VALUE 7.  *> Blanc
-       77  WS-COULEUR-FOND      PIC 9(01) VALUE 1.  *> Bleu
+       77  WS-COL-TXT           PIC 9(01) VALUE 7.  *> Blanc
+       77  WS-COL-FND           PIC 9(01) VALUE 1.  *> Bleu
 
        77  WS-NBR-CON           PIC 9(02).
        77  WS-NBR-RST           PIC 9(02).
@@ -52,7 +69,7 @@
        77  LK-COD-RET           PIC 9(01).
 
        SCREEN SECTION.
-       01  ECRAN-SAISIE-01.
+       01  ECR-SSI-01.
            05  LINE 1  COL 1   PIC X(01) FROM S-CDR-001.
            05  LINE 1  COL 2   PIC X(78) FROM S-CDR-002.
            05  LINE 1  COL 80  PIC X(01) FROM S-CDR-001.
@@ -112,33 +129,46 @@
            05  LINE 24 COL 2   PIC X(78) FROM S-CDR-002.
            05  LINE 24 COL 80  PIC X(01) FROM S-CDR-001.
            05  LINE 9  COL 30  PIC X(20) TO S-NOM-UTL AUTO.
-           05  LINE 13 COL 30 PIC X(20) TO S-MDP-UTL SECURE AUTO
-               FOREGROUND-COLOR WS-COULEUR-TEXTE
-               BACKGROUND-COLOR WS-COULEUR-FOND.
+           05  LINE 13 COL 30  PIC X(20) TO S-MDP-UTL SECURE AUTO
+               FOREGROUND-COLOR WS-COL-TXT
+               BACKGROUND-COLOR WS-COL-FND.
 
-       01  ECRAN-EFFACE.
+       01  ECR-SSI-02.
+           05 LINE 22 COL 10   VALUE "Identifiant et/ou mot de passe 
+      -                                                   " incorrecte".
+           05 LINE 23 COL 10   VALUE "Nombre de tentative restant: ".
+           05 LINE 23 COL 39   PIC X(01) FROM WS-NBR-RST.
+
+       01  ECR-EFC.
            05 BLANK SCREEN.
       ******************************************************************
       *
       ******************************************************************
            PROCEDURE DIVISION USING LK-COD-RET.
-           DISPLAY ECRAN-EFFACE
+
+           PERFORM 0100-CON.
+
+           EXIT PROGRAM.
+
+           0100-CON.
+           DISPLAY ECR-EFC.
            MOVE 1 TO LK-COD-RET.
+           DISPLAY 'Nombre de tentative restant: 03' AT LINE 23 COL 10
            PERFORM VARYING WS-NBR-CON FROM 1 BY 1 UNTIL WS-NBR-CON > 3 
                    OR LK-COD-RET = 0
-             DISPLAY ECRAN-SAISIE-01
-             ACCEPT ECRAN-SAISIE-01
+             DISPLAY ECR-SSI-01
+             ACCEPT ECR-SSI-01
       *Appel sous-progrmme
              CALL 'subprog' USING LK-COD-RET
              IF LK-COD-RET <> 0 THEN
                 DISPLAY 'Identifiant et/ou mot de passe incorrecte' AT
-                        LINE 22 COL 10
+                                                          LINE 22 COL 10
                 DISPLAY 'Nombre de tentative restant: ' AT LINE 23 COL
-                         10
+                                                                      10
                 COMPUTE WS-NBR-RST = 3 - WS-NBR-CON
                 DISPLAY WS-NBR-RST AT LINE 23 COL 39
              END-IF
            END-PERFORM.
-
-           EXIT PROGRAM.
+      
+           
 
