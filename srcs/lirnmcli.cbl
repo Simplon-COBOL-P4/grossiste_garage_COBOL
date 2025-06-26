@@ -1,0 +1,40 @@
+      ******************************************************************
+      *                             ENTÊTE                             *
+      *                                                                *
+      * lirnmcli                                                       *
+      *                                                                *
+      *                           TRIGRAMMES                           *
+      *                                                                *
+      * LIRE=LIR; NOM=NM; CLIENT=CLI                           *
+      *                                                                *
+      ******************************************************************
+       
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. lirnmcli.
+       AUTHOR. .
+       DATE-WRITTEN. .
+
+       DATA DIVISION.
+       LINKAGE SECTION.
+      * Arguments d'entrée.
+       01 NOM               PIC X(80).
+       
+      * Arguments de sortie.
+       01 IDENTIFIANT       PIC 9(10).
+       01 EMAIL             PIC X(160).
+       01 INDICATIF         PIC 9(03).
+       01 TEL               PIC 9(10).
+       01 CODE-POSTAL       PIC 9(05).
+       01 VILLE             PIC X(80).
+       01 ADRESSE           PIC X(160).
+
+       PROCEDURE DIVISION USING NOM,
+                                IDENTIFIANT,
+                                EMAIL,
+                                INDICATIF,
+                                TEL,
+                                CODE-POSTAL,
+                                VILLE,
+                                ADRESSE.
+
+           EXIT PROGRAM.
