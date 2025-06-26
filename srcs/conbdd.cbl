@@ -7,11 +7,11 @@
       *                                                                *
       *                           TRIGRAMMES                           *
       *                                                                *
-      * MDP = mot de passe; BASED= base de donnée                      *
-      *                                                                *
+      * MDP=mot de passe; BDD=base de donnée; CON=connexion;           *
+      * COR=correct                                                    *
       ******************************************************************       
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. conbase.
+       PROGRAM-ID. conbdd.
        AUTHOR. lucas.
        DATE-WRITTEN. 25-06-2025 (fr).
 
@@ -23,7 +23,7 @@
        01  PG-UTILISATEUR       PIC X(30) VALUE "postgres".
        01  PG-MDP               PIC X(30) VALUE "mdp".
       * Le nom de la base de donnée sera peut-être à changer.
-       01  PG-BASED             PIC X(10) VALUE "exobibli".
+       01  PG-BDD               PIC X(10) VALUE "exobibli".
        EXEC SQL END DECLARE SECTION END-EXEC.
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
@@ -31,29 +31,32 @@
 
       * Il est à 0 si la connexion à la base de donnée se passe bien,
       * sinon il est à 1.
-       01 LK-CORRECT PIC 9(01).
+       01 LK-COR PIC 9(01).
 
-       PROCEDURE DIVISION USING LK-CORRECT.
+       PROCEDURE DIVISION USING LK-COR.
 
 
            PERFORM 0100-DEB-CONNEXION-BASE-DONNEE
               THRU 0100-FIN-CONNEXION-BASE-DONNEE.
        
 
+           EXIT PROGRAM.
+
        0100-DEB-CONNEXION-BASE-DONNEE.
            EXEC SQL
                 CONNECT :PG-UTILISATEUR IDENTIFIED BY :PG-MDP 
-                USING :PG-BASED
+                USING :PG-BDD
            END-EXEC.
            
            IF SQLCODE NOT = 0
       * La connexion à la base de donnée échoue
-               MOVE 1 TO LK-CORRECT
-               EXIT PROGRAM
+               MOVE 1 TO LK-COR
+           ELSE
+      * La connexion à la base de donnée réussi
+               MOVE 0 TO LK-COR
            END-IF.
 
-      * La connexion à la base de donnée réussi
-           MOVE 0 TO LK-CORRECT.
+      
        0100-FIN-CONNEXION-BASE-DONNEE.
 
-           EXIT PROGRAM.
+           
