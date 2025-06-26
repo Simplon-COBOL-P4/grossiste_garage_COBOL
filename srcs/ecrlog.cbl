@@ -15,12 +15,13 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ecrlog.
        AUTHOR. Thomas Baudrin.
+       DATE-WRITTEN. 26-06-2025(fr).
 
        DATA DIVISION.
        
        WORKING-STORAGE SECTION.
        
-      *Déclaration de la table contenant tous les logs
+      *Déclaration de la table contenant tous les logs.
        01  WS-LOG-TAB.
            05  WS-LOG OCCURS 100 TIMES.
                10  WS-LOG-ID    PIC 9(10).
@@ -31,14 +32,14 @@
                10  WS-UTI-ID    PIC 9(10).
                10  WS-UTI-NOM   PIC X(30).
 
-      *Déclaration des variables indépendantes
+      *Déclaration des variables indépendantes.
        77  WS-MAX-LIN           PIC 9(03).
        77  WS-LIN-NUM           PIC 9(02).
        77  WS-IDX               PIC 9(03).
        77  WS-LIN-CMP           PIC X(78).
        77  WS-ACC               PIC X.
 
-      *Déclaration de l'écran d'affichage
+      *Déclaration de l'écran d'affichage.
        SCREEN SECTION.
        01 E-MNU-LOG.
            05 BLANK SCREEN.
@@ -101,15 +102,15 @@
 
        PROCEDURE DIVISION.
 
-      * Appel d'un sous-programme pour récupérer les logs en bdd
+      * Appel d'un sous-programme pour récupérer les logs en bdd.
            PERFORM 0100-APL-LEC-LOG-DEB
            THRU    0100-APL-LEC-LOG-FIN.
 
-      * Affichage de l'écran
+      * Affichage de l'écran.
            PERFORM 0200-AFF-SCR-DEB
            THRU    0200-AFF-SCR-FIN.
 
-      * Affichages des lignes avec les logs  
+      * Affichages des lignes avec les logs.  
            PERFORM 0300-AFF-LOG-DEB
            THRU    0300-AFF-LOG-FIN.
 

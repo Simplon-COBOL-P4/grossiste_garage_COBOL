@@ -15,6 +15,7 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. leclog.
        Author. Thomas Baudrin.
+       DATE-WRITTEN. 26-06-2025(fr).
 
        DATA DIVISION.
 
@@ -55,24 +56,24 @@
        
        PROCEDURE DIVISION USING LK-LOG-TAB LK-MAX-LIN.
 
-      * Initialisation des variables
+      * Initialisation des variables.
            PERFORM 0100-INI-VAR-DEB
            THRU    0100-INI-VAR-FIN.
 
-      * Déclaration du curseur
+      * Déclaration du curseur.
            PERFORM 0200-DEC-CUR-DEB
            THRU    0200-DEC-CUR-FIN.
 
-      * Ouverture du curseur
+      * Ouverture du curseur.
            PERFORM 0300-OPN-CUR-DEB
            THRU    0300-OPN-CUR-FIN.
 
       * Affectation des données en bdd avec celle du sous programme 
-      * précédent
+      * précédent.
            PERFORM 0400-FET-LOG-DEB
            THRU    0400-FET-LOG-FIN.
 
-      * Fermeture du curseur     
+      * Fermeture du curseur.     
            PERFORM 0500-CLS-CUR-DEB
            THRU    0500-CLS-CUR-FIN.
                
