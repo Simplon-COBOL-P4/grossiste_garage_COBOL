@@ -9,7 +9,7 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. eutista.
        AUTHOR Yassine.
-       DATE-WRITTEN 26-06-2025 (fr)
+       DATE-WRITTEN. 26-06-2025 (fr)
 
        ENVIRONMENT DIVISION.
 
