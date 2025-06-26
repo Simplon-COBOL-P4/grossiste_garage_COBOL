@@ -65,13 +65,14 @@
            05 LINE 15 COLUMN 30 VALUE "4 - Gestion des livraisons".
            05 LINE 16 COLUMN 30 VALUE "5 - Generer un document".
            05 LINE 17 COLUMN 30 VALUE "6 - Journal de logs".
-           05 LINE 19 COLUMN 30 VALUE "0 - Deconnexion".
-           05 LINE 21 COLUMN 30 VALUE "Entrez votre choix : ".
+           05 LINE 18 COLUMN 30 VALUE "7 - Creer un compte utilisateur".
+           05 LINE 20 COLUMN 30 VALUE "0 - Deconnexion".
+           05 LINE 22 COLUMN 30 VALUE "Entrez votre choix : ".
 
-           05 LINE 21 COLUMN 52 VALUE "[".
-           05 LINE 21 COLUMN 54 VALUE "]".
-           05 LINE 21 COLUMN 53 PIC X(01) TO   WS-TMP-CHX.
-           05 LINE 22 COLUMN 30 PIC X(40) FROM WS-TMP-MSG.
+           05 LINE 22 COLUMN 52 VALUE "[".
+           05 LINE 22 COLUMN 54 VALUE "]".
+           05 LINE 22 COLUMN 53 PIC X(01) TO   WS-TMP-CHX.
+           05 LINE 23 COLUMN 30 PIC X(40) FROM WS-TMP-MSG.
            05 LINE 04 COLUMN 01 VALUE "|".
            05 LINE 05 COLUMN 01 VALUE "|".
            05 LINE 06 COLUMN 01 VALUE "|".
@@ -121,28 +122,27 @@
 
                EVALUATE WS-TMP-CHX
                    WHEN 1 
-                       MOVE "Gestion du stock."           TO WS-TMP-MSG
       * Appel du sous-programme de gestion du stock.
 
                    WHEN 2 
-                       MOVE "Gestion des clients."        TO WS-TMP-MSG
       * Appel du sous-programme de gestion des clients.
 
                    WHEN 3 
-                       MOVE "Gestion des fournisseurs."   TO WS-TMP-MSG
       * Appel du sous-programme de gestion des fournisseurs.
 
                    WHEN 4 
-                       MOVE "Gestion des livraisons."     TO WS-TMP-MSG
       * Appel du sous-programme de gestion des livraisons.
 
                    WHEN 5 
-                       MOVE "Generation de document."     TO WS-TMP-MSG
       * Appel du sous-programme de génération de document.
 
                    WHEN 6 
-                       MOVE "Journal de logs."            TO WS-TMP-MSG
       * Appel du sous-programme d'affichage du journal de logs.
+                        CALL 'ecrlog'
+
+                   WHEN 7 
+      * Appel du sous-programme ecruti.
+                        CALL 'ecruti'
 
                    WHEN 0 
                        MOVE "Deconnexion..."              TO WS-TMP-MSG
