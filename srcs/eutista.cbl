@@ -3,13 +3,13 @@
       *                                                                *
       * TRIGRAMMES :                                                   *
       * CHOIX = CHX ; MESSAGE = MSG ; TEMPORAIRE = TMP ;               *
-      * SCREEN SECTION = S ; ECRAN = ECR ; MENU = MNU ;                *
+      * ECRAN = ECR ; MENU = MNU ;                                     *
       * UTILISATEUR = UTI ; STANDARD = STA                             *
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. eutista.
-       AUTHOR Yassine.
-       DATE-WRITTEN. 26-06-2025 (fr)
+       AUTHOR. Yassine.
+       DATE-WRITTEN. 26-06-2025 (fr).
 
        ENVIRONMENT DIVISION.
 
