@@ -54,22 +54,4 @@
        EXEC SQL COMMIT WORK END-EXEC.
        0200-INS-DON-FIN.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       
