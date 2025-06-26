@@ -2,6 +2,10 @@
       * MOT DE PASSE=MDP; ROLE=RLE; UTILISATEUR=UTL; LECTURE=LET; 
       * DEPLACE=DEP; VARIABLE=VAR; RETOURNE=RET; DONNEES=DON
        
+      *** FONCTION DU PROGRAMME:
+      * IL RETOURNE TOUTES LES DONNÉES DE L'UTILISATEUR DANS LA
+      * TABLE SQL 'utilisateur'.
+
        IDENTIFICATION DIVISION.
        PROGRAM-ID. letutl.
        AUTHOR. Anaisktl.
@@ -10,15 +14,15 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-       01 WS-NOM-UTL      PIC X(80).
-       01 WS-MDP-UTL      PIC X(64).
-       01 WS-RLE-UTL      PIC X(10).
+       01 PG-NOM-UTL      PIC X(80).
+       01 PG-MDP-UTL      PIC X(30).
+       01 PG-RLE-UTL      PIC X(10).
        EXEC SQL END DECLARE SECTION END-EXEC.
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
        LINKAGE SECTION.
        01 LK-NOM-UTL      PIC X(80).
-       01 LK-MDP-UTL      PIC X(64).
+       01 LK-MDP-UTL      PIC X(30).
        01 LK-RLE-UTL      PIC X(10).
       
 
@@ -32,6 +36,8 @@
            PERFORM 0200-DEP-LES-VAR-DEB
               THRU 0200-DEP-LES-VAR-FIN.
          
+           EXIT PROGRAM.
+
 
       ******************************************************************
       ***************************PARAGRAPHES****************************  
@@ -39,16 +45,16 @@
        0100-RET-DON-DEB.
        EXEC SQL 
            SELECT nom_uti, mdp_uti, role_uti 
-           INTO :WS-NOM-UTL, :WS-MDP-UTL, :WS-RLE-UTL
+           INTO :PG-NOM-UTL, :PG-MDP-UTL, :PG-RLE-UTL
            FROM utilisateur
        END-EXEC.
        EXEC SQL COMMIT WORK END-EXEC.
        0100-RET-DON-FIN.
 
        0200-DEP-LES-VAR-DEB.
-           MOVE WS-NOM-UTL   TO LK-NOM-UTL.
-           MOVE WS-MDP-UTL   TO LK-MDP-UTL.
-           MOVE WS-RLE-UTL   TO LK-RLE-UTL.
+           MOVE PG-NOM-UTL   TO LK-NOM-UTL.
+           MOVE PG-MDP-UTL   TO LK-MDP-UTL.
+           MOVE PG-RLE-UTL   TO LK-RLE-UTL.
        0200-DEP-LES-VAR-FIN.
 
     
