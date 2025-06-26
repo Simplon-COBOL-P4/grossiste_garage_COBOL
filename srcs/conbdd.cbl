@@ -8,7 +8,7 @@
       *                           TRIGRAMMES                           *
       *                                                                *
       * MDP=mot de passe; BDD=base de donnée; CON=connexion;           *
-      * COR=correct                                                    *
+      * COR=correct; BSE=base; DON=donnée                              *
       ******************************************************************       
        IDENTIFICATION DIVISION.
        PROGRAM-ID. conbdd.
@@ -36,13 +36,13 @@
        PROCEDURE DIVISION USING LK-COR.
 
 
-           PERFORM 0100-DEB-CONNEXION-BASE-DONNEE
-              THRU 0100-FIN-CONNEXION-BASE-DONNEE.
+           PERFORM 0100-CON-BSE-DON-DEB
+              THRU 0100-CON-BSE-DON-FIN.
        
 
            EXIT PROGRAM.
 
-       0100-DEB-CONNEXION-BASE-DONNEE.
+       0100-CON-BSE-DON-DEB.
            EXEC SQL
                 CONNECT :PG-UTILISATEUR IDENTIFIED BY :PG-MDP 
                 USING :PG-BDD
@@ -57,6 +57,6 @@
            END-IF.
 
       
-       0100-FIN-CONNEXION-BASE-DONNEE.
+       0100-CON-BSE-DON-FIN.
 
            
