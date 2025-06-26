@@ -3,7 +3,7 @@
       *                                                                *
       * TRIGRAMMES :                                                   *
       * CHOIX = CHX ; MESSAGE = MSG ; TEMPORAIRE = TMP ;               *
-      * SCREEN SECTION = S ; ECRAN = ECR ; MENU = MNU ;                *
+      * ECRAN = ECR ; MENU = MNU ;                                     *
       * UTILISATEUR = UTI ; STANDARD = STA                             *
       ******************************************************************
        IDENTIFICATION DIVISION.
