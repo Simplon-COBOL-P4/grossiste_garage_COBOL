@@ -23,7 +23,7 @@
        01  PG-UTILISATEUR       PIC X(30) VALUE "postgres".
        01  PG-MDP               PIC X(30) VALUE "mdp".
       * Le nom de la base de donnée sera peut-être à changer.
-       01  PG-BDD               PIC X(10) VALUE "exobibli".
+       01  PG-BDD               PIC X(10) VALUE "logiparts".
        EXEC SQL END DECLARE SECTION END-EXEC.
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
