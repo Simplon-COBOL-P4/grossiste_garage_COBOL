@@ -17,7 +17,7 @@
       * TRT=TIRET; BAR=BARRE; CRG=CROCHET GAUCHE; CRD=CROCHET DROIT;   *
       * CHX=CHOIX; CFM=CONFIRMATION; AFF=AFFICHAGE; DEB=DEBUT;         *
       * MSG=MESSAGE; ERR=ERREUR; BCL=BOUCLE; APL=APPEL; PRG=PROGRAMME  *
-      * VID=VIDE; APP=APPUI; ENT=ENTREE.                               *
+      * VID=VIDE; APP=APPUI; ENT=ENTREE; PCP=PRINCIPALE.               *
       ******************************************************************
        
        IDENTIFICATION DIVISION.
@@ -179,12 +179,21 @@
 
        PROCEDURE DIVISION.
 
+           PERFORM 0090-BCL-PCP-DEB
+              THRU 0090-BCL-PCP-FIN.
+
+           EXIT PROGRAM.
+
+      ******************************************************************
+      *                         PARAGRAPHES                            * 
+      ******************************************************************
+
       * Affichage de l'écran de création d'utilisateur.
       * Tant que le mot de passe n'est pas confirmé ou que 
       * l'utilisateur ne choisit pas l'une des 2 options proposées, on
       * reste dans la boucle et l'utilisateur peut à nouveau saisir 
       * ses données.
-
+       0090-BCL-PCP-DEB.
            SET WS-FIN-BCL-NON TO TRUE.
 
            PERFORM UNTIL WS-FIN-BCL-OUI
@@ -193,11 +202,7 @@
 
            END-PERFORM.
 
-           EXIT PROGRAM.
-
-      ******************************************************************
-      *                         PARAGRAPHES                            * 
-      ******************************************************************
+       0090-BCL-PCP-FIN.
 
        0100-AFF-ECR-UTI-DEB.
 
