@@ -8,14 +8,14 @@
       *----------------------------------------------------------------*
       *                           TRIGRAMMES                           *
       *                                                                *
-      * ecrlog=Ecran log, lin=ligne; tab=table det=detail              *
+      * ecr=ecran, lin=ligne; tab=table det=detail                     *
       * ID=IDENTIFIANT; UTI=UTILISATEUR; heu=heure; jou=jour;          *
       * typ=type; acc=accept; num=nombre; mnu=menu;  cmp=complet       *
       ******************************************************************  
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ecrlog.
        AUTHOR. Thomas Baudrin.
-       DATE-WRITTEN. 26-06-2025(fr).
+       DATE-WRITTEN. 26-06-2025 (fr).
 
        DATA DIVISION.
        
@@ -23,7 +23,7 @@
        
       *Déclaration de la table contenant tous les logs.
        01  WS-LOG-TAB.
-           05  WS-LOG OCCURS 100 TIMES.
+           05  WS-LOG OCCURS 25 TIMES.
                10  WS-LOG-ID    PIC 9(10).
                10  WS-LOG-DET   PIC X(30).
                10  WS-LOG-HEU   PIC X(08).
@@ -33,9 +33,9 @@
                10  WS-UTI-NOM   PIC X(30).
 
       *Déclaration des variables indépendantes.
-       77  WS-MAX-LIN           PIC 9(03).
+       77  WS-MAX-LIN           PIC 9(02).
        77  WS-LIN-NUM           PIC 9(02).
-       77  WS-IDX               PIC 9(03).
+       77  WS-IDX               PIC 9(02).
        77  WS-LIN-CMP           PIC X(78).
        77  WS-ACC               PIC X.
 

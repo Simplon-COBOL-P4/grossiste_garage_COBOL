@@ -7,15 +7,15 @@
       *----------------------------------------------------------------*
       *                           TRIGRAMMES                           *
       *                                                                *
-      * leclog=Lecture log, lin=ligne; tab=table det=detail            *
+      * lec=Lecture, lin=ligne; tab=table det=detail                   *
       * idl=identifiant log; UTI=UTILISATEUR; heu=heure; jou=jour;     *
       * typ=type; acc=accept; num=nombre; mnu=menu;  cmp=complet       *
-      * idu=identifiant utilisateur; idx=index                         *
+      * idu=identifiant utilisateur; idx=index ; err=erreur            *
       ******************************************************************   
        IDENTIFICATION DIVISION.
        PROGRAM-ID. leclog.
        Author. Thomas Baudrin.
-       DATE-WRITTEN. 26-06-2025(fr).
+       DATE-WRITTEN. 26-06-2025 (fr).
 
        DATA DIVISION.
 
@@ -24,17 +24,20 @@
       *Déclaration des variables correspondants aux attributs de la 
       *table logs et utilisateur
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-       01  WS-IDL   PIC 9(10).
-       01  WS-DET   PIC X(100).
-       01  WS-HEU   PIC X(08).
-       01  WS-JOU   PIC X(10).
-       01  WS-TYP   PIC X(12). 
-       01  WS-IDU   PIC 9(10).
-       01  WS-NOM   PIC X(80).
+       01  PG-IDL   PIC 9(10).
+       01  PG-DET   PIC X(100).
+       01  PG-HEU   PIC X(08).
+       01  PG-JOU   PIC X(10).
+       01  PG-TYP   PIC X(12). 
+       01  PG-IDU   PIC 9(10).
+       01  PG-NOM   PIC X(80).
        EXEC SQL END DECLARE SECTION END-EXEC.
 
       * Déclaration d'un index
-       77  WS-IDX             PIC 9(03).
+       77  WS-IDX             PIC 9(02).
+
+      * Déclaration d'une variable d'erreur
+       77  WS-ERR             PIC S9(9) COMP-5.
 
       * Inclusion des codes d'erreur SQLCA.
        EXEC SQL INCLUDE SQLCA END-EXEC.
@@ -43,7 +46,7 @@
        LINKAGE SECTION.
        
        01  LK-LOG-TAB.
-           05  LK-LOG OCCURS 100 TIMES.
+           05  LK-LOG OCCURS 25 TIMES.
                10  LK-LOG-ID    PIC 9(10).
                10  LK-LOG-DET   PIC X(30).
                10  LK-LOG-HEU   PIC X(08).
@@ -52,7 +55,7 @@
                10  LK-UTI-ID    PIC 9(10).
                10  LK-UTI-NOM   PIC X(30).
 
-       77  LK-MAX-LIN           PIC 9(03).        
+       77  LK-MAX-LIN           PIC 9(02).        
        
        PROCEDURE DIVISION USING LK-LOG-TAB LK-MAX-LIN.
 
@@ -83,7 +86,7 @@
       
        0100-INI-VAR-DEB.
            MOVE 0 TO WS-IDX.
-           MOVE 100 TO LK-MAX-LIN.
+           MOVE 25 TO LK-MAX-LIN.
        0100-INI-VAR-FIN.   
 
        0200-DEC-CUR-DEB.
@@ -102,8 +105,7 @@
                OPEN CUR_LOGS
            END-EXEC.
            IF SQLCODE NOT = 0
-               DISPLAY "Erreur ouverture curseur, SQLCODE = " SQLCODE
-               STOP RUN
+               MOVE SQLCODE TO WS-ERR
            END-IF.
        0300-OPN-CUR-FIN.    
 
@@ -111,25 +113,23 @@
            PERFORM UNTIL SQLCODE NOT = 0 OR WS-IDX > LK-MAX-LIN
 
                EXEC SQL
-                       FETCH CUR_LOGS INTO :WS-IDL, :WS-DET, :WS-HEU, 
-                           :WS-JOU, :WS-TYP, :WS-IDU, :WS-NOM
+                       FETCH CUR_LOGS INTO :PG-IDL, :PG-DET, :PG-HEU, 
+                           :PG-JOU, :PG-TYP, :PG-IDU, :PG-NOM
                END-EXEC
                
                IF SQLCODE = 0
                        ADD 1 TO WS-IDX
-                       MOVE WS-IDL TO LK-LOG-ID(WS-IDX)
-                       MOVE WS-DET TO LK-LOG-DET(WS-IDX)
-                       MOVE WS-HEU TO LK-LOG-HEU(WS-IDX)
-                       MOVE WS-JOU TO LK-LOG-JOU(WS-IDX)
-                       MOVE WS-TYP TO LK-LOG-TYP(WS-IDX)
-                       MOVE WS-IDU TO LK-UTI-ID(WS-IDX)
-                       MOVE WS-NOM TO LK-UTI-NOM(WS-IDX)
+                       MOVE PG-IDL TO LK-LOG-ID(WS-IDX)
+                       MOVE PG-DET TO LK-LOG-DET(WS-IDX)
+                       MOVE PG-HEU TO LK-LOG-HEU(WS-IDX)
+                       MOVE PG-JOU TO LK-LOG-JOU(WS-IDX)
+                       MOVE PG-TYP TO LK-LOG-TYP(WS-IDX)
+                       MOVE PG-IDU TO LK-UTI-ID(WS-IDX)
+                       MOVE PG-NOM TO LK-UTI-NOM(WS-IDX)
                ELSE IF SQLCODE = 100
-                       DISPLAY "Fin des données."
+                       MOVE SQLCODE TO WS-ERR
                ELSE
-                       DISPLAY "Erreur pendant le FETCH, SQLCODE = " 
-                           SQLCODE 
-                       STOP RUN
+                       MOVE SQLCODE TO WS-ERR
                END-IF
                
            END-PERFORM.
@@ -142,8 +142,7 @@
            END-EXEC.
                
            IF SQLCODE NOT = 0
-               DISPLAY "Erreur à la fermeture du curseur, SQLCODE = " 
-                   SQLCODE
+               MOVE SQLCODE TO WS-ERR
            END-IF.
        0500-CLS-CUR-FIN.    
        
