@@ -11,7 +11,6 @@
       *----------------------------------------------------------------*
       *                           TRIGRAMMES                           *
       *                                                                *
-      * ecruti=ecran utilisateur;                                      *
       * UTI=UTILISATEUR; MDP=MOT DE PASSE; ROL=ROLE; ECR=ECRAN;        *
       * CRE=CREATION; LRR=LEURRE; CLR=COULEUR; CDE=CODE; RTR=RETOUR;   *
       * DJA=DEJA; EXS=EXISTANT; TXT=TEXTE; FND=FOND; PLS=PLUS;         *
@@ -181,10 +180,18 @@
        PROCEDURE DIVISION.
 
       * Affichage de l'écran de création d'utilisateur.
+      * Tant que le mot de passe n'est pas confirmé ou que 
+      * l'utilisateur ne choisit pas l'une des 2 options proposées, on
+      * reste dans la boucle et l'utilisateur peut à nouveau saisir 
+      * ses données.
 
-           PERFORM 0100-AFF-ECR-UTI-DEB
-              THRU 0100-AFF-ECR-UTI-FIN.
+           SET WS-FIN-BCL-NON TO TRUE.
 
+           PERFORM UNTIL WS-FIN-BCL-OUI
+               PERFORM 0100-AFF-ECR-UTI-DEB
+                  THRU 0100-AFF-ECR-UTI-FIN
+
+           END-PERFORM.
 
            EXIT PROGRAM.
 
@@ -193,6 +200,9 @@
       ******************************************************************
 
        0100-AFF-ECR-UTI-DEB.
+
+      * Saisie des informations de l'utilisateur sur l'écran affiché.
+
            DISPLAY S-ECR-CRE-UTI.
            ACCEPT  S-ECR-CRE-UTI.
 
@@ -213,18 +223,17 @@
                WHEN 1
                    PERFORM 0155-CFM-MDP-UTI-DEB
                       THRU 0155-CFM-MDP-UTI-FIN
-
-                   PERFORM 0156-APP-ENT-DEB
-                      THRU 0156-APP-ENT-FIN
-                    
-                   
-                   PERFORM 0200-APL-PRG-DEB
-                      THRU 0200-APL-PRG-FIN
                    
                WHEN 2
+
+      * L'utilisateur quitte le programme.
+
                    EXIT PROGRAM
 
                WHEN OTHER 
+
+      * Affichage d'un message d'erreur.  
+
                    PERFORM 0157-MSG-ERR-CHX-DEB
                       THRU 0157-MSG-ERR-CHX-FIN
                    
@@ -238,29 +247,40 @@
       * Confirmation ou non du mot de passe entré.         
        0155-CFM-MDP-UTI-DEB.
 
-           SET WS-FIN-BCL-NON TO TRUE.
+      * Si le mot de passe est confirmé alors on affiche un message
+      * de réussite de la création d'utilisateur, sinon un message
+      * d'échec.
 
-           PERFORM UNTIL WS-FIN-BCL-OUI
-               IF WS-MDP-UTI-CFM = WS-MDP-UTI
-                   DISPLAY "Utilisateur cree avec succes !"
-                   AT LINE 22 COL 03
-                   SET WS-FIN-BCL-OUI TO TRUE  
-               ELSE 
-                   DISPLAY "Echec lors de la creation de l'utilisateur"
-                   AT LINE 22 COL 03  
-                   
-                   PERFORM 0156-APP-ENT-DEB
-                      THRU 0156-APP-ENT-FIN
+           IF WS-MDP-UTI-CFM = WS-MDP-UTI
+               DISPLAY "Utilisateur cree avec succes !"
+               AT LINE 22 COL 03
+
+               PERFORM 0156-APP-ENT-DEB
+                  THRU 0156-APP-ENT-FIN
+                
                
-                   PERFORM 0100-AFF-ECR-UTI-DEB
-                      THRU 0100-AFF-ECR-UTI-FIN
-               END-IF
-           END-PERFORM.
+               PERFORM 0200-APL-PRG-DEB
+                  THRU 0200-APL-PRG-FIN
+
+               SET WS-FIN-BCL-OUI TO TRUE  
+
+           ELSE 
+               DISPLAY "Echec lors de la creation de l'utilisateur"
+               AT LINE 22 COL 03  
+               
+               PERFORM 0156-APP-ENT-DEB
+                  THRU 0156-APP-ENT-FIN
+               
+           END-IF.
            EXIT.
            
        0155-CFM-MDP-UTI-FIN.
        
       *-----------------------------------------------------------------
+      
+      * Demande à l'utilisateur d'appuyer sur entrée pour passer à la 
+      * suite.
+
        0156-APP-ENT-DEB.
            DISPLAY "Appuyez sur entree"
            AT LINE 23 COL 03. 
@@ -277,26 +297,12 @@
       * proposées. 
        0157-MSG-ERR-CHX-DEB.
        
-           SET WS-FIN-BCL-NON TO TRUE.
-           
-           PERFORM UNTIL WS-FIN-BCL-OUI
-               IF WS-CHX NOT = 1 AND NOT = 2
-                   DISPLAY "Erreur de saisie, veuillez choisir 1 ou 2"
-                   AT LINE 22 COL 03 
+           DISPLAY "Erreur de saisie, veuillez choisir 1 ou 2"
+           AT LINE 22 COL 03. 
        
-                   PERFORM 0156-APP-ENT-DEB
-                      THRU 0156-APP-ENT-FIN
+           PERFORM 0156-APP-ENT-DEB
+              THRU 0156-APP-ENT-FIN.
                
-                   PERFORM 0100-AFF-ECR-UTI-DEB
-                      THRU 0100-AFF-ECR-UTI-FIN
-
-               ELSE 
-                   PERFORM 0150-EVA-CHX-UTI-DEB
-                      THRU 0150-EVA-CHX-UTI-FIN
-
-               END-IF     
-           END-PERFORM.
-
            EXIT.
 
        0157-MSG-ERR-CHX-FIN.
@@ -330,7 +336,10 @@
            SET WS-CDE-RTR-BON TO TRUE. 
 
            EVALUATE TRUE 
-           
+
+      * Si le code retour indique une réussite de l'insertion dans la 
+      * base de données, affiche un message à l'utilisateur à l'écran.
+
                WHEN WS-CDE-RTR-BON
                    
                    DISPLAY WS-VID 
@@ -342,6 +351,10 @@
                    PERFORM 0156-APP-ENT-DEB
                       THRU 0156-APP-ENT-FIN
 
+
+      * Si le nom d'utilisateur entré existe déjà dans la base de 
+      * données, affiche un message à l'utilisateur à l'écran.
+
                WHEN WS-CDE-RTR-DJA-EXS
 
                    DISPLAY WS-VID 
@@ -352,6 +365,11 @@
 
                    PERFORM 0156-APP-ENT-DEB
                       THRU 0156-APP-ENT-FIN
+
+
+      * S'il y a une erreur d'insertion dans la base de données autre 
+      * que le nom d'utilisateur déjà existant, affiche un message à 
+      * l'utilisateur à l'écran. 
 
                WHEN WS-CDE-RTR-ERR
 
