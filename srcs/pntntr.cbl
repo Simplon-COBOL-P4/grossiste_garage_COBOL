@@ -20,17 +20,9 @@
            PERFORM 0100-APL-ECR-TTR-DEB
               THRU 0100-APL-ECR-TTR-FIN.
 
-           PERFORM 0200-CNX-BDD-DEB
-              THRU 0200-CNX-BDD-FIN.
-
            STOP RUN.
 
        0100-APL-ECR-TTR-DEB.
-           CALL "ecrttr"
+           CALL "eccnxbdd"
            END-CALL.
        0100-APL-ECR-TTR-FIN.
-
-       0200-CNX-BDD-DEB.
-           CALL "cnxbdd"
-           END-CALL.
-       0200-CNX-BDD-FIN.
