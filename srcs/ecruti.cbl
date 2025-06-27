@@ -53,9 +53,9 @@
 
       * Variables correspondant aux informations entrées par 
       * l'utilisateur. 
-       01 WS-IDF-UTI           PIC X(30).
-       01 WS-MDP-UTI           PIC X(30).
-       01 WS-MDP-UTI-CFM       PIC X(30).
+       01 WS-IDF-UTI           PIC X(20).
+       01 WS-MDP-UTI           PIC X(20).
+       01 WS-MDP-UTI-CFM       PIC X(20).
        01 WS-ROL-UTI           PIC X(14).
 
        01 WS-CHX               PIC X(01).

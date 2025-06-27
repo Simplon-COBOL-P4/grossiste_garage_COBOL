@@ -8,6 +8,7 @@
       *                                                                *
       * MDP=mot de passe; UTL=utilisateur; DEB= début; POU = poubelle; *
       * COR=correct; INI=initialisation; VAR=variable; ACC= accès      *
+      * STT=STATUT; ERR=ERREUR; ADM=ADMIN; STD=STANDARD; ROL=ROLE      *
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -19,13 +20,14 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
 
-       01 WS-NOM     PIC X(80).
-       01 WS-MDP     PIC X(64).
+       01 WS-NOM     PIC X(20).
+       01 WS-MDP     PIC X(20).
 
       * Les variables servant à faire la requête SQL.
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
        01 PG-POU-1   PIC X(80).
        01 PG-POU-2   PIC X(64).
+       01 PG-ROL     PIC X(14).
        EXEC SQL END DECLARE SECTION END-EXEC.
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
@@ -33,10 +35,13 @@
        LINKAGE SECTION.
 
       * Le nom et le mot de passe du client.
-       01 LK-NOM     PIC X(80).
-       01 LK-MDP     PIC X(64).
+       01 LK-NOM     PIC X(20).
+       01 LK-MDP     PIC X(20).
 
-       01 LK-COR PIC 9(01).
+       01 LK-COR     PIC 9(01).
+           88 LK-STT-ERR       VALUE 0.
+           88 LK-STT-ADM       VALUE 1.
+           88 LK-STT-STD       VALUE 2.
 
        PROCEDURE DIVISION using LK-NOM LK-MDP LK-COR.
 
@@ -60,10 +65,10 @@
        0200-SQL-DEB.
 
            EXEC SQL
-           SELECT nom_uti, mdp_uti
+           SELECT nom_uti, mdp_uti, role_uti
       * 2 variables poubelles qui servent uniquement pour pouvoir faire
       * la requête SQL.
-           INTO :PG-POU-1 , :PG-POU-2 
+           INTO :PG-POU-1 , :PG-POU-2, :PG-ROL
            FROM utilisateur
            WHERE nom_uti = :WS-NOM
            and mdp_uti = encode(digest(:WS-MDP, 'sha256'), 
@@ -73,10 +78,17 @@
 
            IF SQLCODE = 0
       * L'utilisateur est dans la table.
-               MOVE 0 TO LK-COR 
+               EVALUATE PG-ROL
+                   WHEN "ADMIN"
+                       SET LK-STT-ADM TO TRUE
+                   WHEN "STANDARD"
+                       SET LK-STT-STD TO TRUE
+                   WHEN OTHER
+                       SET LK-STT-ERR TO TRUE
+               END-EVALUATE
            ELSE
       * L'utilisateur n'est pas dans la table ou la table n'existe pas.
-               MOVE 1 TO LK-COR
+               SET LK-STT-ERR TO TRUE
            END-IF.
                
            EXEC SQL COMMIT END-EXEC.

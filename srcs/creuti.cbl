@@ -27,8 +27,8 @@
       * (identifiant, mot de passe et role) de la table utilisateur.
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
 
-       01 PG-IDF-UTI         PIC X(80).
-       01 PG-MDP-UTI         PIC X(30).
+       01 PG-IDF-UTI         PIC X(20).
+       01 PG-MDP-UTI         PIC X(20).
        01 PG-ROL-UTI         PIC X(14).
        
        EXEC SQL END DECLARE SECTION END-EXEC.
@@ -38,8 +38,8 @@
 
       * Déclaration des variables du sous-programme. 
        LINKAGE SECTION. 
-       01 LK-IDF-UTI         PIC X(80).
-       01 LK-MDP-UTI         PIC X(30).
+       01 LK-IDF-UTI         PIC X(20).
+       01 LK-MDP-UTI         PIC X(20).
        01 LK-ROL-UTI         PIC X(14).
 
        

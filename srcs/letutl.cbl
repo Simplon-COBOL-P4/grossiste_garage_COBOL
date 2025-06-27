@@ -14,15 +14,15 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-       01 PG-NOM-UTL      PIC X(80).
-       01 PG-MDP-UTL      PIC X(30).
+       01 PG-NOM-UTL      PIC X(20).
+       01 PG-MDP-UTL      PIC X(20).
        01 PG-RLE-UTL      PIC X(14).
        EXEC SQL END DECLARE SECTION END-EXEC.
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
        LINKAGE SECTION.
-       01 LK-NOM-UTL      PIC X(80).
-       01 LK-MDP-UTL      PIC X(30).
+       01 LK-NOM-UTL      PIC X(20).
+       01 LK-MDP-UTL      PIC X(20).
        01 LK-RLE-UTL      PIC X(14).
       
 
