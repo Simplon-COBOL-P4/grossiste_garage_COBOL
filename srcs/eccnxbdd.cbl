@@ -115,7 +115,7 @@
 
            EXIT PROGRAM.
 
-       100-APL-PRG-DEB.
+       0100-APL-PRG-DEB.
            DISPLAY ECR-EFC.
            DISPLAY ECR-SSI.
 
