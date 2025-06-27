@@ -14,6 +14,7 @@
       *  PRG = Programme
       *  RET = Retour
       *  SSI = Saisie
+      *  eccnxbdd = ec-ecran  cnx-connexion  bdd-base de donnée
       *
       *SCREEN-SECTION:
       *  ECR-SSI  Ecran-Saisie ou Saisie Ecran
@@ -21,18 +22,12 @@
       *
       *Paragraphe
       *  0100-APL-PRG. Appel sous Programme
+      * 
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. eccnxbdd.
        AUTHOR.    Benoit.
        DATE-WRITTEN. 25-06-2025 (fr).
-       
-
-      ******************************************************************
-      *
-      ******************************************************************
-       ENVIRONMENT DIVISION.
-       CONFIGURATION SECTION.
 
       ******************************************************************
       *
@@ -115,12 +110,12 @@
       ******************************************************************
       *
       ******************************************************************
-           PROCEDURE DIVISION USING LK-COD-RET.
-           PERFORM 0100-APL-PRG.
+       PROCEDURE DIVISION USING LK-COD-RET.
+           PERFORM 0100-APL-PRG-DEB THRU 0100-APL-PRG-FIN.
 
            EXIT PROGRAM.
 
-           0100-APL-PRG.
+       100-APL-PRG-DEB.
            DISPLAY ECR-EFC.
            DISPLAY ECR-SSI.
 
@@ -133,4 +128,5 @@
               ACCEPT WS-NUL AT LINE 23 COL 20
            END-IF.        
            
-
+       0100-APL-PRG-FIN.
+           EXIT.           
