@@ -1,10 +1,10 @@
       ******************************************************************
-      *Ce programme sert à connecter un utilisateur à l'application.
-      *L'utilisateur doit entrer son numéro d'identification et son mot
-      *de passe via un écran de saisie puis taper sur la touche ENTREE.
-      *Seules 3 tentative de connexion sont autorisées.
+      * Ce programme sert à connecter un utilisateur à l'application.
+      * L'utilisateur doit entrer son numéro d'identification et son mot
+      * de passe via un écran de saisie puis taper sur la touche ENTREE.
+      * Seules 3 tentative de connexion sont autorisées.
       *
-      *Trigram:
+      * Trigram:
       *  APL = Application
       *  CDR = Cadre
       *  COD = Code
@@ -21,11 +21,11 @@
       *  TXT = Test
       *  UTL = Utilisateur
 
-      *WS-NOM-UTL > nom de l'utilisateur
-      *WS-MDP-UTL > mot de passe de l'utilisateur 
-      *LK-COD-RET > code retour, 0=OK, 1=KO
-      *WS-NBR-CON > nombre de connexions tentative
-      *WS-NBR-RST > nombre de tentative restant
+      * WS-NOM-UTL > nom de l'utilisateur
+      * WS-MDP-UTL > mot de passe de l'utilisateur 
+      * LK-COD-RET > code retour, 0=OK, 1=KO
+      * WS-NBR-CON > nombre de connexions tentative
+      * WS-NBR-RST > nombre de tentative restant
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. conapl.
@@ -144,13 +144,13 @@
       ******************************************************************
       *
       ******************************************************************
-           PROCEDURE DIVISION USING LK-COD-RET.
+       PROCEDURE DIVISION USING LK-COD-RET.
 
-           PERFORM 0100-CON.
+           PERFORM 0100-CON-DEB THRU 0100-CON-FIN.
 
            EXIT PROGRAM.
 
-           0100-CON.
+       0100-CON-DEB.
            DISPLAY ECR-EFC.
            MOVE 1 TO LK-COD-RET.
            DISPLAY 'Nombre de tentative restant: 03' AT LINE 23 COL 10
@@ -158,7 +158,7 @@
                    OR LK-COD-RET = 0
              DISPLAY ECR-SSI-01
              ACCEPT ECR-SSI-01
-      *Appel sous-progrmme
+      * Appel sous-progrmme
              CALL 'subprog' USING LK-COD-RET
              IF LK-COD-RET <> 0 THEN
                 DISPLAY 'Identifiant et/ou mot de passe incorrecte' AT
@@ -169,6 +169,9 @@
                 DISPLAY WS-NBR-RST AT LINE 23 COL 39
              END-IF
            END-PERFORM.
+
+       0100-CON-FIN.
+       EXIT.
       
            
 
