@@ -1,12 +1,12 @@
       ******************************************************************
       *                             ENTÊTE                             *
       *                                                                *
-      * ajucli                                                         *
-      *                                                                *
-      *                           TRIGRAMMES                           *
-      *                                                                *
+      *** TRIGRAMMES:                                                  *
       * AJOUT=AJU; CLIENT=CLI; EMAIL=EML; INDICATIF=IND; TELEPHONE=TEL;*
-      * CODE-POSTAL=COP; VILLE=VIL; ADRESSE=ADR;                       *
+      * CODE-POSTAL=COP; VILLE=VIL; ADRESSE=ADR;
+      *                                                                *
+      *** FONCTION DU PROGRAMME:                                       *
+      * IL AJOUTE UN CLIENT DANS LA TABLE 'client'.
       ******************************************************************
      
        IDENTIFICATION DIVISION.
@@ -49,7 +49,7 @@
            PERFORM 0100-DEP-LES-VAR-DEB
               THRU 0100-DEP-LES-VAR-FIN.
 
-      * AJOUT D'UN CLIENT DANS LA TABLE 'public.client'.        
+      * AJOUT D'UN CLIENT DANS LA TABLE 'client'.        
            PERFORM 0200-AJU-CLI-DEB
               THRU 0200-AJU-CLI-FIN.
 
@@ -72,7 +72,7 @@
 
        0200-AJU-CLI-DEB.  
        EXEC SQL
-           INSERT INTO public.client (nom_cli, adresse_cli, ville_cli,
+           INSERT INTO client (nom_cli, adresse_cli, ville_cli,
                                 cp_cli, tel_cli, mail_cli, indic_cli)
            VALUES (:PG-NOM-CLI, :PG-ADR-CLI, :PG-VIL-CLI, :PG-COP-CLI,
                    :PG-TEL-CLI, :PG-EML-CLI, :PG-IND-CLI)
