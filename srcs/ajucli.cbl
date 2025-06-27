@@ -49,7 +49,7 @@
            PERFORM 0100-DEP-LES-VAR-DEB
               THRU 0100-DEP-LES-VAR-FIN.
 
-      * AJOUT D'UN CLIENT DANS LA TABLE 'clients'.        
+      * AJOUT D'UN CLIENT DANS LA TABLE 'public.client'.        
            PERFORM 0200-AJU-CLI-DEB
               THRU 0200-AJU-CLI-FIN.
 
