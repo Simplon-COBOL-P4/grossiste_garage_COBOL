@@ -111,7 +111,8 @@
       *
       ******************************************************************
        PROCEDURE DIVISION USING LK-COD-RET.
-           PERFORM 0100-APL-PRG-DEB THRU 0100-APL-PRG-FIN.
+           PERFORM 0100-APL-PRG-DEB
+              THRU 0100-APL-PRG-FIN.
 
            EXIT PROGRAM.
 
