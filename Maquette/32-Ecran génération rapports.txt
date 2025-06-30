@@ -1,0 +1,27 @@
+************************Ecran de génération de rapports (admin)*****************
+
++------------------------------------------------------------------------------+
+|                               LogiParts Solutions                            |
++------------------------------------------------------------------------------+
+| Connecte en tant que : Admin                                                 |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                            Generation de documents                           |
+|                                                                              |
+|                            1 - Rupture de stock                              |
+|                            2 - Entrées et sorties                            |
+|                            3 - Rapport de clients                            |
+|                            4 - Rapport de fournisseurs                       |
+|                            5 - Rapport de livraisons                         |
+|                            6 - Bons de commandes                             |                                
+|                            7 - Rapport statistiques                          |        
+|                                                                              |
+|                            0 - Retour au menu                                |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                            Entrez votre choix : [_]                          |  
+|                                                                              |
++------------------------------------------------------------------------------+

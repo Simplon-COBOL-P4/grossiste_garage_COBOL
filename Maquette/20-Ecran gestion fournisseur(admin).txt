@@ -1,0 +1,26 @@
+*********************Ecran de gestion des fournisseurs (admin)******************
+
++------------------------------------------------------------------------------+
+|                               LogiParts Solutions                            |
++------------------------------------------------------------------------------+
+| Connecte en tant que : Admin                                                 |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                            Gestion des fournisseurs                          |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                            1 - Ajouter un forunisseur                        |
+|                            2 - Afficher un fournisseur                       |
+|                            3 - Modifier un fournisseur                       |
+|                            4 - Supprimer un fournisseur                      |
+|                                                                              |
+|                                                                              |                                                
+|                            0 - Retour au menu                                |
+|                                                                              |
+|                                                                              |
+|                            Entrez votre choix : [_]                          |  
+|                                                                              |
++------------------------------------------------------------------------------+

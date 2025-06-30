@@ -1,0 +1,26 @@
+*****************************Ecran de connexion BDD*****************************  
+
++------------------------------------------------------------------------------+
+|HIMYC présente :                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|             L      OOOOO  GGGGG  I  PPPPP  AAAAA  RRRRR  TTTTT  SSSSS        |
+|             L      O   O  G      I  P   P  A   A  R   R    T    S            |
+|             L      O   O  G  GG  I  PPPPP  AAAAA  RRRRR    T    SSSSS        |
+|             L      O   O  G   G  I  P      A   A  R  R     T        S        |
+|             LLLLL  OOOOO  GGGGG  I  P      A   A  R   R    T    SSSSS        |
+|                                                                              |
+|                                                                              |
+|            SSSSS  OOOOO  L      U   U  TTTTT  I  OOOOO  N N   N  SSSSS       |
+|            S      O   O  L      U   U    T    I  O   O  N  N  N  S           |
+|            SSSSS  O   O  L      U   U    T    I  O   O  N   N N  SSSSS       |
+|                S  O   O  L      U   U    T    I  O   O  N    NN      S       |
+|            SSSSS  OOOOO  LLLLL  UUUUU    T    I  OOOOO  N     N  SSSSS       |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+| Démarrage du processus de connexion                                          |
+| Connexion à la base de données...                                            |
+| Connexion établie !                                                          |
++------------------------------------------------------------------------------+
