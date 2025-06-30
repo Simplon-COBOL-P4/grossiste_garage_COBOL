@@ -95,7 +95,7 @@
                SELECT id_logs, detail_log, heure_log, date_log, 
                    type_log, logs.id_uti, nom_uti 
                FROM logs
-               INNER JOIN utilisateur
+               LEFT JOIN utilisateur
                ON logs.id_uti = utilisateur.id_uti
            END-EXEC.
        0200-DEC-CUR-FIN.    

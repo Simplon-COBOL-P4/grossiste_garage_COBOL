@@ -1,6 +1,6 @@
       *** TRIGRAMMES:
       * DETAIL=DTL; TYPE=TYP; DEPLACE=DEP; VARIABLE=VAR; INSERTION=INS;
-      * DONNEES=DON; LOG=LG (EXCEPTION);
+      * DONNEES=DON; LOG=LG (EXCEPTION); UTI=UTILISATEUR; ID=IDENTIFIANT
 
       *** FONCTION DU PROGRAMME:
       * IL PREND LES INFORMATIONS CONCERNANT LA CRÉATION D'UN LOG ET
@@ -16,16 +16,19 @@
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
        01 PG-DTL-LG       PIC X(100).
        01 PG-TYP-LG       PIC X(12).
+       01 PG-UTI-ID       PIC 9(10).
        EXEC SQL END DECLARE SECTION END-EXEC.
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
        LINKAGE SECTION.
        01 LK-DTL-LG       PIC X(100).
        01 LK-TYP-LG       PIC X(12).
+       01 LK-UTI-ID       PIC 9(10).
 
 
-       PROCEDURE DIVISION USING LK-DTL-LG
-                                LK-TYP-LG.
+       PROCEDURE DIVISION USING LK-DTL-LG,
+                                LK-TYP-LG,
+                                LK-UTI-ID.
 
       * DEPLACE LES VARIABLES.
            PERFORM 0100-DEP-LES-VAR-DEB
@@ -44,13 +47,21 @@
        0100-DEP-LES-VAR-DEB.
            MOVE LK-DTL-LG   TO PG-DTL-LG.
            MOVE LK-TYP-LG   TO PG-TYP-LG.
+           MOVE LK-UTI-ID   TO PG-UTI-ID.
        0100-DEP-LES-VAR-FIN.
 
        0200-INS-DON-DEB.
+       IF PG-UTI-ID EQUAL 0 THEN
        EXEC SQL
            INSERT INTO logs (detail_log, type_log)
            VALUES (:PG-DTL-LG, :PG-TYP-LG)
-       END-EXEC.
+       END-EXEC
+       ELSE
+       EXEC SQL
+           INSERT INTO logs (detail_log, type_log, id_uti)
+           VALUES (:PG-DTL-LG, :PG-TYP-LG, :PG-UTI-ID)
+       END-EXEC
+       END-IF.
        EXEC SQL COMMIT WORK END-EXEC.
        0200-INS-DON-FIN.
 

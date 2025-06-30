@@ -15,6 +15,7 @@
       *  EFC = Efface
       *  ERR = Erreur
       *  FND = Fond
+      *  ID  = Identifiant
       *  LG  = Log
       *  MDP = Mot De Passe
       *  NBR = Nombre
@@ -57,6 +58,8 @@
 
        77  WS-NOM-UTL           PIC X(20).
        77  WS-MDP-UTL           PIC X(20).
+       01  WS-ID-UTL            PIC 9(10).
+
 
        77  WS-CDR-005           PIC X(13) VALUE 'Identifiant :'.
 
@@ -114,6 +117,7 @@
                    USING
                    WS-NOM-UTL
                    WS-MDP-UTL
+                   WS-ID-UTL
                    LK-COD-RET
                END-CALL
                IF LK-STT-ERR THEN
@@ -128,28 +132,34 @@
                        AT LINE 23 COL 39
 
                    MOVE "CON_ERR" TO WS-TYP-LG
+                   MOVE SPACE TO WS-DTL-LG
                    STRING
-                       " L'utilisateur " WS-NOM-UTL " n'a pas réussi a"
-                       " se connecter." WS-NBR-RST " essais restants."
+                       FUNCTION TRIM(WS-NOM-UTL) SPACE
+                       WS-NBR-RST " restants."
                        DELIMITED BY SIZE 
                        INTO WS-DTL-LG 
                    END-STRING
+                   MOVE 0 TO WS-ID-UTL
                    CALL "crelog"
                        USING
-                       WS-TYP-LG
                        WS-DTL-LG
+                       WS-TYP-LG
+                       WS-ID-UTL
                    END-CALL
                ELSE
                    MOVE "CON_SUC" TO WS-TYP-LG
+                   MOVE SPACE TO WS-DTL-LG
                    STRING
-                       " L'utilisateur " WS-NOM-UTL " s'est connecté."
+                       FUNCTION TRIM(WS-NOM-UTL)
+                       " connecte."
                        DELIMITED BY SIZE 
                        INTO WS-DTL-LG 
                    END-STRING
                    CALL "crelog"
                        USING
-                       WS-TYP-LG
                        WS-DTL-LG
+                       WS-TYP-LG
+                       WS-ID-UTL
                    END-CALL
                END-IF
            END-PERFORM.

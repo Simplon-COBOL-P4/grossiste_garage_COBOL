@@ -11,6 +11,7 @@
       * ecr=ecran, lin=ligne; tab=table det=detail; fnd=fond           *
       * ID=IDENTIFIANT; UTI=UTILISATEUR; heu=heure; jou=jour;          *
       * typ=type; acc=accept; num=nombre; mnu=menu;  cmp=complet       *
+      * AFF=affichage;
       ******************************************************************  
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ecrlog.
@@ -38,6 +39,8 @@
        77  WS-IDX               PIC 9(02).
        77  WS-LIN-CMP           PIC X(78).
        77  WS-ACC               PIC X.
+
+       77  WS-AFF-ID            PIC Z(09)9(01).
 
       *Déclaration de l'écran d'affichage.
        SCREEN SECTION.
@@ -80,20 +83,29 @@
            UNTIL WS-IDX > WS-MAX-LIN
 
                COMPUTE WS-LIN-NUM = WS-LIN-NUM + 1
-
-               STRING
-                   "[" WS-LOG-JOU(WS-IDX) "/" WS-LOG-HEU(WS-IDX) "] "
-                   "L'utilisateur "
-                   WS-UTI-ID(WS-IDX)
-                   " a "
-                   INTO WS-LIN-CMP
-               END-STRING
+               MOVE WS-UTI-ID(WS-IDX) TO WS-AFF-ID
+               MOVE SPACE TO WS-LIN-CMP
+               IF WS-UTI-ID(WS-IDX) NOT EQUAL 0 THEN
+                   STRING
+                       "[" WS-LOG-JOU(WS-IDX) "/" WS-LOG-HEU(WS-IDX)
+                       "] " "Utilisateur "
+                       FUNCTION TRIM (WS-AFF-ID)
+                       INTO WS-LIN-CMP
+                   END-STRING
+               ELSE
+                   STRING
+                       "[" WS-LOG-JOU(WS-IDX) "/" WS-LOG-HEU(WS-IDX) 
+                       "] " "Pas d'utilisateur"
+                       INTO WS-LIN-CMP
+                   END-STRING
+               END-IF
 
                DISPLAY WS-LIN-CMP AT LINE WS-LIN-NUM COLUMN 02
 
                COMPUTE WS-LIN-NUM = WS-LIN-NUM + 1
            
                DISPLAY WS-LOG-DET(WS-IDX) AT LINE WS-LIN-NUM COLUMN 24
+               DISPLAY WS-LOG-TYP(WS-IDX) AT LINE WS-LIN-NUM COLUMN 2
 
            END-PERFORM.
 

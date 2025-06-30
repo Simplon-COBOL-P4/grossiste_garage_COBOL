@@ -1,6 +1,7 @@
       *** TRIGRAMMES:
       * MOT DE PASSE=MDP; ROLE=RLE; UTILISATEUR=UTL; LECTURE=LET; 
-      * DEPLACE=DEP; VARIABLE=VAR; RETOURNE=RET; DONNEES=DON
+      * DEPLACE=DEP; VARIABLE=VAR; RETOURNE=RET; DONNEES=DON;
+      * IDENTIFIANT=ID;
        
       *** FONCTION DU PROGRAMME:
       * IL RETOURNE TOUTES LES DONNÉES DE L'UTILISATEUR DANS LA
@@ -17,6 +18,7 @@
        01 PG-NOM-UTL      PIC X(20).
        01 PG-MDP-UTL      PIC X(20).
        01 PG-RLE-UTL      PIC X(14).
+       01 PG-ID-UTL       PIC 9(10).
        EXEC SQL END DECLARE SECTION END-EXEC.
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
@@ -24,9 +26,13 @@
        01 LK-NOM-UTL      PIC X(20).
        01 LK-MDP-UTL      PIC X(20).
        01 LK-RLE-UTL      PIC X(14).
+       01 LK-ID-UTL       PIC 9(10).
       
 
-       PROCEDURE DIVISION USING LK-NOM-UTL LK-MDP-UTL LK-RLE-UTL.
+       PROCEDURE DIVISION USING LK-NOM-UTL,
+                                LK-MDP-UTL,
+                                LK-RLE-UTL,
+                                LK-ID-UTL.
 
       * RETOURNE LES DONNEES.
            PERFORM 0100-RET-DON-DEB
@@ -43,15 +49,23 @@
       ***************************PARAGRAPHES****************************  
      
        0100-RET-DON-DEB.
-       EXEC SQL 
-           SELECT nom_uti, mdp_uti, role_uti 
-           INTO :PG-NOM-UTL, :PG-MDP-UTL, :PG-RLE-UTL
+           MOVE LK-NOM-UTL TO PG-NOM-UTL.
+           MOVE LK-MDP-UTL TO PG-MDP-UTL.
+       EXEC SQL
+           SELECT id_uti, nom_uti, mdp_uti, role_uti
+      * 2 variables poubelles qui servent uniquement pour pouvoir faire
+      * la requête SQL.
+           INTO :PG-ID-UTL, :PG-NOM-UTL , :PG-MDP-UTL, :PG-RLE-UTL
            FROM utilisateur
+           WHERE nom_uti = :PG-NOM-UTL
+           and mdp_uti = encode(digest(:PG-MDP-UTL, 'sha256'), 
+           'hex')
        END-EXEC.
        EXEC SQL COMMIT WORK END-EXEC.
        0100-RET-DON-FIN.
 
        0200-DEP-LES-VAR-DEB.
+           MOVE PG-ID-UTL    TO LK-ID-UTL.
            MOVE PG-NOM-UTL   TO LK-NOM-UTL.
            MOVE PG-MDP-UTL   TO LK-MDP-UTL.
            MOVE PG-RLE-UTL   TO LK-RLE-UTL.
