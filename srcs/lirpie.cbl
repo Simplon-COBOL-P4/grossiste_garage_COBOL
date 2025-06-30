@@ -6,8 +6,10 @@
       *                                                                *
       *                           TRIGRAMMES                           *
       *                                                                *
-      * LIRE=LIR; PIE=PIECE; CUR=curseur; VAR=variable                 *
-      *                                                                *
+      * LIRE=LIR; PIE=PIECE; CUR=curseur; VAR=variable; IDENTIFIANT=IDN*
+      * QUA=quantité; SEU=seuil; FOU=fournisseur; TEM=temporaire;      *
+      * AJO=ajout; OFS=offset; SEN=sens; IDX=index; PAG=page           *
+      * TAB=tableau; ARG=argument
       ******************************************************************
        
        IDENTIFICATION DIVISION.
@@ -20,76 +22,58 @@
        WORKING-STORAGE SECTION.
 
        EXEC SQL INCLUDE SQLCA END-EXEC.
-       01 WS-SENS-TRI            PIC 9(01).
-           88 WS-ASCENDANT                 VALUE 0.
-           88 WS-DESCENDANT                VALUE 1.
+       01 WS-SEN-TRI        PIC 9(01).
        
-       01 WS-TRI                 PIC 9(01).
-           88 WS-TRI-NOM                   VALUE 0.
-           88 WS-TRI-QUANTITE              VALUE 1.
-           88 WS-TRI-FOURNISSEUR           VALUE 2.
+       01 WS-TRI            PIC 9(01).
 
       *pour pouvoir faire le order by dans la requête sql
        01 WS-TRI-SQL PIC X(7).
-       01 WS-SENS-TRI-SQL PIC X(5).  
-
-       01 WS-TABLEAU. 
-           05 WS-TABLEAU-ARGUMENT OCCURS 25 TIMES. *> Max quantité.
-              10 WS-IDENTIFIANT       PIC 9(10).
-              10 WS-NOM               PIC X(80).
-              10 WS-T-QUANTITE        PIC 9(10).
-              10 WS-SEUIL             PIC 9(10).
-              10 WS-NOM-FOURNISSEUR   PIC X(80).
+       01 WS-SEN-TRI-SQL PIC X(5).  
        
-       01 WS-IDENTIFIANT-TEMPO        PIC 9(10).
-       01 WS-NOM-TEMPO                PIC X(80).
-       01 WS-T-QUANTITE-TEMPO         PIC 9(10).
-       01 WS-SEUIL-TEMPO              PIC 9(10).
-       01 WS-NOM-FOURNISSEUR-TEMPO    PIC X(80).
+       01 WS-IDN-TEM        PIC 9(10).
+       01 WS-NOM-TEM        PIC X(80).
+       01 WS-QUA-TEM        PIC 9(10).
+       01 WS-SEU-TEM        PIC 9(10).
+       01 WS-NOM-FOU-TEM    PIC X(80).
 
 
-       01 WS-QUANTITE            PIC 9(02). *> Min 1 - Max 25.
+       01 WS-QUA            PIC 9(02). *> Min 1 - Max 25.
 
       *le nombre d'élément ajouter dans le tableau
-       01 WS-ELT-AJOUT           PIC 9(02) VALUE 0.
+       01 WS-ELT-AJO        PIC 9(02) VALUE 0.
 
       * l'offset pour la requête SQL
-       01 WS-OFFSET              PIC 9(03).
+       01 WS-OFS            PIC 9(03).
 
-       01 WS-INDEX PIC 9(2).
+       01 WS-IDX            PIC 9(2) VALUE 0.
 
 
        LINKAGE SECTION.
       * Arguments d'entrée.
-       01 LK-TRI                 PIC 9(01).
-           88 LK-TRI-NOM                   VALUE 0.
-           88 LK-TRI-QUANTITE              VALUE 1.
-           88 LK-TRI-FOURNISSEUR           VALUE 2.
+       01 LK-TRI            PIC 9(01).
        
-       01 LK-SENS-TRI            PIC 9(01).
-           88 LK-ASCENDANT                 VALUE 0.
-           88 LK-DESCENDANT                VALUE 1.
+       01 LK-SEN-TRI        PIC 9(01).
 
-       01 LK-QUANTITE            PIC 9(02). *> Min 1 - Max 25.
+       01 LK-QUA            PIC 9(02). *> Min 1 - Max 25.
 
-       01 LK-PAGE-P              PIC 9(10). *> Min 0 - Max 1,000,000,000.
+       01 LK-PAG            PIC 9(10). *> Min 0 - Max 1,000,000,000.
 
       * Arguments de sortie.
-       01 LK-TABLEAU. 
-           05 LK-TABLEAU-ARGUMENT OCCURS 25 TIMES. *> Max quantité.
-              10 LK-IDENTIFIANT       PIC 9(10).
-              10 LK-NOM               PIC X(80).
-              10 LK-T-QUANTITE        PIC 9(10).
-              10 LK-SEUIL             PIC 9(10).
-              10 LK-NOM-FOURNISSEUR   PIC X(80).
+       01 LK-TAB. 
+           05 LK-TAB-ARG OCCURS 25 TIMES. *> Max quantité.
+              10 LK-IDN     PIC 9(10).
+              10 LK-NOM     PIC X(80).
+              10 LK-T-QUA   PIC 9(10).
+              10 LK-SEU     PIC 9(10).
+              10 LK-NOM-FOU PIC X(80).
 
        
 
        PROCEDURE DIVISION USING LK-TRI, *>colonne de tri
-                                LK-SENS-TRI, *> sens de tri
-                                LK-QUANTITE, *>le nombre d'élément 
-                                LK-PAGE-P, *>une page est de taille 15,
-                                LK-TABLEAU.
+                                LK-SEN-TRI, *> sens de tri
+                                LK-QUA, *>le nombre d'élément 
+                                LK-PAG, *>une page est de taille 15,
+                                LK-TAB.
 
       
            PERFORM 0100-INI-VAR-DEB
@@ -97,31 +81,22 @@
 
            PERFORM 0200-CUR-DEB
               THRU 0200-CUR-FIN.
-
-
-           DISPLAY "à la fin". 
-           DISPLAY WS-ELT-AJOUT.
-
-           DISPLAY "on affiche le tableau"
-           PERFORM VARYING WS-INDEX from 1 by 1 UNTIL WS-INDEX GREATER
-           THAN LK-QUANTITE 
-           DISPLAY "affichage inutile"
-           DISPLAY "l'index: " WS-INDEX
-           DISPLAY  LK-IDENTIFIANT(WS-INDEX)   
-           DISPLAY LK-NOM(WS-INDEX)              
-           DISPLAY LK-T-QUANTITE(WS-INDEX)         
-           DISPLAY LK-SEUIL(WS-INDEX)            
-           DISPLAY LK-NOM-FOURNISSEUR(WS-INDEX)   
-           END-PERFORM.
            
-
            EXIT PROGRAM.
 
 
        0100-INI-VAR-DEB.
-           MOVE LK-QUANTITE TO WS-QUANTITE.
-           MULTIPLY LK-PAGE-P BY 15 GIVING WS-OFFSET.
 
+           
+      * Une page faisant 15 pieces, on multiplie le numéro de la page
+      * par 15.
+           MULTIPLY LK-PAG BY 15 GIVING WS-OFS.
+
+      * Comme on ne peux pas utiliser les variables de la linkage 
+      * section dans une requête SQL, on les move dans la 
+      * working-storage section
+           MOVE LK-QUA TO WS-QUA.
+              
       * Pour le order by.
            IF WS-TRI EQUAL 0
               MOVE "nom_pie" to WS-TRI-SQL
@@ -131,16 +106,16 @@
               MOVE "nom_fou" TO WS-TRI-SQL
            END-IF. 
 
-           IF LK-SENS-TRI EQUAL 0 
-              MOVE "ASC" TO WS-SENS-TRI-SQL
+           IF LK-SEN-TRI EQUAL 0 
+              MOVE "ASC" TO WS-SEN-TRI-SQL
            ELSE
-              MOVE "DESC" TO WS-SENS-TRI-SQL
+              MOVE "DESC" TO WS-SEN-TRI-SQL
            END-IF.
 
       * On initialise la taille du tableau.
-           MOVE 0 TO WS-QUANTITE.
+           MOVE 0 TO WS-QUA.
            MOVE LK-TRI TO WS-TRI.
-           MOVE LK-SENS-TRI TO WS-SENS-TRI.
+           MOVE LK-SEN-TRI TO WS-SEN-TRI.
 
        0100-INI-VAR-FIN.
            EXIT.
@@ -150,26 +125,22 @@
        0200-CUR-DEB.
 
       * On déclare le curseur.
-           IF LK-SENS-TRI EQUAL 1
+           IF LK-SEN-TRI EQUAL 1
               EXEC SQL
-                  DECLARE curseur CURSOR FOR
+                  DECLARE curseur CURSOR FOR 
                   SELECT id_pie, nom_pie, qt_pie, seuil_pie, nom_fou
-                  FROM Piece JOIN Fournisseur on Piece.id_fou = 
+                  FROM Piece INNER JOIN Fournisseur on Piece.id_fou = 
                   Fournisseur.id_fou
                   ORDER BY :WS-TRI-SQL "DESC"
-      *            LIMIT :WS-QUANTITE
-      *           LIMIT :WS-QUANTITE OFFSET :WS-OFFSET
                   FOR READ ONLY
               END-EXEC
            ELSE 
               EXEC SQL
                   DECLARE curseur CURSOR FOR
                   SELECT id_pie, nom_pie, qt_pie, seuil_pie, nom_fou
-                  FROM Piece JOIN Fournisseur on Piece.id_fou = 
+                  FROM Piece INNER JOIN Fournisseur on Piece.id_fou = 
                   Fournisseur.id_fou
                   ORDER BY :WS-TRI-SQL "ASC"
-      *            LIMIT :WS-QUANTITE
-      *           LIMIT :WS-QUANTITE OFFSET :WS-OFFSET
                   FOR READ ONLY
               END-EXEC
            END-IF.
@@ -183,29 +154,28 @@
       * On lit le curseur tant que le sqlcode n'est pas à 100 ou que le
       * nombre d'élément à ajouter est atteint.
                PERFORM UNTIL SQLCODE = 100 
-               OR WS-ELT-AJOUT EQUAL LK-QUANTITE
+               OR WS-ELT-AJO EQUAL LK-QUA
                  EXEC SQL
-                    FETCH curseur into :WS-IDENTIFIANT-TEMPO, 
-                    :WS-NOM-TEMPO, 
-                    :WS-T-QUANTITE-TEMPO, 
-                    :WS-SEUIL-TEMPO,
-                    :WS-NOM-FOURNISSEUR-TEMPO
+                    FETCH curseur into :WS-IDN-TEM, 
+                    :WS-NOM-TEM, 
+                    :WS-QUA-TEM, 
+                    :WS-SEU-TEM,
+                    :WS-NOM-FOU-TEM
                  END-EXEC
+
+                 ADD 1 TO WS-IDX
+      * Comme je n'arrive pas à mettre de LIMIT et OFFSET dans la 
+      * requête SQL, je les implémente coté cobol.
+                 IF WS-IDX EQUAL WS-OFS OR GREATER THAN WS-OFS
                         
-                  ADD 1 TO WS-ELT-AJOUT
-                  MOVE WS-IDENTIFIANT-TEMPO 
-                  TO LK-IDENTIFIANT(WS-ELT-AJOUT) 
-                  DISPLAY "identifiant: " WS-IDENTIFIANT-TEMPO 
-                  MOVE WS-NOM-TEMPO TO LK-NOM(WS-ELT-AJOUT)
-                  DISPLAY "nom tempo: " WS-NOM-TEMPO
-                  MOVE WS-T-QUANTITE-TEMPO 
-                  TO LK-T-QUANTITE(WS-ELT-AJOUT)
-                  DISPLAY "quantite-t: " WS-T-QUANTITE-TEMPO
-                  MOVE WS-SEUIL-TEMPO TO LK-SEUIL(WS-ELT-AJOUT)
-                  DISPLAY "seuil: " WS-SEUIL-TEMPO
-                  MOVE WS-NOM-FOURNISSEUR-TEMPO 
-                  TO LK-NOM-FOURNISSEUR(WS-ELT-AJOUT)
-                  DISPLAY "nom-fou: " WS-NOM-FOURNISSEUR-TEMPO
+                  ADD 1 TO WS-ELT-AJO
+
+                  MOVE WS-IDN-TEM     TO LK-IDN(WS-ELT-AJO)  
+                  MOVE WS-NOM-TEM     TO LK-NOM(WS-ELT-AJO)
+                  MOVE WS-QUA-TEM     TO LK-T-QUA(WS-ELT-AJO)
+                  MOVE WS-SEU-TEM     TO LK-SEU(WS-ELT-AJO)
+                  MOVE WS-NOM-FOU-TEM TO LK-NOM-FOU(WS-ELT-AJO)
+                 END-IF
                END-PERFORM.
 
       * On ferme le curseur.
@@ -213,6 +183,5 @@
                  CLOSE curseur
               END-EXEC.
 
-           DISPLAY  "fin du paragraphe 2".
        0200-CUR-FIN.
            EXIT.
