@@ -63,7 +63,7 @@
            05 LK-TAB-ARG OCCURS 25 TIMES. *> Max quantité.
               10 LK-IDN     PIC 9(10).
               10 LK-NOM     PIC X(80).
-              10 LK-T-QUA   PIC 9(10).
+              10 LK-TAB-QUA   PIC 9(10).
               10 LK-SEU     PIC 9(10).
               10 LK-NOM-FOU PIC X(80).
 
