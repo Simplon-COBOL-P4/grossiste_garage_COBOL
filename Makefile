@@ -24,13 +24,21 @@ PRECOMPILED = $(patsubst $(SRC_FOLDER)%.cbl, $(PRECOMPILED_FOLDER)%.cob, $(SRC))
 # Librairies partagées (exemple : objects/foo.so).
 LIBS = $(patsubst $(PRECOMPILED_FOLDER)%.cob, $(LIBS_FOLDER)%.so, $(PRECOMPILED))
 
+# Crée un espace sous forme de variable pour le subst
+space := $(subst ,, )
+# Récupère tous les dossiers dans le dossier libs
+RUN_PATHS := $(shell find $(LIBS_FOLDER) -type d)
+# exporte les chemins vers tous les sous dossiers de libs séparés par des ":"
+export COB_LIBRARY_PATH := $(subst $(space),:,$(RUN_PATHS))
+
 # Exporte le chemin vers les librairies locales, pour permettre le linkage au runtime.
-export COB_LIBRARY_PATH := libs
+#export COB_LIBRARY_PATH := libs
 # Exporte le chemin vers sqlca, il ne peut pas simplement être mis dans les Copybooks, étant donné qu'il s'appelle .cbl et non .cpy, il serait récupéré et compilé par le Makefile.
 export COBCPY := sqlca
 
 # Règle principale, par défaut.
 all: $(BIN) $(LIBS)
+	@echo $(COB_LIBRARY_PATH)
 	./$(BIN)
 
 # Empêche le makefile de considérer les .cob comme des fichiers intermédiaires, comme ils sont parfois utiles pour débug.
