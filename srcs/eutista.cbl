@@ -25,41 +25,12 @@
        01 LK-MSG              PIC X(40).
 
        SCREEN SECTION.
+       COPY ecrprn.
+
       * l'écran de l’administrateur avec le menu
        01 S-E-MNU-UTI.
-           05 BLANK SCREEN.
-           05 LINE 01 COLUMN 01 VALUE "+------------------------------".
-           05 LINE 01 COLUMN 30 VALUE "-------------------------------".
-           05 LINE 01 COLUMN 61 VALUE "-------------------+".
-           05 LINE 02 COLUMN 01 VALUE "|".
-           05 LINE 02 COLUMN 33 VALUE "LogiParts Solutions".
-           05 LINE 02 COLUMN 80 VALUE "|".
-           05 LINE 03 COLUMN 01 VALUE "+------------------------------".
-           05 LINE 03 COLUMN 30 VALUE "-------------------------------".
-           05 LINE 03 COLUMN 61 VALUE "-------------------+".
            05 LINE 04 COLUMN 01 VALUE "| Connecte en tant que : ".
            05 LINE 04 COLUMN 26 VALUE "Utilisateur".
-           05 LINE 04 COLUMN 80 VALUE "|".
-           05 LINE 05 COLUMN 80 VALUE "|".
-           05 LINE 06 COLUMN 80 VALUE "|".
-           05 LINE 07 COLUMN 80 VALUE "|".
-           05 LINE 08 COLUMN 80 VALUE "|".
-           05 LINE 09 COLUMN 80 VALUE "|".
-           05 LINE 10 COLUMN 80 VALUE "|".
-           05 LINE 11 COLUMN 80 VALUE "|".
-           05 LINE 12 COLUMN 80 VALUE "|".
-           05 LINE 13 COLUMN 80 VALUE "|".
-           05 LINE 14 COLUMN 80 VALUE "|".
-           05 LINE 15 COLUMN 80 VALUE "|".
-           05 LINE 16 COLUMN 80 VALUE "|".
-           05 LINE 17 COLUMN 80 VALUE "|".
-           05 LINE 18 COLUMN 80 VALUE "|".
-           05 LINE 19 COLUMN 80 VALUE "|".
-           05 LINE 20 COLUMN 80 VALUE "|".
-           05 LINE 21 COLUMN 80 VALUE "|".
-           05 LINE 22 COLUMN 80 VALUE "|".
-           05 LINE 23 COLUMN 80 VALUE "|".
-           05 LINE 24 COLUMN 80 VALUE "|".
           
            05 LINE 12 COLUMN 30 VALUE "1 - Gestion du stock".
            05 LINE 13 COLUMN 30 VALUE "2 - Gestion des clients".
@@ -73,30 +44,6 @@
            05 LINE 21 COLUMN 54 VALUE "]".
            05 LINE 21 COLUMN 53 PIC X(01) TO   WS-TMP-CHX.
            05 LINE 22 COLUMN 30 PIC X(40) FROM WS-TMP-MSG.
-           05 LINE 04 COLUMN 01 VALUE "|".
-           05 LINE 05 COLUMN 01 VALUE "|".
-           05 LINE 06 COLUMN 01 VALUE "|".
-           05 LINE 07 COLUMN 01 VALUE "|".
-           05 LINE 08 COLUMN 01 VALUE "|".
-           05 LINE 09 COLUMN 01 VALUE "|".
-           05 LINE 10 COLUMN 01 VALUE "|".
-           05 LINE 11 COLUMN 01 VALUE "|".
-           05 LINE 12 COLUMN 01 VALUE "|".
-           05 LINE 13 COLUMN 01 VALUE "|".
-           05 LINE 14 COLUMN 01 VALUE "|".
-           05 LINE 15 COLUMN 01 VALUE "|".
-           05 LINE 16 COLUMN 01 VALUE "|".
-           05 LINE 17 COLUMN 01 VALUE "|".
-           05 LINE 18 COLUMN 01 VALUE "|".
-           05 LINE 19 COLUMN 01 VALUE "|".
-           05 LINE 20 COLUMN 01 VALUE "|".
-           05 LINE 21 COLUMN 01 VALUE "|".
-           05 LINE 22 COLUMN 01 VALUE "|".
-           05 LINE 23 COLUMN 01 VALUE "|".
-           05 LINE 24 COLUMN 01 VALUE "|".
-           05 LINE 24 COLUMN 01 VALUE "+------------------------------".
-           05 LINE 24 COLUMN 30 VALUE "-------------------------------".
-           05 LINE 24 COLUMN 61 VALUE "-------------------+".
 
       ******************************************************************       
        PROCEDURE DIVISION USING LK-CHX LK-MSG.
@@ -117,6 +64,7 @@
            PERFORM UNTIL WS-TMP-CHX = 0
                MOVE SPACES TO WS-TMP-MSG
 
+               DISPLAY S-FND-ECR
                DISPLAY S-E-MNU-UTI
                ACCEPT  S-E-MNU-UTI
 

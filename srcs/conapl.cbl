@@ -10,10 +10,12 @@
       *  CDR = Cadre
       *  COD = Code
       *  CON = Connexion
+      *  DTL = Detail
       *  ECR = Ecran
       *  EFC = Efface
       *  ERR = Erreur
       *  FND = Fond
+      *  LG  = Log
       *  MDP = Mot De Passe
       *  NBR = Nombre
       *  NOM = nom
@@ -22,7 +24,9 @@
       *  SSI = Saisie
       *  STT = Statut
       *  STD = Standard
+      *  SUC = Succes
       *  TXT = Test
+      *  TYP = Type
       *  UTL = Utilisateur
 
 
@@ -48,15 +52,18 @@
        77  WS-NBR-CON           PIC 9(02).
        77  WS-NBR-RST           PIC 9(02).
 
-       77  S-NOM-UTL            PIC X(20).
-       77  S-MDP-UTL            PIC X(20).
+       01  WS-DTL-LG            PIC X(100).
+       01  WS-TYP-LG            PIC X(12).
 
-       77  S-CDR-005            PIC X(13) VALUE 'Identifiant :'.
+       77  WS-NOM-UTL           PIC X(20).
+       77  WS-MDP-UTL           PIC X(20).
 
-       77  S-CDR-006            PIC X(01) VALUE '['.
-       77  S-CDR-007            PIC X(01) VALUE ']'.
+       77  WS-CDR-005           PIC X(13) VALUE 'Identifiant :'.
 
-       77  S-CDR-008            PIC X(14) VALUE 'Mot de passe :'.
+       77  WS-CDR-006           PIC X(01) VALUE '['.
+       77  WS-CDR-007           PIC X(01) VALUE ']'.
+
+       77  WS-CDR-008           PIC X(14) VALUE 'Mot de passe :'.
 
        LINKAGE SECTION.
        01  LK-COD-RET           PIC 9(01).
@@ -68,13 +75,13 @@
        COPY ecrprn.
 
        01  ECR-SSI-01.
-           05  LINE 7  COL 34  PIC X(13) FROM S-CDR-005.
-           05  LINE 9  COL 29  PIC X(01) FROM S-CDR-006.
-           05  LINE 9  COL 50  PIC X(01) FROM S-CDR-007.
-           05  LINE 13 COL 29  PIC X(01) FROM S-CDR-006.
-           05  LINE 13 COL 50  PIC X(01) FROM S-CDR-007.
-           05  LINE 9  COL 30  PIC X(20) TO S-NOM-UTL AUTO.
-           05  LINE 13 COL 30  PIC X(20) TO S-MDP-UTL SECURE AUTO
+           05  LINE 7  COL 34  PIC X(13) FROM WS-CDR-005.
+           05  LINE 9  COL 29  PIC X(01) FROM WS-CDR-006.
+           05  LINE 9  COL 50  PIC X(01) FROM WS-CDR-007.
+           05  LINE 13 COL 29  PIC X(01) FROM WS-CDR-006.
+           05  LINE 13 COL 50  PIC X(01) FROM WS-CDR-007.
+           05  LINE 9  COL 30  PIC X(20) TO WS-NOM-UTL AUTO.
+           05  LINE 13 COL 30  PIC X(20) TO WS-MDP-UTL SECURE AUTO
                FOREGROUND-COLOR WS-COL-TXT
                BACKGROUND-COLOR WS-COL-FND.
 
@@ -100,23 +107,51 @@
            DISPLAY 'Nombre de tentative restant: 03' AT LINE 23 COL 10
            PERFORM VARYING WS-NBR-CON FROM 1 BY 1 UNTIL WS-NBR-CON > 3 
                    OR NOT LK-STT-ERR
-             DISPLAY ECR-SSI-01
-             ACCEPT ECR-SSI-01
+               DISPLAY ECR-SSI-01
+               ACCEPT ECR-SSI-01
       * Appel sous-progrmme
-             CALL 'accutl' 
-                 USING
-                 S-NOM-UTL
-                 S-MDP-UTL
-                 LK-COD-RET
-             END-CALL
-             IF LK-STT-ERR THEN
-                DISPLAY 'Identifiant et/ou mot de passe incorrecte' AT
-                                                          LINE 22 COL 10
-                DISPLAY 'Nombre de tentative restant: ' AT LINE 23 COL
-                                                                      10
-                COMPUTE WS-NBR-RST = 3 - WS-NBR-CON
-                DISPLAY WS-NBR-RST AT LINE 23 COL 39
-             END-IF
+               CALL 'accutl' 
+                   USING
+                   WS-NOM-UTL
+                   WS-MDP-UTL
+                   LK-COD-RET
+               END-CALL
+               IF LK-STT-ERR THEN
+                   DISPLAY 'Identifiant et/ou mot de passe incorrecte'
+                       AT LINE 22 COL 10
+                   DISPLAY 'Nombre de tentative restant: ' 
+                       AT LINE 23 COL 10
+
+                   COMPUTE WS-NBR-RST = 3 - WS-NBR-CON
+
+                   DISPLAY WS-NBR-RST 
+                       AT LINE 23 COL 39
+
+                   MOVE "CON_ERR" TO WS-TYP-LG
+                   STRING
+                       " L'utilisateur " WS-NOM-UTL " n'a pas réussi a"
+                       " se connecter." WS-NBR-RST " essais restants."
+                       DELIMITED BY SIZE 
+                       INTO WS-DTL-LG 
+                   END-STRING
+                   CALL "crelog"
+                       USING
+                       WS-TYP-LG
+                       WS-DTL-LG
+                   END-CALL
+               ELSE
+                   MOVE "CON_SUC" TO WS-TYP-LG
+                   STRING
+                       " L'utilisateur " WS-NOM-UTL " s'est connecté."
+                       DELIMITED BY SIZE 
+                       INTO WS-DTL-LG 
+                   END-STRING
+                   CALL "crelog"
+                       USING
+                       WS-TYP-LG
+                       WS-DTL-LG
+                   END-CALL
+               END-IF
            END-PERFORM.
 
        0100-CON-FIN.
