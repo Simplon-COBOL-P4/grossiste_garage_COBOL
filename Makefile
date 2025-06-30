@@ -27,9 +27,10 @@ LIBS = $(patsubst $(PRECOMPILED_FOLDER)%.cob, $(LIBS_FOLDER)%.so, $(PRECOMPILED)
 # Crée un espace sous forme de variable pour le subst
 space := $(subst ,, )
 # Récupère tous les dossiers dans le dossier libs
-RUN_PATHS := $(shell find $(LIBS_FOLDER) -type d)
+SRC_PATHS := $(shell find $(SRC_FOLDER) -type d)
+RUN_PATHS = $(patsubst $(SRC_FOLDER)%, $(LIBS_FOLDER)%, $(SRC_PATHS))
 # exporte les chemins vers tous les sous dossiers de libs séparés par des ":"
-export COB_LIBRARY_PATH := $(subst $(space),:,$(RUN_PATHS))
+export COB_LIBRARY_PATH := $(subst $(space)$(space),:,$(RUN_PATHS))
 
 # Exporte le chemin vers les librairies locales, pour permettre le linkage au runtime.
 #export COB_LIBRARY_PATH := libs
