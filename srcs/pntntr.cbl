@@ -62,7 +62,7 @@
                        WS-MSG
                    END-CALL
                WHEN WS-STT-STD
-                   CALL "eutista"
+                   CALL "ecrsta"
                        USING
                        WS-CHX
                        WS-MSG

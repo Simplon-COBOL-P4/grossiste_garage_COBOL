@@ -7,7 +7,7 @@
       * UTILISATEUR = UTI ; STANDARD = STA                             *
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. eutista.
+       PROGRAM-ID. ecrsta.
        AUTHOR. Yassine.
        DATE-WRITTEN. 26-06-2025 (fr).
 
