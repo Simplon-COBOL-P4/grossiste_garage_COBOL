@@ -10,7 +10,7 @@
        
        IDENTIFICATION DIVISION.
        PROGRAM-ID. supcli.
-       AUTHOR.Anaisktl .
+       AUTHOR. Anaisktl.
        DATE-WRITTEN. 27-06-2025 (fr).
 
        DATA DIVISION.
