@@ -11,7 +11,7 @@
      
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ajucli.
-       AUTHOR.Anaisktl.
+       AUTHOR. Anaisktl.
        DATE-WRITTEN. 26-06-2025 (fr).
 
        DATA DIVISION.
@@ -61,12 +61,12 @@
       ******************************************************************    
 
        0100-DEP-LES-VAR-DEB.
-           MOVE LK-NOM-CLI    TO PG-NOM-CLI
-           MOVE LK-EML-CLI    TO PG-EML-CLI
-           MOVE LK-IND-CLI    TO PG-IND-CLI
-           MOVE LK-TEL-CLI    TO PG-TEL-CLI
-           MOVE LK-COP-CLI    TO PG-COP-CLI
-           MOVE LK-VIL-CLI    TO PG-VIL-CLI
+           MOVE LK-NOM-CLI    TO PG-NOM-CLI.
+           MOVE LK-EML-CLI    TO PG-EML-CLI.
+           MOVE LK-IND-CLI    TO PG-IND-CLI.
+           MOVE LK-TEL-CLI    TO PG-TEL-CLI.
+           MOVE LK-COP-CLI    TO PG-COP-CLI.
+           MOVE LK-VIL-CLI    TO PG-VIL-CLI.
            MOVE LK-ADR-CLI    TO PG-ADR-CLI.
        0100-DEP-LES-VAR-FIN.
 
@@ -79,3 +79,4 @@
        END-EXEC.
        EXEC SQL COMMIT WORK END-EXEC.
        0200-AJU-CLI-FIN.
+       
