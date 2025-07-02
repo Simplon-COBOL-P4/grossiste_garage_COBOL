@@ -12,7 +12,7 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. verema IS INITIAL.
        AUTHOR. lucas.
-       DATE-WRITTEN. 01/07/2025 (fr).
+       DATE-WRITTEN. 01-07-2025 (fr).
 
        DATA DIVISION.
 
