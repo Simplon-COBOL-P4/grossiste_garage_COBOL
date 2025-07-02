@@ -21,20 +21,23 @@
 
        WORKING-STORAGE SECTION.
 
-       EXEC SQL INCLUDE SQLCA END-EXEC.
-       01 WS-SEN-TRI        PIC 9(01).
        
-       01 WS-TRI            PIC 9(01).
-
+       EXEC SQL BEGIN DECLARE SECTION END-EXEC.
+       01 PG-SEN-TRI        PIC 9(01).
+       01 PG-IDN-TEM        PIC 9(10).
+       01 PG-NOM-TEM        PIC X(80).
+       01 PG-QUA-TEM        PIC 9(10).
+       01 PG-SEU-TEM        PIC 9(10).
+       01 PG-NOM-FOU-TEM    PIC X(80).
       *pour pouvoir faire le order by dans la requête sql
-       01 WS-TRI-SQL PIC X(7).
-       01 WS-SEN-TRI-SQL PIC X(5).  
+       01 PG-TRI-SQL PIC X(7).
+       01 PG-SEN-TRI-SQL PIC X(5).  
+       EXEC SQL END DECLARE SECTION END-EXEC.
+       EXEC SQL INCLUDE SQLCA END-EXEC.
+
        
-       01 WS-IDN-TEM        PIC 9(10).
-       01 WS-NOM-TEM        PIC X(80).
-       01 WS-QUA-TEM        PIC 9(10).
-       01 WS-SEU-TEM        PIC 9(10).
-       01 WS-NOM-FOU-TEM    PIC X(80).
+       
+       01 WS-TRI            PIC 9(01). 
 
 
        01 WS-QUA            PIC 9(02). *> Min 1 - Max 25.
@@ -63,7 +66,7 @@
            05 LK-TAB-ARG OCCURS 25 TIMES. *> Max quantité.
               10 LK-IDN     PIC 9(10).
               10 LK-NOM     PIC X(80).
-              10 LK-TAB-QUA   PIC 9(10).
+              10 LK-TAB-QUA PIC 9(10).
               10 LK-SEU     PIC 9(10).
               10 LK-NOM-FOU PIC X(80).
 
@@ -88,9 +91,9 @@
        0100-INI-VAR-DEB.
 
            
-      * Une page faisant 15 pieces, on multiplie le numéro de la page
-      * par 15.
-           MULTIPLY LK-PAG BY 15 GIVING WS-OFS.
+      * Une page faisant LK-QUA pieces, on multiplie le numéro de la 
+      * page par LK-QUA.
+           MULTIPLY LK-PAG BY LK-QUA GIVING WS-OFS.
 
       * Comme on ne peux pas utiliser les variables de la linkage 
       * section dans une requête SQL, on les move dans la 
@@ -99,23 +102,23 @@
               
       * Pour le order by.
            IF WS-TRI EQUAL 0
-              MOVE "nom_pie" to WS-TRI-SQL
+              MOVE "nom_pie" to PG-TRI-SQL
            ELSE IF WS-TRI EQUAL 1 
-              MOVE "qte_pie" TO WS-TRI-SQL
+              MOVE "qte_pie" TO PG-TRI-SQL
            ELSE 
-              MOVE "nom_fou" TO WS-TRI-SQL
+              MOVE "nom_fou" TO PG-TRI-SQL
            END-IF. 
 
            IF LK-SEN-TRI EQUAL 0 
-              MOVE "ASC" TO WS-SEN-TRI-SQL
+              MOVE "ASC" TO PG-SEN-TRI-SQL
            ELSE
-              MOVE "DESC" TO WS-SEN-TRI-SQL
+              MOVE "DESC" TO PG-SEN-TRI-SQL
            END-IF.
 
       * On initialise la taille du tableau.
            MOVE 0 TO WS-QUA.
            MOVE LK-TRI TO WS-TRI.
-           MOVE LK-SEN-TRI TO WS-SEN-TRI.
+           MOVE LK-SEN-TRI TO PG-SEN-TRI.
 
        0100-INI-VAR-FIN.
            EXIT.
@@ -131,7 +134,7 @@
                   SELECT id_pie, nom_pie, qt_pie, seuil_pie, nom_fou
                   FROM Piece INNER JOIN Fournisseur on Piece.id_fou = 
                   Fournisseur.id_fou
-                  ORDER BY :WS-TRI-SQL "DESC"
+                  ORDER BY :PG-TRI-SQL "DESC"
                   FOR READ ONLY
               END-EXEC
            ELSE 
@@ -140,7 +143,7 @@
                   SELECT id_pie, nom_pie, qt_pie, seuil_pie, nom_fou
                   FROM Piece INNER JOIN Fournisseur on Piece.id_fou = 
                   Fournisseur.id_fou
-                  ORDER BY :WS-TRI-SQL "ASC"
+                  ORDER BY :PG-TRI-SQL "ASC"
                   FOR READ ONLY
               END-EXEC
            END-IF.
@@ -156,11 +159,11 @@
                PERFORM UNTIL SQLCODE = 100 
                OR WS-ELT-AJO EQUAL LK-QUA
                  EXEC SQL
-                    FETCH curseur into :WS-IDN-TEM, 
-                    :WS-NOM-TEM, 
-                    :WS-QUA-TEM, 
-                    :WS-SEU-TEM,
-                    :WS-NOM-FOU-TEM
+                    FETCH curseur into :PG-IDN-TEM, 
+                    :PG-NOM-TEM, 
+                    :PG-QUA-TEM, 
+                    :PG-SEU-TEM,
+                    :PG-NOM-FOU-TEM
                  END-EXEC
 
                  ADD 1 TO WS-IDX
@@ -170,11 +173,11 @@
                         
                   ADD 1 TO WS-ELT-AJO
 
-                  MOVE WS-IDN-TEM     TO LK-IDN(WS-ELT-AJO)  
-                  MOVE WS-NOM-TEM     TO LK-NOM(WS-ELT-AJO)
-                  MOVE WS-QUA-TEM     TO LK-T-QUA(WS-ELT-AJO)
-                  MOVE WS-SEU-TEM     TO LK-SEU(WS-ELT-AJO)
-                  MOVE WS-NOM-FOU-TEM TO LK-NOM-FOU(WS-ELT-AJO)
+                  MOVE PG-IDN-TEM     TO LK-IDN(WS-ELT-AJO)  
+                  MOVE PG-NOM-TEM     TO LK-NOM(WS-ELT-AJO)
+                  MOVE PG-QUA-TEM     TO LK-TAB-QUA(WS-ELT-AJO)
+                  MOVE PG-SEU-TEM     TO LK-SEU(WS-ELT-AJO)
+                  MOVE PG-NOM-FOU-TEM TO LK-NOM-FOU(WS-ELT-AJO)
                  END-IF
                END-PERFORM.
 
