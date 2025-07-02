@@ -18,11 +18,12 @@
 
        WORKING-STORAGE SECTION.
        
+       01 WS-NB.
       * Le nombre d'"@" dans l'adresse-mail.  
-       01  WS-NB-ARO PIC 9(02).
+           05 WS-NB-ARO PIC 9(02).
 
       * Le nombre de "." dans l'adresse-mail. 
-       01  WS-NB-POI PIC 9(02).
+           05 WS-NB-POI PIC 9(02).
 
        LINKAGE SECTION.
       * Arguments d'entrée.
@@ -44,8 +45,8 @@
            PERFORM 0200-RES-DEB
               THRU 0200-RES-FIN
 
-
-
+           INITIALIZE WS-NB.
+      
            EXIT PROGRAM.
 
       * Paragraphe pour compter les "@" et "." dans le mail.
