@@ -1,4 +1,4 @@
-test*************************Ecran d'ajout de livraisons****************************
+*************************Ecran d'ajout de livraisons****************************
 
 +------------------------------------------------------------------------------+
 |                               LogiParts Solutions                            |
@@ -6,17 +6,17 @@ test*************************Ecran d'ajout de livraisons************************
 | Connecte en tant que :                                                       |
 |                                                                              |
 |                                                                              |
-| ID bon de commande :  [_______________]                                      |
 |                                                                              |
-| ID piece :            [_______________]                                      |
 |                                                                              |
-| ID fournisseur :      [_______________]                                      |
+| ID piece :            [__________]                                           |
 |                                                                              |
-| Quantite livree :     [_______________]                                      |
+| ID fournisseur :      [__________]                                           |
 |                                                                              |
-| Date livraison :      [_______________]                                      |
+| Quantite livree :     [__________]                                           |
 |                                                                              |
-| Statut :              [_______________]                                      |
+| Date livraison :      [__________]                                           |
+|                                                                              |
+| Statut :              [__________]                                           |
 |                                                                              |                                                
 |                                                                              | 
 |                               Ajouter au stock                               |
