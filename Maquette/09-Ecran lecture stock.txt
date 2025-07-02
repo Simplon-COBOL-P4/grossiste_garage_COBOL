@@ -6,12 +6,12 @@
 | Connecte en tant que :                                                       |
 |                                                                              |
 | 1 - trier par nom   2 - trier par quantite   3 - trier par fournisseur       |
-|                                                                              |
 | Option de tri : [_]                                                          |
-|                                                                              |
+| 1 - Ascendant   2 - Descendant                                               |
+| Ordre de tri  : [_]                                                          |
 |______________________________________________________________________________|
 |            |          |                |                |                    |
-| ID         | Nom      | Quantite       | Seuil          | ID fournisseur     |
+| ID         | Nom      | Quantite       | Seuil          |  Nom fournisseur   |
 |____________|__________|________________|________________|____________________|
 |            |          |                |                |                    |
 |            |          |                |                |                    |
