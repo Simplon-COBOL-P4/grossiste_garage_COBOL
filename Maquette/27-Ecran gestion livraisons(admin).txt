@@ -8,8 +8,6 @@
 |                                                                              |
 |                                                                              |
 |                                                                              |
-|                                                                              |
-|                                                                              |
 |                            Gestion des livraisons                            |
 |                                                                              |
 |                            1 - Ajouter une livraison                         |
@@ -17,7 +15,9 @@
 |                            3 - Modifier une livraison                        |
 |                            4 - Supprimer une livraison                       |
 |                                                                              |
-|                                                                              |                                                
+|                                                                              |  
+|                                                                              |
+|                                                                              |                                              
 |                            0 - Retour au menu                                |
 |                                                                              |
 |                                                                              |
