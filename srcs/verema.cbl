@@ -20,10 +20,10 @@
        
        
       * Le nombre d'"@" dans l'adresse-mail.  
-       01 WS-NB-ARO PIC 9(02).
+       01 WS-NB-ARO PIC 9(03).
 
       * Le nombre de "." dans l'adresse-mail. 
-       01 WS-NB-POI PIC 9(02).
+       01 WS-NB-POI PIC 9(03).
 
        LINKAGE SECTION.
       * Arguments d'entrée.
