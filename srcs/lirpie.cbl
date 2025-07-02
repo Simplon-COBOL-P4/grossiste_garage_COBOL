@@ -30,8 +30,7 @@
        01 PG-SEU-TEM        PIC 9(10).
        01 PG-NOM-FOU-TEM    PIC X(80).
       *pour pouvoir faire le order by dans la requête sql
-       01 PG-TRI-SQL PIC X(7).
-       01 PG-SEN-TRI-SQL PIC X(5).  
+       01 PG-TRI-SQL PIC X(7).  
        EXEC SQL END DECLARE SECTION END-EXEC.
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
@@ -109,11 +108,6 @@
               MOVE "nom_fou" TO PG-TRI-SQL
            END-IF. 
 
-           IF LK-SEN-TRI EQUAL 0 
-              MOVE "ASC" TO PG-SEN-TRI-SQL
-           ELSE
-              MOVE "DESC" TO PG-SEN-TRI-SQL
-           END-IF.
 
       * On initialise la taille du tableau.
            MOVE 0 TO WS-QUA.
