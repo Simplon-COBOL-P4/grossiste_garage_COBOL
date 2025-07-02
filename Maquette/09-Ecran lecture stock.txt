@@ -7,7 +7,7 @@
 |                                                                              |
 | 1 - trier par nom   2 - trier par quantite   3 - trier par fournisseur       |
 | Option de tri : [_]                                                          |
-| 1 - Ascendant   2 - Descendant                                               |
+| A - Ascendant   D - Descendant                                               |
 | Ordre de tri  : [_]                                                          |
 |______________________________________________________________________________|
 |            |          |                |                |                    |
