@@ -23,6 +23,7 @@
 
        SCREEN SECTION.
 
+      * Voir maquette 15-Ecran choix lecture clients.txt
        01 S-FND-ECR.
            05 BLANK SCREEN.
 
