@@ -6,10 +6,10 @@
       *                                                                *
       *                           TRIGRAMMES                           *
       *                                                                *
-      * LIRE=LIR; PIE=PIECE; CUR=curseur; VAR=variable; IDENTIFIANT=IDN*
+      * LIRE=LIR; PIE=PIECE; CUR=curseur; VAR=variable; IDN=identifiant*
       * QUA=quantité; SEU=seuil; FOU=fournisseur; TEM=temporaire;      *
       * AJO=ajout; OFS=offset; SEN=sens; IDX=index; PAG=page           *
-      * TAB=tableau; ARG=argument
+      * TAB=tableau; ARG=argument                                      * 
       ******************************************************************
        
        IDENTIFICATION DIVISION.
@@ -29,25 +29,19 @@
        01 PG-QUA-TEM        PIC 9(10).
        01 PG-SEU-TEM        PIC 9(10).
        01 PG-NOM-FOU-TEM    PIC X(80).
-      *pour pouvoir faire le order by dans la requête sql
+      * Pour pouvoir faire le order by dans la requête sql.
        01 PG-TRI-SQL PIC X(7).  
+       01 PG-QUA            PIC 9(02). *> Min 1 - Max 25.
+      * L'offset pour la requête SQL
+       01 PG-OFS            PIC 9(03).
        EXEC SQL END DECLARE SECTION END-EXEC.
        EXEC SQL INCLUDE SQLCA END-EXEC.
-
        
-       
-       01 WS-TRI            PIC 9(01). 
-
-
-       01 WS-QUA            PIC 9(02). *> Min 1 - Max 25.
+       01 WS-TRI            PIC 9(01).
 
       *le nombre d'élément ajouter dans le tableau
        01 WS-ELT-AJO        PIC 9(02) VALUE 0.
 
-      * l'offset pour la requête SQL
-       01 WS-OFS            PIC 9(03).
-
-       01 WS-IDX            PIC 9(2) VALUE 0.
 
 
        LINKAGE SECTION.
@@ -92,26 +86,22 @@
            
       * Une page faisant LK-QUA pieces, on multiplie le numéro de la 
       * page par LK-QUA.
-           MULTIPLY LK-PAG BY LK-QUA GIVING WS-OFS.
+           MULTIPLY LK-PAG BY LK-QUA GIVING PG-OFS.
 
       * Comme on ne peux pas utiliser les variables de la linkage 
       * section dans une requête SQL, on les move dans la 
       * working-storage section
-           MOVE LK-QUA TO WS-QUA.
+           MOVE LK-QUA TO PG-QUA.
               
       * Pour le order by.
-           IF WS-TRI EQUAL 0
+           IF LK-TRI EQUAL 0
               MOVE "nom_pie" to PG-TRI-SQL
-           ELSE IF WS-TRI EQUAL 1 
+           ELSE IF LK-TRI EQUAL 1 
               MOVE "qte_pie" TO PG-TRI-SQL
            ELSE 
               MOVE "nom_fou" TO PG-TRI-SQL
            END-IF. 
 
-
-      * On initialise la taille du tableau.
-           MOVE 0 TO WS-QUA.
-           MOVE LK-TRI TO WS-TRI.
            MOVE LK-SEN-TRI TO PG-SEN-TRI.
 
        0100-INI-VAR-FIN.
@@ -129,6 +119,8 @@
                   FROM Piece INNER JOIN Fournisseur on Piece.id_fou = 
                   Fournisseur.id_fou
                   ORDER BY :PG-TRI-SQL "DESC"
+                  LIMIT :PG-QUA
+                  OFFSET :PG-OFS
                   FOR READ ONLY
               END-EXEC
            ELSE 
@@ -138,6 +130,8 @@
                   FROM Piece INNER JOIN Fournisseur on Piece.id_fou = 
                   Fournisseur.id_fou
                   ORDER BY :PG-TRI-SQL "ASC"
+                  LIMIT :PG-QUA
+                  OFFSET :PG-OFS
                   FOR READ ONLY
               END-EXEC
            END-IF.
@@ -151,7 +145,6 @@
       * On lit le curseur tant que le sqlcode n'est pas à 100 ou que le
       * nombre d'élément à ajouter est atteint.
                PERFORM UNTIL SQLCODE = 100 
-               OR WS-ELT-AJO EQUAL LK-QUA
                  EXEC SQL
                     FETCH curseur into :PG-IDN-TEM, 
                     :PG-NOM-TEM, 
@@ -159,11 +152,6 @@
                     :PG-SEU-TEM,
                     :PG-NOM-FOU-TEM
                  END-EXEC
-
-                 ADD 1 TO WS-IDX
-      * Comme je n'arrive pas à mettre de LIMIT et OFFSET dans la 
-      * requête SQL, je les implémente coté cobol.
-                 IF WS-IDX EQUAL WS-OFS OR GREATER THAN WS-OFS
                         
                   ADD 1 TO WS-ELT-AJO
 
@@ -172,7 +160,7 @@
                   MOVE PG-QUA-TEM     TO LK-TAB-QUA(WS-ELT-AJO)
                   MOVE PG-SEU-TEM     TO LK-SEU(WS-ELT-AJO)
                   MOVE PG-NOM-FOU-TEM TO LK-NOM-FOU(WS-ELT-AJO)
-                 END-IF
+      *           END-IF
                END-PERFORM.
 
       * On ferme le curseur.
