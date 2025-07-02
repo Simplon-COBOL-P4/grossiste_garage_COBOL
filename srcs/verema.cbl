@@ -10,7 +10,7 @@
       ******************************************************************
        
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. verema.
+       PROGRAM-ID. verema IS INITIAL.
        AUTHOR. lucas.
        DATE-WRITTEN. 01/07/2025 (fr).
 
@@ -18,12 +18,12 @@
 
        WORKING-STORAGE SECTION.
        
-       01 WS-NB.
+       
       * Le nombre d'"@" dans l'adresse-mail.  
-           05 WS-NB-ARO PIC 9(02).
+       01 WS-NB-ARO PIC 9(02).
 
       * Le nombre de "." dans l'adresse-mail. 
-           05 WS-NB-POI PIC 9(02).
+       01 WS-NB-POI PIC 9(02).
 
        LINKAGE SECTION.
       * Arguments d'entrée.
@@ -44,8 +44,6 @@
 
            PERFORM 0200-RES-DEB
               THRU 0200-RES-FIN
-
-           INITIALIZE WS-NB.
       
            EXIT PROGRAM.
 
