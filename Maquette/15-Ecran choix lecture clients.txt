@@ -12,8 +12,8 @@
 |                                                                              |
 |                                                                              |
 |                                                                              |
-|                            1 - Un client (ID requis)                         |
-|                            2 - La liste complète                             |
+|                            1 - Un client                                     |
+|                            2 - La liste complete                             |
 |                                                                              |
 |                                                                              |
 |                                                                              |
