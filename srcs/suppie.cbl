@@ -12,7 +12,7 @@
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. suppie.
-       AUTHOR.    Benoit.
+       AUTHOR. Benoit.
        DATE-WRITTEN. 27-06-2025 (fr).
 
       ******************************************************************
