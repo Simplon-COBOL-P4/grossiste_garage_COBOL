@@ -59,20 +59,22 @@
 
       * Traitement de la commande entrée par l'utilisateur.
        0200-TRA-COM-DEB.
-           PERFORM UNTIL WS-CON EQUAL 1 OR WS-CON EQUAL 2
-              ACCEPT S-ECR-LEC-CLI
-              EVALUATE WS-CON
-                  
-                 WHEN EQUAL 1
-                    CALL "ecrrecli"
-                    END-CALL
-          
-                  WHEN EQUAL 2
-                    CALL "ecrpgcli"
-                    END-CALL 
-                  WHEN OTHER 
-                    DISPLAY "entrer 1 ou 2" LINE 21 COLUMN 3  
-              END-EVALUATE
+           PERFORM UNTIL WS-CON EQUAL 0
+               ACCEPT S-ECR-LEC-CLI
+               EVALUATE WS-CON
+                   
+                   WHEN EQUAL 1
+                       CALL "ecrrecli"
+                       END-CALL
+            
+                   WHEN EQUAL 2
+                       CALL "ecrpgcli"
+                       END-CALL 
+                     
+                   WHEN OTHER 
+                       DISPLAY "entrer 1 ou 2" LINE 21 COLUMN 3  
+                       
+               END-EVALUATE
            END-PERFORM.
        0200-TRA-COM-FIN.
        
