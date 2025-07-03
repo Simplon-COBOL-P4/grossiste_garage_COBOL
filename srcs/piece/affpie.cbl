@@ -39,22 +39,22 @@
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       01 WS-TRI                 PIC 9(01).
+       01 WS-TRI                PIC 9(01).
            88 WS-TRI-NOM                   VALUE 0.
            88 WS-TRI-QTE                   VALUE 1.
            88 WS-TRI-FOU                   VALUE 2.
        
-       01 WS-SNS-TRI             PIC 9(01).
+       01 WS-SNS-TRI            PIC 9(01).
            88 WS-ASC                       VALUE 0.
            88 WS-DSC                       VALUE 1.
 
-       77 WS-QTE                 PIC 9(02). *> Min 1 - Max 25.
-       77 WS-PGE                 PIC 9(10).*> Min 0 - Max 1,000,000,000.
-       77 WS-TRE                 PIC X(78) VALUE ALL '_'.
-       77 WS-ORD                 PIC X(01).
-       77 WS-LIN-QTE             PIC 9(02) VALUE 10.
-       77 WS-LIN-PRM             PIC 9(02) VALUE 14.
-       77 WS-TBL-IDX              PIC 9(02).
+       77 WS-QTE                PIC 9(02). *> Min 1 - Max 25.
+       77 WS-PGE                PIC 9(10). *> Min 0 - Max 1,000,000,000.
+       77 WS-TRE                PIC X(78) VALUE ALL '_'.
+       77 WS-ORD                PIC X(01).
+       77 WS-LIN-QTE            PIC 9(02) VALUE 10.
+       77 WS-LIN-PRM            PIC 9(02) VALUE 14.
+       77 WS-TBL-IDX            PIC 9(02).
 
       * Arguments de sortie.
        01 WS-TBL. 
