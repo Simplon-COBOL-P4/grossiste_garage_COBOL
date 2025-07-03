@@ -55,7 +55,7 @@
       *                     Programme principal
       ******************************************************************
            PERFORM 0100-LIR-NOM-CLI-DEB
-              THRU 0100-LIR-NOM-CLI-FIN
+              THRU 0100-LIR-NOM-CLI-FIN.
 
            EXIT PROGRAM.
 
