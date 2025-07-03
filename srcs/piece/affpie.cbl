@@ -177,7 +177,7 @@
                 WS-QTE,
                 WS-PGE,
                 WS-TBL
-            END-CALL.
+           END-CALL.
 
       *
       * Afficher le tableau WS-TBL
