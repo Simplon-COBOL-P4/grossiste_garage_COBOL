@@ -12,10 +12,10 @@
 |                                                                              |
 |                                                                              |
 |                                                                              |
-|                            1 - Ajouter une pièce                             |
-|                            2 - Afficher une pièce                            |
-|                            3 - Modifier une pièce                            |
-|                            4 - Supprimer une pièce                           |
+|                            1 - Ajouter une piece                             |
+|                            2 - Afficher une piece                            |
+|                            3 - Modifier une piece                            |
+|                            4 - Supprimer une piece                           |
 |                                                                              |
 |                                                                              |                                                
 |                            0 - Retour au menu                                |

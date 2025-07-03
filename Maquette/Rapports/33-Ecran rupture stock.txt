@@ -5,7 +5,7 @@
 +------------------------------------------------------------------------------+
 | Connecte en tant que : Admin                                                 |
 |                                                                              |
-| Rapport des pièces en rupture de stock :                                     |
+| Rapport des pieces en rupture de stock :                                     |
 |                                                                              |
 |______________________________________________________________________________|
 |            |                              |      ID       |       Nom        |

@@ -1,7 +1,7 @@
 *****************************Ecran de connexion BDD*****************************  
 
 +------------------------------------------------------------------------------+
-|HIMYC présente :                                                              |
+|HIMYC presente :                                                              |
 |                                                                              |
 |                                                                              |
 |                                                                              |
@@ -20,7 +20,7 @@
 |                                                                              |
 |                                                                              |
 |                                                                              |
-| Démarrage du processus de connexion                                          |
-| Connexion à la base de données...                                            |
-| Connexion établie !                                                          |
+| Demarrage du processus de connexion                                          |
+| Connexion a la base de donnees...                                            |
+| Connexion etablie !                                                          |
 +------------------------------------------------------------------------------+

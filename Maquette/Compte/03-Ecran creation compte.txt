@@ -16,11 +16,11 @@
 |                                                                              |
 |                                                                              |
 |                                                                              |
-|                  1 - Créer un utilisateur   2 - Annuler                      |
+|                  1 - Creer un utilisateur   2 - Annuler                      |
 |                                                                              |
 |                               [_]                                            |
 |                                                                              |
 |                                                                              |
-| Utilisateur créé avec succès !/Echec lors de la création de l'utilisateur    |
+| Utilisateur cree avec succes !/Echec lors de la creation de l'utilisateur    |
 |                                                                              |
 +------------------------------------------------------------------------------+
