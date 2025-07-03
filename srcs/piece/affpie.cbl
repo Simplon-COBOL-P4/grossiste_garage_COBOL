@@ -184,14 +184,22 @@
       *
            PERFORM VARYING WS-TBL-IDX FROM 1 BY 1 UNTIL WS-TBL-IDX > 10
                                            OR WS-TBL-IDT(WS-TBL-IDX) = 0
-             DISPLAY WS-TBL-IDT(WS-TBL-IDX) AT LINE WS-LIN-PRM COL 2
-             DISPLAY WS-TBL-NOM(WS-TBL-IDX)(1:22) AT LINE WS-LIN-PRM COL
-                                                                      13
-             DISPLAY WS-TBL-QTE(WS-TBL-IDX) AT LINE WS-LIN-PRM COL 36
-             DISPLAY WS-TBL-SUI(WS-TBL-IDX) AT LINE WS-LIN-PRM COL 47
-             DISPLAY WS-TBL-NOM-FOU(WS-TBL-IDX)(1:22) AT LINE WS-LIN-PRM 
-                                                                  COL 58
-             ADD 1 TO WS-LIN-PRM
+               DISPLAY WS-TBL-IDT(WS-TBL-IDX)
+                   AT LINE WS-LIN-PRM COL 2
+
+               DISPLAY WS-TBL-NOM(WS-TBL-IDX)(1:22)
+                   AT LINE WS-LIN-PRM COL 13
+
+               DISPLAY WS-TBL-QTE(WS-TBL-IDX)
+                   AT LINE WS-LIN-PRM COL 36
+
+               DISPLAY WS-TBL-SUI(WS-TBL-IDX)
+                   AT LINE WS-LIN-PRM COL 47
+
+               DISPLAY WS-TBL-NOM-FOU(WS-TBL-IDX)(1:22)
+                   AT LINE WS-LIN-PRM COL 58
+                   
+               ADD 1 TO WS-LIN-PRM
            END-PERFORM.
        0300-CAL-LIRPIE-FIN.
            EXIT.
