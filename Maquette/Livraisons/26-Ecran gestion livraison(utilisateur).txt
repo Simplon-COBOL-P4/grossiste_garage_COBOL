@@ -1,0 +1,26 @@
+*****************Ecran de gestion des livraisons (utilisateur standard)*********
+
++------------------------------------------------------------------------------+
+|                               LogiParts Solutions                            |
++------------------------------------------------------------------------------+
+| Connecte en tant que : User                                                  |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                            Gestion des livraisons                            |
+|                                                                              |
+|                            1 - Ajouter une livraison                         |
+|                            2 - Afficher une livraison                        |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |                                                
+|                            0 - Retour au menu                                |
+|                                                                              |
+|                                                                              |
+|                            Entrez votre choix : [_]                          |  
+|                                                                              |
++------------------------------------------------------------------------------+
