@@ -7,14 +7,16 @@
 |                                                                              |
 |                     ID de la piece : [__________]                            |
 |                                                                              |
-| Nom piece :                                                                  |
+|                                                                              |
+|                                                                              |
+| Quantite :                                                                   |
 | [__________]                                                                 |
 |                                                                              |
-| Seuil minimum :                                                              |
-| [__________]                                                                 |
+| Ajouter (1) Enlever (2) :                                                    |
+| [_]                                                                          |
 |                                                                              |
-| ID fournisseur :                                                             |
-| [__________]                                                                 |
+|                                                                              |
+|                                                                              |
 |                                                                              |
 |                                                                              |
 |                                                                              |
