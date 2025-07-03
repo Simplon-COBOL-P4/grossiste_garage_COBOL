@@ -6,7 +6,7 @@
       *                                                                *
       *                           TRIGRAMMES                           *
       * ECR=ECRAN; SP=SUPPRESSION; CLI=CLIENT; IDN=identifiant         *
-      * CMD=commande                                                   *
+      * CMD=commande; AFF=affichage; TRA=traitement                    *
       *                                                                *
       ******************************************************************
        
@@ -38,13 +38,37 @@
 
        PROCEDURE DIVISION.
 
-           DISPLAY S-FND-ECR.
-           DISPLAY S-SP-CLI.
-
-           ACCEPT S-SP-CLI.
-
-           CALL "supcli" USING WS-IDN
-           END-CALL.
+           PERFORM 0100-AFF-ECR-DEB
+              THRU 0100-AFF-ECR-FIN.
+           
+           PERFORM 0200-TRA-CMD-DEB
+              THRU 0200-TRA-CMD-FIN.
 
            EXIT PROGRAM.
            
+      * Paragraphe pour afficher l'écran.    
+       0100-AFF-ECR-DEB.
+           DISPLAY S-FND-ECR.
+           DISPLAY S-SP-CLI.
+       0100-AFF-ECR-FIN.
+
+      * Paragraphe pour permettre à l'utilisateur d'entrer un id client
+      * et de choisir s'il veut le supprimer ou non
+       0200-TRA-CMD-DEB.
+           PERFORM UNTIL WS-CMD EQUAL 1 OR WS-CMD EQUAL 2
+
+           ACCEPT S-SP-CLI
+
+           EVALUATE WS-CMD
+
+           WHEN EQUAL 1
+                 CALL "supcli" USING WS-IDN
+                 END-CALL
+           WHEN EQUAL 2 
+                 DISPLAY "suppression annuler" LINE 18 COLUMN 30 
+           WHEN OTHER
+                 DISPLAY "commande incomprise" LINE 17 COLUMN 30 
+           END-EVALUATE
+
+           END-PERFORM.
+       0200-TRA-CMD-FIN.
