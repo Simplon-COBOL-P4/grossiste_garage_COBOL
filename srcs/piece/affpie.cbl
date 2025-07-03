@@ -141,8 +141,8 @@
       * Saisir dans l'ecran de saisi
       *
        0200-SSI-ECR-DEB.
-           PERFORM UNTIL (WS-TRI = 1 oR 2 OR 3) AND (WS-ORD = 'A' OR 'a'
-                   OR 'D' or 'd') AND (WS-PGE > 0 and < 1000000001)
+           PERFORM UNTIL (WS-TRI = 1 OR 2 OR 3) AND (WS-ORD = 'A' OR 'a'
+                   OR 'D' OR 'd') AND (WS-PGE > 0 AND < 1000000001)
                    ACCEPT S-ECR-SSI-01
            END-PERFORM.
        0200-SSI-ECR-FIN.
