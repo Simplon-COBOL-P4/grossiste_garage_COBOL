@@ -14,7 +14,7 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ecrchcli.
        AUTHOR. lucas.
-       DATE-WRITTEN. 01/07/2025 (fr).
+       DATE-WRITTEN. 01-07-2025 (fr).
 
        DATA DIVISION.
 
@@ -31,7 +31,7 @@
 
            05 LINE 09 COLUMN 30 VALUE "Afficher : ".
           
-           05 LINE 13 COLUMN 30 VALUE "1 - Un client (ID requis)".
+           05 LINE 13 COLUMN 30 VALUE "1 - Un client".
 
            05 LINE 14 COLUMN 30 VALUE "2 - La liste complete".
 
@@ -55,20 +55,24 @@
            DISPLAY S-FND-ECR.
            DISPLAY S-ECR-LEC-CLI.
 
-           ACCEPT S-ECR-LEC-CLI.
        0100-ECR-FIN.
 
       * Traitement de la commande entrée par l'utilisateur.
        0200-TRA-COM-DEB.
-           EVALUATE WS-CON
-               
-              WHEN EQUAL 1
-                 CALL "ecrrecli"
-                 END-CALL
-       
-               WHEN EQUAL 2
-                 CALL "ecrpgcli"
-                 END-CALL  
-           END-EVALUATE.
+           PERFORM UNTIL WS-CON EQUAL 1 OR WS-CON EQUAL 2
+              ACCEPT S-ECR-LEC-CLI
+              EVALUATE WS-CON
+                  
+                 WHEN EQUAL 1
+                    CALL "ecrrecli"
+                    END-CALL
+          
+                  WHEN EQUAL 2
+                    CALL "ecrpgcli"
+                    END-CALL 
+                  WHEN OTHER 
+                    DISPLAY "entrer 1 ou 2" LINE 21 COLUMN 3  
+              END-EVALUATE
+           END-PERFORM.
        0200-TRA-COM-FIN.
        
