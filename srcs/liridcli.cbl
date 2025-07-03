@@ -9,8 +9,8 @@
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. liridcli.
-       AUTHOR. Yssine.
-       DATE-WRITTEN. 02-07-2025(fr).
+       AUTHOR. Yassine.
+       DATE-WRITTEN. 02-07-2025 (fr).
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
@@ -54,7 +54,7 @@
       *                      Programme principal                       *
       ******************************************************************
            PERFORM 0100-LIR-ID-CLI-DEB
-              THRU 0100-LIR-ID-CLI-FIN
+              THRU 0100-LIR-ID-CLI-FIN.
 
            EXIT PROGRAM.
 
