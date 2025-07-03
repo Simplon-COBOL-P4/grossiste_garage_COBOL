@@ -20,7 +20,7 @@
       ******************************************************************
        
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. ecrajcli.
+       PROGRAM-ID. ecrajcli IS INITIAL.
        AUTHOR. ThomasD.
        DATE-WRITTEN. 01-07-2025 (fr).
 
