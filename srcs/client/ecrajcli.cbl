@@ -239,8 +239,10 @@
         
        0400-APL-VER-EMA-DEB.
 
-           CALL "verema" USING WS-EMA-CLI 
-                               WS-VLR-RTR
+           CALL "verema"
+               USING
+               WS-EMA-CLI 
+               WS-VLR-RTR
            END-CALL.
 
       * Affichage à l'écran du message de retour après vérification de  
@@ -358,14 +360,15 @@
       * clients dans la BDD.  
        0500-APL-AJ-CLI-BDD-DEB.
 
-           CALL "ajucli" USING WS-NOM-CLI
-                               WS-EMA-CLI
-                               WS-IND-CLI
-                               WS-TEL-CLI
-                               WS-COP-CLI
-                               WS-VIL-CLI
-                               WS-ADR-CLI
-
+           CALL "ajucli"
+                USING
+                WS-NOM-CLI
+                WS-EMA-CLI
+                WS-IND-CLI
+                WS-TEL-CLI
+                WS-COP-CLI
+                WS-VIL-CLI
+                WS-ADR-CLI
            END-CALL.
            EXIT.
 
