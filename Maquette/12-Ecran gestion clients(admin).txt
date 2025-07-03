@@ -12,7 +12,7 @@
 |                                                                              |
 |                                                                              |
 |                                                                              |
-|                            1 - Ajout de clients                              |
+|                            1 - Ajouter un client                             |
 |                            2 - Afficher un client                            |
 |                            3 - Modifier un client                            |
 |                            4 - Supprimer un client                           |
