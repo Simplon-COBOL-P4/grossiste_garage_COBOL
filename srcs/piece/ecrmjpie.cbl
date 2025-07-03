@@ -28,7 +28,7 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ecrmjpie.
        AUTHOR. Benoit.
-       DATE-WRITTEN. 01-07-2025 (FR).
+       DATE-WRITTEN. 01-07-2025 (fr).
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
@@ -43,7 +43,7 @@
        SCREEN SECTION.
        COPY ecrprn.
 
-       01  ECR-SSI-01.
+       01  S-ECR-SSI-01.
            05  LINE 4  COL 3  VALUE 'Connecte en tant que : Admin'.
            05  LINE 6  COL 23 VALUE 'ID de la piece : ['.
            05  LINE 6  COL 51 VALUE ']'.
@@ -60,41 +60,47 @@
        PROCEDURE DIVISION.
 
       * Afficher l'écran de travail
-       PERFORM 0100-AFC-ECR-DEB 
-          THRU 0100-AFC-ECR-FIN.
+           PERFORM 0100-AFC-ECR-DEB 
+              THRU 0100-AFC-ECR-FIN.
 
       * Saisir l'ecran du travail. Tous les chapms sont obligatoires
-       PERFORM 0100-SSI-ECR UNTIL WS-PIE-IDT <> 0 AND
-               WS-PIE-QTE <> 0 AND (WS-PIE-ACT = 1 OR 2).
+           PERFORM 0200-SSI-ECR-DEB
+               THRU 0200-SSI-ECR-FIN.
 
       * Appeler le sous programme 'majpie' pour faire les modifs.
-       PERFORM 0100-MAJ-DEB
-          THRU 0100-MAJ-FIN.
-       EXIT PROGRAM.
+           PERFORM 0300-MAJ-DEB
+              THRU 0300-MAJ-FIN.
+           EXIT PROGRAM.
 
       * Affiche l'ecran de saisi
        0100-AFC-ECR-DEB.    
            DISPLAY S-FND-ECR.
-           DISPLAY ECR-SSI-01.
+           DISPLAY S-ECR-SSI-01.
        0100-AFC-ECR-FIN.
+           EXIT.
 
       * Saisir l'id et la qantité de la pièce à modifier et l'action
       * (Ajout/Enlever) à faire 
-       0100-SSI-ECR.
-           ACCEPT ECR-SSI-01.
+       0200-SSI-ECR-DEB.
+           PERFORM UNTIL WS-PIE-IDT <> 0 AND WS-PIE-QTE <> 0 AND 
+                                                   (WS-PIE-ACT = 1 OR 2)
+                   ACCEPT S-ECR-SSI-01
+           END-PERFORM.
            IF WS-PIE-ACT = 1 THEN
               SET AJOUT TO TRUE
            ELSE
               SET ENLEVER TO TRUE
            END-IF.
+       0200-SSI-ECR-FIN.
+           EXIT.
   
-       0100-MAJ-DEB.
+       0300-MAJ-DEB.
            CALL "majpie"
                USING
                WS-PIE-IDT
                WS-PIE-QTE
                WS-PIE-TYP
            END-CALL.
-       0100-MAJ-FIN.
+       0300-MAJ-FIN.
            EXIT.
       
