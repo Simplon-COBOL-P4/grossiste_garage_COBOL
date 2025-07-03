@@ -61,12 +61,12 @@
            88 WS-RTR-PAS-DE-PNT           VALUE 3.
 
       * Variable d'affichage pour l'écran. 
-       01 WS-CRG               PIC X(01)   VALUE "[".
-       01 WS-CRD               PIC X(01)   VALUE "]".
+       01 WS-CRG               PIC X(01) VALUE "[".
+       01 WS-CRD               PIC X(01) VALUE "]".
        01 WS-LRR               PIC X(01).
-       01 WS-VID               PIC X(40)   VALUE ALL " ".
-       01 WS-CLR-TXT           PIC 9(01)       VALUE 7. *> Blanc
-       01 WS-CLR-FND           PIC 9(01)       VALUE 0. *> Noir
+       01 WS-VID               PIC X(40) VALUE ALL " ".
+       01 WS-CLR-TXT           PIC 9(01) VALUE 7. *> Blanc
+       01 WS-CLR-FND           PIC 9(01) VALUE 0. *> Noir
        
        
 
