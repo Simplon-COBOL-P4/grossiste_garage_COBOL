@@ -89,6 +89,8 @@
                    WHEN EQUAL 4 AND LK-ROL EQUAL "ADMIN"
                        CALL "ecrspcli"
                        END-CALL
+                   WHEN 0
+                   
                    WHEN OTHER 
                        DISPLAY "commande incorrecte" 
                        AT LINE 21 COLUMN 5
@@ -98,4 +100,3 @@
 
 
        0200-TRA-CMD-FIN.
-       
