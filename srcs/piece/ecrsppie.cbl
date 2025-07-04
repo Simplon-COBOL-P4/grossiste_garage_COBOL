@@ -14,11 +14,11 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ecrsppie.
        AUTHOR. Anaisktl.
-       DATE-WRITTEN. 01.07.2025 (fr).
+       DATE-WRITTEN. 01-07-2025 (fr).
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       01 WS-IDF-PIE       PIC Z(10).
+       01 WS-IDF-PIE       PIC 9(10).
 
        01 WS-LEU           PIC X(01).
 
@@ -73,22 +73,24 @@
        0200-SUP-PIE-DEB.
            IF WS-CHX-OUI
 
-              CALL "suppie"
-                USING WS-IDF-PIE
-              END-CALL         
+               CALL "suppie"
+                 USING WS-IDF-PIE
+               END-CALL         
 
-              DISPLAY "PIECE SUPPRIMEE ! " AT LINE 20 COLUMN 32      
-              ACCEPT WS-LEU
+               DISPLAY "PIECE SUPPRIMEE ! " AT LINE 20 COLUMN 32      
+               ACCEPT WS-LEU
       
-           ELSE IF WS-CHX-NON
-
-              DISPLAY "SUPPRESSION ANNULEE !" AT LINE 20 COLUMN 30
-              ACCEPT WS-LEU
-
            ELSE 
+               IF WS-CHX-NON
 
-              DISPLAY "ERREUR DE SAISIE ! "  AT LINE 20 COLUMN 32
-              ACCEPT WS-LEU
+                   DISPLAY "SUPPRESSION ANNULEE !" AT LINE 20 COLUMN 30
+                   ACCEPT WS-LEU
 
+               ELSE 
+
+                   DISPLAY "ERREUR DE SAISIE ! "  AT LINE 20 COLUMN 32
+                   ACCEPT WS-LEU
+
+               END-IF.
            END-IF.
        0200-SUP-PIE-FIN.
