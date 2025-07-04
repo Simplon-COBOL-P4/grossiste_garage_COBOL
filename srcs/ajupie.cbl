@@ -15,7 +15,7 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ajupie.
        AUTHOR. siboryg.
-       DATE-WRITTEN. 03-07-2025 (fr).
+       DATE-WRITTEN. 04-07-2025 (fr).
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
@@ -26,14 +26,6 @@
        01  PG-PIE-QTE                   PIC 9(10).
        01  PG-PIE-MIN                   PIC 9(10).
        01  PG-ID-FOU                    PIC 9(10).      
-    
-    
-      *    Déclaration des variables pour la connexion à la BDD.
-       01  PG-UTI                       PIC X(30) VALUE "postgres".
-       01  PG-MDP                       PIC X(30) VALUE "mdp".
-       01  PG-BDD                       PIC X(10) VALUE "logiparts".
-       EXEC SQL END DECLARE SECTION END-EXEC.
-       EXEC SQL INCLUDE SQLCA END-EXEC.
 
        LINKAGE SECTION.
       * Arguments d'entrée.
@@ -47,38 +39,18 @@
                                 LK-PIE-MIN,
                                 LK-ID-FOU.
 
-
-      *    Paragraphe pour la connexion à la BDD. 
-           PERFORM 0100-CNX-BDD-DEB
-              THRU 0100-CNX-BDD-FIN.
-           
       *    Paragraphe pour l'ajout de pièces à la BDD.
-           PERFORM 0200-AJU-PIE-DEB
-              THRU 0200-AJU-PIE-FIN.
+           PERFORM 0100-AJU-PIE-DEB
+              THRU 0100-AJU-PIE-FIN.
 
       *    Paragraphe pour le commit.
-           PERFORM 0300-COM-DEB
-              THRU 0300-COM-FIN.
+           PERFORM 0200-COM-DEB
+              THRU 0200-COM-FIN.
        
            EXIT PROGRAM.
 
-      *    Paragraphe pour la connexion, génère un SQLCODE pour les
-      *    erreurs.
-       0100-CNX-BDD-DEB.
-           EXEC SQL
-                CONNECT :PG-UTI IDENTIFIED BY :PG-MDP 
-                USING :PG-BDD
-           END-EXEC.
-              IF SQLCODE NOT EQUAL 0
-                   EXIT PROGRAM
-                   END-IF.
-
-      *    Sortie de paragraphe.
-       0100-CNX-BDD-FIN.
-           EXIT.
-
       *    Paragraphe pour l'ajout de pièces.
-       0200-AJU-PIE-DEB.         
+       0100-AJU-PIE-DEB.         
 
            MOVE LK-PIE-NOM TO PG-PIE-NOM.
            MOVE LK-PIE-QTE TO PG-PIE-QTE.
@@ -96,16 +68,16 @@
            END-EXEC.
 
       *    Sortie de parapgraphe.
-       0200-AJU-PIE-FIN.
+       0100-AJU-PIE-FIN.
            EXIT.
       
       *    Parapgraphe COMMIT pour la requête SQL.
-       0300-COM-DEB.
+       0200-COM-DEB.
            EXEC SQL COMMIT END-EXEC.
            IF SQLCODE NOT EQUAL 0
                    EXIT PROGRAM
                    END-IF.
 
       *    Sortie de paragraphe.
-       0300-COM-FIN.
+       0200-COM-FIN.
            EXIT.
