@@ -14,7 +14,7 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. majcli.
        AUTHOR. lucas.
-       DATE-WRITTEN. 4-07-25 (fr).
+       DATE-WRITTEN. 04-07-25 (fr).
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
