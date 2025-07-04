@@ -30,8 +30,7 @@
            05 LINE 06 COLUMN 51 VALUE "]".
            05 LINE 06 COLUMN 41 PIC Z(10) TO WS-IDN.
 
-           05 LINE 21 COLUMN 30 VALUE "Supprimer le client ?".
-           05 LINE 22 COLUMN 30 VALUE "1 - Oui   2 - Non ".
+           05 LINE 22 COLUMN 30 VALUE "1 - Supprimer   0 - Annuler".
            05 LINE 23 COLUMN 37 VALUE "[ ]".
            05 LINE 23 COLUMN 38 PIC Z TO WS-CMD.
 
@@ -55,20 +54,24 @@
       * Paragraphe pour permettre à l'utilisateur d'entrer un id client
       * et de choisir s'il veut le supprimer ou non
        0200-TRA-CMD-DEB.
-           PERFORM UNTIL WS-CMD EQUAL 1 OR WS-CMD EQUAL 2
+           PERFORM UNTIL WS-CMD
 
-           ACCEPT S-SP-CLI
+               ACCEPT S-SP-CLI
+            
+               EVALUATE WS-CMD
+            
+                   WHEN EQUAL 1
+                       CALL "supcli" 
+                           USING
+                           WS-IDN
+                       END-CALL
 
-           EVALUATE WS-CMD
+                   WHEN EQUAL 0 
 
-           WHEN EQUAL 1
-                 CALL "supcli" USING WS-IDN
-                 END-CALL
-           WHEN EQUAL 2 
-                 DISPLAY "suppression annuler" LINE 18 COLUMN 30 
-           WHEN OTHER
-                 DISPLAY "commande incomprise" LINE 17 COLUMN 30 
-           END-EVALUATE
+                   WHEN OTHER
+                       DISPLAY "commande incomprise" LINE 17 COLUMN 30 
+
+               END-EVALUATE
 
            END-PERFORM.
        0200-TRA-CMD-FIN.
