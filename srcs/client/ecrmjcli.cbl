@@ -105,14 +105,16 @@
            DISPLAY S-ECR-CLI
            ACCEPT  S-ECR-CLI
 
-           CALL "liridcli" USING WS-IDT-CLI,
-                                 WS-NOM-CLI,
-                                 WS-EML-CLI,
-                                 WS-IND-CLI,
-                                 WS-TEL-CLI,
-                                 WS-CP-CLI,
-                                 WS-VIL-CLI,
-                                 WS-ADR-CLI
+           CALL "liridcli"
+               USING
+               WS-IDT-CLI
+               WS-NOM-CLI
+               WS-EML-CLI
+               WS-IND-CLI
+               WS-TEL-CLI
+               WS-CP-CLI
+               WS-VIL-CLI
+               WS-ADR-CLI
            END-CALL.                      
                                 
 
@@ -125,14 +127,16 @@
       * Si l'admin tape "1" on appelle le programme (majcli) pour
       * modifier.
               IF WS-CHX-ADM = "1"
-                 CALL "majcli" USING WS-IDT-CLI,
-                                     WS-NOM-CLI,
-                                     WS-EML-CLI,
-                                     WS-IND-CLI,
-                                     WS-TEL-CLI,
-                                     WS-CP-CLI,
-                                     WS-VIL-CLI,
-                                     WS-ADR-CLI
+                 CALL "majcli"
+                     USING
+                     WS-IDT-CLI
+                     WS-NOM-CLI
+                     WS-EML-CLI
+                     WS-IND-CLI
+                     WS-TEL-CLI
+                     WS-CP-CLI
+                     WS-VIL-CLI
+                     WS-ADR-CLI
                  END-CALL                  
                                      
                END-IF
