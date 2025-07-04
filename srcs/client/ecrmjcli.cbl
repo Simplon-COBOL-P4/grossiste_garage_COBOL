@@ -127,17 +127,17 @@
       * Si l'admin tape "1" on appelle le programme (majcli) pour
       * modifier.
               IF WS-CHX-ADM = "1"
-                 CALL "majcli"
-                     USING
-                     WS-IDT-CLI
-                     WS-NOM-CLI
-                     WS-EML-CLI
-                     WS-IND-CLI
-                     WS-TEL-CLI
-                     WS-CP-CLI
-                     WS-VIL-CLI
-                     WS-ADR-CLI
-                 END-CALL                  
+                  CALL "majcli"
+                      USING
+                      WS-IDT-CLI
+                      WS-NOM-CLI
+                      WS-EML-CLI
+                      WS-IND-CLI
+                      WS-TEL-CLI
+                      WS-CP-CLI
+                      WS-VIL-CLI
+                      WS-ADR-CLI
+                  END-CALL                  
                                      
                END-IF
            END-PERFORM.                        
