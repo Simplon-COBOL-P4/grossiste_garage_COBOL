@@ -5,10 +5,8 @@
 +------------------------------------------------------------------------------+
 | Connecte en tant que :                                                       |
 |                                                                              |
-| 1 - trier par nom   2 - trier par quantite   3 - trier par fournisseur       |
-| Option de tri : [_]                                                          |
-| A - Ascendant   D - Descendant                                               |
-| Ordre de tri  : [_]                                                          |
+| Option de tri [_] : 1 - Nom   2 - Quantite   3 - Fournisseur                 |
+| Ordre de tri  [_] : A - Ascendant   D - Descendant                           |
 |______________________________________________________________________________|
 |            |          |                |                |                    |
 | ID         | Nom      | Quantite       | Seuil          |  Nom fournisseur   |
@@ -16,6 +14,8 @@
 |            |          |                |                |                    |
 |            |          |                |                |                    |
 |            |          |                |                |                    |
+|            |          |                |                |                    |
+|            |          |                |                |                    |                                                
 |            |          |                |                |                    |
 |            |          |                |                |                    |
 |            |          |                |                |                    |
