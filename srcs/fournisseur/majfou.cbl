@@ -4,7 +4,7 @@
       *                                                                *
       *                                                                *
       *                           TRIGRAMMES                           *
-      * LIR=LIRE; NM=NOM; FOU=FOURNISSEUR;                             *
+      * MAJ=MISE A JOUR; FOU=FOURNISSEUR;                              *
       *                                                                *
       *                                                                *
       ******************************************************************
