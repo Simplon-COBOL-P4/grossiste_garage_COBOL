@@ -14,7 +14,7 @@
       * TYP=TYPE; CHG=CHANGEMENT; AJT=AJOUT; RTI=RETRAIT;              *
       * AFC=AFFECTATION; VAR=VARIABLE; CHX=CHOIX; GEN=GENERATION;      *
       * MSG=MESSAGE; EDT=EDITION; OPR=OPERATION; STA=STATUT; APL=APPEL;*
-      * CRE=CREATION.                                                  *
+      * CRE=CREATION; UTI=UTILISATEUR.                                 *
       ******************************************************************
        
        IDENTIFICATION DIVISION.
@@ -36,7 +36,12 @@
 
       * Déclaration de la variable définissant le type de log. 
        01 WS-TYP-LOG           PIC X(12). 
-     
+      
+      * Déclaration de la variable correspondant à l'identifiant de 
+      * l'utilisateur.
+       01 WS-IDF-UTI           PIC 9(10).
+
+
       * Déclaration de la variable d'édition pour un meilleur affichage 
       * des variables LK-QTE-PIE et LK-IDF-PIE dans les logs. 
        01 WS-IDF-EDT           PIC Z(10). 
@@ -324,6 +329,7 @@
 
            CALL "crelog" USING WS-MSG-LOG
                                WS-TYP-LOG
+                               WS-IDF-UTI
                                
            END-CALL.
 
