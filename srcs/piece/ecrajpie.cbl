@@ -96,25 +96,23 @@
       *    Paragrpahe pour afficher constamment l'ecran.
        0100-AFF-ECR-DEB.
            IF WS-CHX = 0
-           EXIT PROGRAM
+               EXIT PROGRAM
            ELSE
-           DISPLAY S-FND-ECR
-           DISPLAY ECRAJPCS
-           ACCEPT  ECRAJPCS
+               DISPLAY S-FND-ECR
+               DISPLAY ECRAJPCS
+               ACCEPT  ECRAJPCS
            END-IF.
 
        0100-AFF-ECR-FIN.
-           EXIT.
+               EXIT.
       
       *    Parapgraphe pour vérifier que la quantité enregistrée est
       *    bien au format numérique.
        0200-VER-QTE-DEB.
-           MOVE FUNCTION NUMVAL(WS-QTE-PIE) TO WS-QTE-PIE-NUM
+               MOVE FUNCTION NUMVAL(WS-QTE-PIE) TO WS-QTE-PIE-NUM
            
            IF WS-QTE-PIE GREATER THAN ZERO
-           ADD 1 TO WS-MQR-1
-           ELSE
-           DISPLAY "ERR1"
+               ADD 1 TO WS-MQR-1
            END-IF.
        
       *    Paragraphe de sortie.
@@ -124,27 +122,23 @@
       *    Parapgraphe pour vérifier que le seuil minimum enregistré
       *    est bien au format numérique.
        0300-VER-MIN-DEB.
-           MOVE FUNCTION NUMVAL(WS-MIN-PIE) TO WS-MIN-PIE-NUM
+               MOVE FUNCTION NUMVAL(WS-MIN-PIE) TO WS-MIN-PIE-NUM
            
            IF WS-MIN-PIE-NUM IS NUMERIC
-           ADD 1 TO WS-MQR-2
-           ELSE
-           DISPLAY "ERR2"
+               ADD 1 TO WS-MQR-2
            END-IF.
 
       *    Parapgraphe de sortie.
        0300-VER-MIN-FIN.
-           EXIT.
+               EXIT.
 
       *    Paragraphe pour vérifier que l'ID fournisseur est bien au
       *    format numérique.
        0400-VER-FOU-DEB.
-           MOVE FUNCTION NUMVAL(WS-ID-FOU) TO WS-ID-FOU-NUM
+               MOVE FUNCTION NUMVAL(WS-ID-FOU) TO WS-ID-FOU-NUM
 
            IF WS-ID-FOU-NUM IS NUMERIC
-           ADD 1 TO WS-MQR-3
-           ELSE
-           DISPLAY "ERR3"
+               ADD 1 TO WS-MQR-3
            END-IF.
 
       *    Paragraphe de sortie.
@@ -154,21 +148,21 @@
       *    Paragraphe qui appelle le sous-programme 'ajupie', l'appel
       *    ne se fera que si les marqueurs sont validés.
        0500-VLD-ECR-DEB.
-           IF WS-MQR-1 EQUAL 1
+           IF  WS-MQR-1 EQUAL 1
            AND WS-MQR-2 EQUAL 2
            AND WS-MQR-3 EQUAL 3
            CALL "ajupie"
                USING
-               WS-NOM-PIE
-               WS-QTE-PIE-NUM
-               WS-MIN-PIE-NUM
-               WS-ID-FOU-NUM
+                   WS-NOM-PIE
+                   WS-QTE-PIE-NUM
+                   WS-MIN-PIE-NUM
+                   WS-ID-FOU-NUM
            END-CALL
 
       *    MOVE 0 TO WS-CHX pour arrêté le programme.
-           MOVE 0 TO WS-CHX
+               MOVE 0 TO WS-CHX
            END-IF.
        
       *    Paragraphe de sortie.
        0500-VLD-ECR-FIN.
-           EXIT.
+               EXIT.
