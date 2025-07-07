@@ -11,10 +11,10 @@
       *                           TRIGRAMMES                           *
       *                                                                *
       * MAJ=MISE À JOUR; PIE=PIÈCE; IDF=IDENTIFIANT; QTE=QUANTITE;     *
-      * TYP=TYPE; CHG=CHANGEMENT; AJT=AJOUT; RTI=RETRAIT; RSU=RESULTAT;*
-      * AFC=AFFECTATION; VAR=VARIABLE; SLC=SELECTION; VRT=VARIANTE;    *
-      * CHX=CHOIX; NVL=NOUVELLE; GEN=GENERATION; MSG=MESSAGE;          *
-      * EDT=EDITION; UTI=UTILISATEUR.                                  *
+      * TYP=TYPE; CHG=CHANGEMENT; AJT=AJOUT; RTI=RETRAIT;              *
+      * AFC=AFFECTATION; VAR=VARIABLE; CHX=CHOIX; GEN=GENERATION;      *
+      * MSG=MESSAGE; EDT=EDITION; OPR=OPERATION; STA=STATUT; APL=APPEL;*
+      * CRE=CREATION.                                                  *
       ******************************************************************
        
        IDENTIFICATION DIVISION.
@@ -25,87 +25,71 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
 
-      * Déclaration des variables correspondant aux attributs  
-      * id_pie et qt_pie et nom_pie de la table piece.
+      * Déclaration de la variable mentionnant l'opération effectuée
+      * sur le stock pour l'affichage dans les logs.
 
-       EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-
-       01 PG-IDF-PIE           PIC 9(10).
-       01 PG-QTE-PIE           PIC 9(10).
-       01 PG-NOM-PIE           PIC X(30).
-
-      * Déclaration du booléen correspondant au choix de l'opération
-      * sur le stock de pièces. 
-       01 PG-TYP-CHG           PIC X(01).
-           88 PG-AJT                       VALUE '+'.
-           88 PG-RTI                       VALUE '-'.
-           
-
-      * Déclaration de la variable, correspondant à la quantité à 
-      * ajouter ou à soustraire au stock, que doit saisir l'utilisateur.   
-
-       01 PG-QTE-VRT           PIC 9(10).
-
-      * Création de la variable d'édition pour un meilleur affichage 
-      * de la variable PG-QTE-VRT dans les logs. 
-       01 PG-QTE-VRT-EDT       PIC Z(10).
-
+       01 WS-OPR-QTE-PIE       PIC X(10).
+ 
       * Déclaration de la variable stockant le message à inclure dans 
       * les logs à chaque opération.  
-       01 PG-MSG-LOG           PIC X(100).
+       01 WS-MSG-LOG           PIC X(100).
 
-      * Déclaration de la variable correspondant à l'identifiant de 
-      * l'utilisateur.
-       01 PG-IDF-UTI           PIC 9(10).
-       
+      * Déclaration de la variable définissant le type de log. 
+       01 WS-TYP-LOG           PIC X(12). 
+     
+      * Déclaration de la variable d'édition pour un meilleur affichage 
+      * des variables LK-QTE-PIE et LK-IDF-PIE dans les logs. 
+       01 WS-IDF-EDT           PIC Z(10). 
+       01 WS-QTE-EDT           PIC Z(10). 
+
+      * Déclaration des variables correspondant aux attributs  
+      * id_pie et qt_pie de la table piece.
+
+       EXEC SQL BEGIN DECLARE SECTION END-EXEC.
+       01 PG-IDF-PIE           PIC 9(10).
+
+      * Déclaration de la variable, correspondant à la quantité à 
+      * ajouter ou à soustraire au stock, que doit saisir l'utilisateur. 
+       01 PG-QTE-PIE           PIC 9(10).
+
+      * Déclaration de la variable  définissant le statut du retrait.
+      
+       01 PG-STA-RTI           PIC X(02).
+           88 PG-STA-RTI-OK                VALUE "OK".
+           88 PG-STA-RTI-KO                VALUE "KO".
+
+
        EXEC SQL END DECLARE SECTION END-EXEC.
        
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
-       
-      * Déclaration de la variable correspondant au résultat de 
-      * l'opération sur la quantité de pièces dans le stock.
-
-       01 WS-QTE-RSU           PIC 9(10).
 
        LINKAGE SECTION.
       * Arguments d'entrée correspondant aux variables utilisées dans 
       * le programme appelant.
        01 LK-IDF-PIE           PIC 9(10).
        01 LK-QTE-PIE           PIC 9(10).
-       01 LK-NOM-PIE           PIC X(30).
-
-       01 LK-TYP-CHG           PIC X(01).
-           88 LK-AJT                       VALUE '+'.
-           88 LK-SUP                       VALUE '-'.
-
-       01 LK-QTE-VRT           PIC 9(10).
        
-       01 LK-IDF-UTI           PIC 9(10).
+      * Déclaration du booléen correspondant au choix de l'opération
+      * sur le stock de pièces.  
+       01 LK-TYP-CHG           PIC 9(01).
+           88 LK-AJT                       VALUE 0.
+           88 LK-RTI                       VALUE 1.
 
 
-       PROCEDURE DIVISION USING LK-IDF-PIE,
-                                LK-QTE-PIE,
-                                LK-TYP-CHG,
-                                LK-QTE-VRT
-                                LK-NOM-PIE
-                                LK-IDF-UTI.
-
+       PROCEDURE DIVISION USING LK-IDF-PIE
+                                LK-QTE-PIE
+                                LK-TYP-CHG.
+                                
 
            PERFORM 0100-AFC-VAR-DEB
               THRU 0100-AFC-VAR-FIN.
            
-           PERFORM 0200-SLC-PIE-DEB
-              THRU 0200-SLC-PIE-FIN.
-
-           PERFORM 0300-CHX-TYP-CHG-DEB
-              THRU 0300-CHX-TYP-CHG-FIN.
+           PERFORM 0200-CHX-TYP-CHG-DEB
+              THRU 0200-CHX-TYP-CHG-FIN.
            
-           PERFORM 0400-MAJ-NVL-QTE-DEB
-              THRU 0400-MAJ-NVL-QTE-FIN.
-           
-           PERFORM 0500-CHX-LOG-DEB
-              THRU 0500-CHX-LOG-FIN.
+           PERFORM 0500-APL-CRE-LOG-DEB
+              THRU 0500-APL-CRE-LOG-FIN.
 
            EXIT PROGRAM.
 
@@ -114,226 +98,237 @@
       *                         PARAGRAPHES                            * 
       ******************************************************************
        
-      * Alimentation des variables à utiliser dans SQL (id de la pièce,
-      * quantité pour la pièce, type d'opération, quantité à ajouter ou
-      * à retirer dans le stock, nom de la pièce et l'id de  
-      * l'utilisateur) avec les valeurs saisies par l'utilisateur.
-
        0100-AFC-VAR-DEB.
+
+      * Alimentation des variables à utiliser dans SQL (id de la pièce
+      * et quantité à ajouter ou à retirer dans le stock) avec les  
+      * valeurs saisies par l'utilisateur. 
 
            MOVE LK-IDF-PIE 
            TO   PG-IDF-PIE.
-
+       
            MOVE LK-QTE-PIE 
            TO   PG-QTE-PIE.
 
-           MOVE LK-TYP-CHG 
-           TO   PG-TYP-CHG.
-           
-           MOVE LK-QTE-VRT 
-           TO   PG-QTE-VRT.
+      * Alimentation des variables d'édition avec les valeurs saisies  
+      * par l'utilisateur. Elles seront utilisées dans les logs.
 
-           MOVE LK-NOM-PIE 
-           TO   PG-NOM-PIE.
+           MOVE LK-IDF-PIE
+           TO   WS-IDF-EDT.
 
-           MOVE LK-IDF-UTI 
-           TO   PG-IDF-UTI.
+           MOVE LK-QTE-PIE
+           TO   WS-QTE-EDT.
+
+      * Alimentation de la variable correspondant au type de log.     
+           MOVE 'piece'
+           TO   WS-TYP-LOG.
 
            EXIT.
        0100-AFC-VAR-FIN.
 
       *-----------------------------------------------------------------
-
-      * Récupération de l'information correspondant à l'id de la pièce
-      * saisi par l'utilisateur.
-
-       0200-SLC-PIE-DEB.
-
-           EXEC SQL 
-               SELECT id_pie
-               INTO   :PG-IDF-PIE
-               FROM   piece
-               WHERE  id_pie = :PG-IDF-PIE
-           END-EXEC.
-
-           EXIT.
-       0200-SLC-PIE-FIN.
-
-      *-----------------------------------------------------------------
        
-
       * Choix de l'opération à effectuer sur le stock de la pièce 
       * correspondante.
 
-       0300-CHX-TYP-CHG-DEB.
+       0200-CHX-TYP-CHG-DEB.
 
       * Si l'utilisateur choisit d'ajouter des pièces dans le stock,
       * additionne la quantité à rajouter saisie à la quantité des  
       * pièces dans le stock.
 
-           IF PG-AJT
-               COMPUTE WS-QTE-RSU = PG-QTE-PIE + PG-QTE-VRT  
-               
-               PERFORM 0350-NVL-QTE-PIE-DEB
-                  THRU 0350-NVL-QTE-PIE-FIN
+           IF LK-AJT
+
+               PERFORM 0300-MAJ-AJT-QTE-DEB
+                  THRU 0300-MAJ-AJT-QTE-FIN
+
+      * Génération du message d'ajout dans les logs.
+
+               PERFORM 0450-GEN-LOG-OK-DEB
+                  THRU 0450-GEN-LOG-OK-FIN
 
       * Si l'utilisateur choisit de retirer des pièces dans le stock,
       * soustrait la quantité à retirer saisie à la quantité des pièces 
-      * dans le stock.
+      * dans le stock (seulement si la quantité à retirer est 
+      * inférieure au stock).
 
            ELSE
-               COMPUTE WS-QTE-RSU = PG-QTE-PIE - PG-QTE-VRT    
 
-               PERFORM 0350-NVL-QTE-PIE-DEB
-                  THRU 0350-NVL-QTE-PIE-FIN
+               PERFORM 0300-MAJ-RTI-QTE-DEB
+                  THRU 0300-MAJ-RTI-QTE-FIN
+
+      * Choix du message à générer dans les logs selon le statut du 
+      * retrait.
+
+               PERFORM 0400-CHX-MSG-LOG-DEB
+                  THRU 0400-CHX-MSG-LOG-FIN
 
            END-IF.
        
            EXIT.
-       0300-CHX-TYP-CHG-FIN.
-
-      *-----------------------------------------------------------------
-       
-      * Alimentation de la variable correspondant à la quantité des 
-      * pièces dans le stock avec la nouvelle valeur. 
-       0350-NVL-QTE-PIE-DEB.
-           
-           MOVE WS-QTE-RSU 
-           TO   PG-QTE-PIE.
-
-           EXIT.
-       0350-NVL-QTE-PIE-FIN.
+       0200-CHX-TYP-CHG-FIN.
 
       *-----------------------------------------------------------------
        
       * Mise à jour de l'information sur la quantité de pièces du stock
-      * dans la base de données SQL.
+      * dans la base de données SQL. Ajout de la quantité définie dans 
+      * la SCREEN SECTION au stock.
 
-       0400-MAJ-NVL-QTE-DEB.
+       0300-MAJ-AJT-QTE-DEB.
 
            EXEC SQL
                UPDATE piece
-               SET qt_pie = :PG-QTE-PIE
+               SET qt_pie = qt_pie + :PG-QTE-PIE
                WHERE id_pie = :PG-IDF-PIE
            END-EXEC.    
 
            IF SQLCODE = 0
               EXEC SQL COMMIT END-EXEC 
-       
+
+              MOVE 'Ajout'
+              TO   WS-OPR-QTE-PIE
+
            ELSE
               EXEC SQL ROLLBACK END-EXEC 
            END-IF.
-           
+
            EXIT.
-       0400-MAJ-NVL-QTE-FIN.
+       0300-MAJ-AJT-QTE-FIN.
 
       *-----------------------------------------------------------------
+       
+      * Mise à jour de l'information sur la quantité de pièces du stock
+      * dans la base de données SQL. Retrait de la quantité définie dans 
+      * la SCREEN SECTION au stock.
 
-      * Choix du message à afficher dans les logs selon l'opération sur
-      * la quantité des pièces.
 
-       0500-CHX-LOG-DEB.
+       0300-MAJ-RTI-QTE-DEB.
+
+      * Affectation d'une variable de statut sur le retrait. Elle
+      * permettra de définir le message log à envoyer.
+      * Si la quantité à retirer est inférieure à la quantité en stock
+      * alors le retrait est défini en "OK", sinon il est défini en 
+      * "KO". 
+
+           EXEC SQL
+               SELECT 
+                   CASE 
+                       WHEN qt_pie>= :PG-QTE-PIE 
+                       THEN 'OK'
+                       ELSE 
+                           'KO'
+                   END 
+               INTO :PG-STA-RTI
+               FROM piece
+               WHERE id_pie = :PG-IDF-PIE 
+           END-EXEC.
+
+
+      * Le retrait ne s'opère que si la quantité à retirer est 
+      * inférieure à la quantité de la pièce en stock.
+
+           IF PG-STA-RTI-OK
+               EXEC SQL
+                   UPDATE piece
+                   SET qt_pie = qt_pie - :PG-QTE-PIE
+                   WHERE id_pie = :PG-IDF-PIE
+               END-EXEC
+            
+         
+               IF SQLCODE = 0 
+                  EXEC SQL COMMIT END-EXEC 
+                  MOVE 'Retrait'
+                  TO   WS-OPR-QTE-PIE 
+
+               ELSE
+                  EXEC SQL ROLLBACK END-EXEC 
+                  
+               END-IF
+       
+           END-IF.
            
-      * Alimentation de la variable d'édition avec la valeur de la 
-      * quantité à ajouter ou à retirer saisie par l'utilisateur.
+           EXIT.
+       0300-MAJ-RTI-QTE-FIN.
 
-           MOVE PG-QTE-VRT
-           TO   PG-QTE-VRT-EDT.
+      *----------------------------------------------------------------- 
+       0400-CHX-MSG-LOG-DEB.
 
-      * Génération du log si un ajout de pièce dans le stock est 
-      * effectué.
+      * Si le statut du retrait est "OK" alors on génère le message de
+      * log correspondant au retrait dans le stock.
 
-           IF PG-AJT
-               PERFORM 0550-GEN-LOG-AJT-DEB
-                  THRU 0550-GEN-LOG-AJT-FIN 
+           IF PG-STA-RTI-OK 
+       
+               PERFORM 0450-GEN-LOG-OK-DEB
+                  THRU 0450-GEN-LOG-OK-FIN  
 
-      * Génération du log si un retrait de pièce dans le stock est 
-      * effectué.  
+      * Si le statut de retrait est "KO" alors on génère le message 
+      * d'erreur dans les logs.
 
-           ELSE 
-               PERFORM 0550-GEN-LOG-RTI-DEB
-                  THRU 0550-GEN-LOG-RTI-FIN 
+           ELSE
+               
+               PERFORM 0450-GEN-LOG-K0-DEB
+                  THRU 0450-GEN-LOG-K0-FIN
+
            END-IF. 
-           
-           EXIT.
-       0500-CHX-LOG-FIN.
-      *-----------------------------------------------------------------
-       
-       0550-GEN-LOG-AJT-DEB.
-
-      * Concaténation de chaîne de caractères avec les variables 
-      * correspondant au nom de la pièce concernée et la quantité à 
-      * ajouter au stock pour générer le message dans les logs.
-
-           STRING 'Mise a jour du stock de ' DELIMITED BY SIZE 
-                  PG-NOM-PIE DELIMITED BY SPACE 
-                  ' de + ' DELIMITED BY SIZE
-                  FUNCTION TRIM (PG-QTE-VRT-EDT) DELIMITED BY SIZE
-                  ' unites.' DELIMITED BY SIZE
-                  INTO PG-MSG-LOG
-           END-STRING.
-
-      * Insertion de l'heure et la date auxquelles ont été réalisées les 
-      * requêtes SQL, du message de log indiquant les opérations 
-      * effectuées, le type du log et l'id de l'utilisateur dans la 
-      * table logs de la base de données.
-
-           EXEC SQL
-               INSERT INTO logs (heure_log, date_log, detail_log, 
-                               type_log, id_uti)
-               VALUES (CURRENT_TIME, CURRENT_DATE, :PG-MSG-LOG,
-                      'piece', :PG-IDF-UTI)
-           END-EXEC.
-
-           IF SQLCODE = 0
-              EXEC SQL COMMIT END-EXEC 
-       
-           ELSE
-              EXEC SQL ROLLBACK END-EXEC 
-           END-IF.
 
            EXIT.
-       0550-GEN-LOG-AJT-FIN.
+       0400-CHX-MSG-LOG-FIN.
+      *----------------------------------------------------------------- 
        
-      *-----------------------------------------------------------------
-       
-       0550-GEN-LOG-RTI-DEB.
+       0450-GEN-LOG-OK-DEB.
            
       * Concaténation de chaîne de caractères avec les variables 
-      * correspondant au nom de la pièce concernée et la quantité à 
-      * retirer au stock pour générer le message dans les logs.
+      * correspondant à l'ID de la pièce concernée, le type de  
+      * l'opération sur le stock et la quantité à ajouter/retirer au 
+      * stock pour générer le message dans les logs.
 
-           STRING 'Mise a jour du stock de ' DELIMITED BY SIZE 
-                  PG-NOM-PIE DELIMITED BY SPACE 
-                  ' de - ' DELIMITED BY SIZE
-                  FUNCTION TRIM (PG-QTE-VRT-EDT) DELIMITED BY SIZE
+           STRING '[' DELIMITED BY SIZE 
+                  FUNCTION TRIM (WS-IDF-EDT) DELIMITED BY SIZE 
+                  '] ' DELIMITED BY SIZE 
+                  WS-OPR-QTE-PIE DELIMITED BY SPACE 
+                  ' de ' DELIMITED BY SIZE
+                  FUNCTION TRIM (WS-QTE-EDT) DELIMITED BY SIZE
                   ' unites.' DELIMITED BY SIZE
-                  INTO PG-MSG-LOG
+                  INTO WS-MSG-LOG
            END-STRING.
 
-
-      * Insertion de l'heure et la date auxquelles ont été réalisées les 
-      * requêtes SQL, du message de log indiquant les opérations 
-      * effectuées, le type du log et l'id de l'utilisateur dans la 
-      * table logs de la base de données.
-
-           EXEC SQL
-               INSERT INTO logs (heure_log, date_log, detail_log, 
-                               type_log, id_uti)
-               VALUES (CURRENT_TIME, CURRENT_DATE, :PG-MSG-LOG,
-                      'piece', :PG-IDF-UTI)
-           END-EXEC.
-
-
-           IF SQLCODE = 0
-              EXEC SQL COMMIT END-EXEC 
-       
-           ELSE
-              EXEC SQL ROLLBACK END-EXEC 
-           END-IF.
-       
            EXIT.
-       0550-GEN-LOG-RTI-FIN.
+       0450-GEN-LOG-OK-FIN.
+      *----------------------------------------------------------------- 
+      
+       0450-GEN-LOG-K0-DEB.
 
+      * De même que pour le paragraphe 0450-GEN-LOG-OK-DEB, à la 
+      * différence qu'ici un message d'erreur est généré.
+
+           STRING '[' DELIMITED BY SIZE 
+                  FUNCTION TRIM (WS-IDF-EDT) DELIMITED BY SIZE 
+                  '] ' DELIMITED BY SIZE 
+                  '[ERREUR] la quantite a retirer est superieure'
+      -           ' a la quantite en stock' DELIMITED BY SIZE 
+                  INTO WS-MSG-LOG
+           END-STRING.
+           
+           EXIT.
+
+       0450-GEN-LOG-K0-FIN.
+
+      *----------------------------------------------------------------- 
+       
+       0500-APL-CRE-LOG-DEB.
+
+      * Appel du sous-programme crelog pour l'insertion du log dans la
+      * base de données SQL. Il prend le message de log généré ainsi
+      * que le type de log défini dans ce programme en arguments.
+
+
+           CALL "crelog" USING WS-MSG-LOG
+                               WS-TYP-LOG
+                               
+           END-CALL.
+
+           EXIT.
+
+       0500-APL-CRE-LOG-FIN.
 
 
