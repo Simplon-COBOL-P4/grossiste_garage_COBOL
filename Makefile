@@ -32,6 +32,9 @@ RUN_PATHS = $(patsubst $(SRC_FOLDER)%, $(LIBS_FOLDER)%, $(SRC_PATHS))
 # exporte les chemins vers tous les sous dossiers de libs séparés par des ":"
 export COB_LIBRARY_PATH := $(subst $(space)$(space),:,$(RUN_PATHS))
 
+CPY_PATHS := $(shell find $(COPYBOOKS_FOLDER) -type d)
+COB_CPY_PATH = $(subst $(space), -I ,$(CPY_PATHS))
+
 # Exporte le chemin vers les librairies locales, pour permettre le linkage au runtime.
 #export COB_LIBRARY_PATH := libs
 # Exporte le chemin vers sqlca, il ne peut pas simplement être mis dans les Copybooks, étant donné qu'il s'appelle .cbl et non .cpy, il serait récupéré et compilé par le Makefile.
@@ -47,7 +50,7 @@ all: $(BIN) $(LIBS)
 
 # Règle pour compiler le point d'entrée.
 $(BIN): $(MAIN_PRECOMPILED)
-	cobc -x -locesql $(MAIN_PRECOMPILED) -o $(BIN) -I srcs/Copybooks
+	cobc -x -locesql $(MAIN_PRECOMPILED) -o $(BIN) -I $(COB_CPY_PATH)
 
 # Règle pour précompiler les .cob à partir des .cbl avec ocesql.
 $(PRECOMPILED_FOLDER)%.cob: $(SRC_FOLDER)%.cbl
@@ -57,7 +60,7 @@ $(PRECOMPILED_FOLDER)%.cob: $(SRC_FOLDER)%.cbl
 # Règle pour compiler les librairies dynamiques à partir des précompilés.
 $(LIBS_FOLDER)%.so: $(PRECOMPILED_FOLDER)%.cob
 	@mkdir -p $(dir $@)
-	cobc -m -locesql $< -o $@ -I srcs/Copybooks
+	cobc -m -locesql $< -o $@ -I $(COB_CPY_PATH)
 
 # Règle pour installer la structure de base du projet.
 install:
