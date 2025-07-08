@@ -159,8 +159,8 @@
 
            ELSE
 
-               PERFORM 0300-MAJ-RTI-QTE-DEB
-                  THRU 0300-MAJ-RTI-QTE-FIN
+               PERFORM 0350-MAJ-RTI-QTE-DEB
+                  THRU 0350-MAJ-RTI-QTE-FIN
 
       * Choix du message à générer dans les logs selon le statut du 
       * retrait.
@@ -207,7 +207,7 @@
       * la SCREEN SECTION au stock.
 
 
-       0300-MAJ-RTI-QTE-DEB.
+       0350-MAJ-RTI-QTE-DEB.
 
       * Affectation d'une variable de statut sur le retrait. Elle
       * permettra de définir le message log à envoyer.
@@ -253,7 +253,7 @@
            END-IF.
            
            EXIT.
-       0300-MAJ-RTI-QTE-FIN.
+       0350-MAJ-RTI-QTE-FIN.
 
       *----------------------------------------------------------------- 
        0400-CHX-MSG-LOG-DEB.
@@ -271,8 +271,8 @@
 
            ELSE
                
-               PERFORM 0450-GEN-LOG-K0-DEB
-                  THRU 0450-GEN-LOG-K0-FIN
+               PERFORM 0460-GEN-LOG-KO-DEB
+                  THRU 0460-GEN-LOG-KO-FIN
 
            END-IF. 
 
@@ -301,7 +301,7 @@
        0450-GEN-LOG-OK-FIN.
       *----------------------------------------------------------------- 
       
-       0450-GEN-LOG-K0-DEB.
+       0460-GEN-LOG-KO-DEB.
 
       * De même que pour le paragraphe 0450-GEN-LOG-OK-DEB, à la 
       * différence qu'ici un message d'erreur est généré.
@@ -316,7 +316,7 @@
            
            EXIT.
 
-       0450-GEN-LOG-K0-FIN.
+       0460-GEN-LOG-KO-FIN.
 
       *----------------------------------------------------------------- 
        
@@ -327,9 +327,11 @@
       * que le type de log défini dans ce programme en arguments.
 
 
-           CALL "crelog" USING WS-MSG-LOG
-                               WS-TYP-LOG
-                               WS-IDF-UTI
+           CALL "crelog" 
+               USING 
+               WS-MSG-LOG
+               WS-TYP-LOG
+               WS-IDF-UTI
                                
            END-CALL.
 
