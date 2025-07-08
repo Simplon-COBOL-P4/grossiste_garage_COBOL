@@ -146,22 +146,18 @@
        0200-AFF-ECR-FIN.
 
        0300-EVA-SAI-UTL-DEB.
-     
+           EVALUATE WS-CHX-UTL
 
-               EVALUATE WS-CHX-UTL
+               WHEN 1
 
-                   WHEN 1
-     
-                       PERFORM 0310-RE-CLI-DEB
-                          THRU 0310-RE-CLI-FIN
+                   PERFORM 0310-RE-CLI-DEB
+                      THRU 0310-RE-CLI-FIN
 
-                   WHEN 0
+               WHEN 0
 
-                       SET WS-FIN-BCL-OUI TO TRUE
+                   SET WS-FIN-BCL-OUI TO TRUE
 
-    
-               END-EVALUATE.
-           
+           END-EVALUATE.
        0300-EVA-SAI-UTL-FIN.
 
        0310-RE-CLI-DEB.
