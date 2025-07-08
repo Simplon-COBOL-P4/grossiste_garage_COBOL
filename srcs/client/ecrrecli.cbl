@@ -161,40 +161,40 @@
        0300-EVA-SAI-UTL-FIN.
 
        0310-RE-CLI-DEB.
-               IF FUNCTION TRIM(WS-SAI-UTL) IS NUMERIC
+           IF FUNCTION TRIM(WS-SAI-UTL) IS NUMERIC
 
-                   CALL "liridcli"
-                       USING 
-                       *> Arguments d'entrée:
-                       WS-IDF
-                       *> Arguments de sortie:
-                       WS-NOM
-                       WS-EML
-                       WS-IND
-                       WS-TEL
-                       WS-CDP
-                       WS-VIL 
-                       WS-ADR
-                   END-CALL   
-                   
-                  DISPLAY S-ECR-AFF
-                  ACCEPT WS-LRR
-                  
-                ELSE  
+               CALL "liridcli"
+                   USING 
+                   *> Arguments d'entrée:
+                   WS-IDF
+                   *> Arguments de sortie:
+                   WS-NOM
+                   WS-EML
+                   WS-IND
+                   WS-TEL
+                   WS-CDP
+                   WS-VIL 
+                   WS-ADR
+               END-CALL   
+               
+               DISPLAY S-ECR-AFF
+               ACCEPT WS-LRR
+              
+           ELSE  
 
-                   CALL "lirnmcli"
-                       USING
-                       *> Arguments d'entrée:
-                       WS-NOM
-                       *> Arguments de sortie:
-                       WS-IDF
-                       WS-EML
-                       WS-IND
-                       WS-TEL
-                       WS-CDP
-                       WS-VIL
-                       WS-ADR
-                   END-CALL 
+               CALL "lirnmcli"
+                   USING
+                   *> Arguments d'entrée:
+                   WS-NOM
+                   *> Arguments de sortie:
+                   WS-IDF
+                   WS-EML
+                   WS-IND
+                   WS-TEL
+                   WS-CDP
+                   WS-VIL
+                   WS-ADR
+               END-CALL 
 
-               END-IF.
+           END-IF.
        0310-RE-CLI-FIN.
