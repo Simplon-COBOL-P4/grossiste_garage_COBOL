@@ -1,7 +1,7 @@
       ******************************************************************
       *                             ENTÊTE                             *
       * Cet écran permet d'afficher les clients en liste, permet de    *
-      * saisir le numéro de la page.                                   *                           *
+      * saisir le numéro de la page.                                   *
       *                                                                *
       *                                                                *
       *                           TRIGRAMMES                           *
