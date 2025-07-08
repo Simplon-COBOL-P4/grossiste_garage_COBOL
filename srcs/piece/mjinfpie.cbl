@@ -169,10 +169,11 @@
       * de log défini dans ce programme et l'id utilisateur en 
       * arguments. 
 
-           CALL "crelog" USING WS-MSG-LOG
-                               WS-TYP-LOG
-                               WS-IDF-UTI
-           
+           CALL "crelog"
+               USING 
+               WS-MSG-LOG
+               WS-TYP-LOG
+               WS-IDF-UTI
            END-CALL.
 
            EXIT.
