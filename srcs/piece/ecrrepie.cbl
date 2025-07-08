@@ -129,7 +129,7 @@
                
                END-IF
 
-           ACCEPT S-MNU-STD
+               ACCEPT S-MNU-STD
            END-PERFORM.
 
        0200-TRA-COM-FIN.
