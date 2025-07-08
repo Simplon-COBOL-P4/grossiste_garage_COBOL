@@ -73,22 +73,22 @@
       *
       * Affiché l'ecran de saisi
       * 
-       PERFORM 0100-AFC-ECR-DEB
-          THRU 0100-AFC-ECR-FIN.
+           PERFORM 0100-AFC-ECR-DEB
+              THRU 0100-AFC-ECR-FIN.
       *
       * Saisir l'ID de la piece et les modifications souhaites puis 
       * confirmer la mise-à-jour.
       *
-       PERFORM UNTIL WS-MAJ-RET = '0'
-         PERFORM 0200-SSI-IDT-DEB
-            THRU 0200-SSI-IDT-FIN
-         PERFORM 0300-LIR-PIE-DEB
-            THRU 0300-LIR-PIE-FIN
-         PERFORM 0400-SSI-MOD-DEB
-            THRU 0400-SSI-MOD-FIN
-       END-PERFORM.
-
-       EXIT PROGRAM.
+           PERFORM UNTIL WS-MAJ-RET = '0'
+             PERFORM 0200-SSI-IDT-DEB
+             THRU 0200-SSI-IDT-FIN
+           PERFORM 0300-LIR-PIE-DEB
+             THRU 0300-LIR-PIE-FIN
+           PERFORM 0400-SSI-MOD-DEB
+             THRU 0400-SSI-MOD-FIN
+           END-PERFORM.
+      
+           EXIT PROGRAM.
       * 
       * Afficher l'ecran de saisi
       *
