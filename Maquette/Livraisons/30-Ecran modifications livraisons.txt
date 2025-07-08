@@ -4,23 +4,34 @@
 |                               LogiParts Solutions                            |
 +------------------------------------------------------------------------------+
 | Connecte en tant que : Admin                                                 |
-|                                                                              | 
-|                     ID livraisons :  [__________]                            |
-|                                                                              |  
-| Nom piece :                                                                  |
-| [__________________________________________________]                         |
-|                                                                              |                                                                      
-| ID piece :       [__________]                                                |
-|                                                                              | 
-| Nom fournisseur :                                                            |
-| [__________________________________________________]                         |
-|                                                                              | 
-| Quantite :       [__________]        ID fournisseur : [_________]            |
-|                                                                              | 
-| Date :           [__________]        Statut :         [_________]            |
 |                                                                              |
-|                                                                              | 
-|                            Confirmer modifications ?                         |
-|                            1 - Oui   0 - Annuler                             |
+|                      ID livraison :  [__________]                            |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                  1 - Valider la reception   0 - Annuler                      |
 |                                      [_]                                     |
 +------------------------------------------------------------------------------+
+Valider la reception :
+    Lire la livraison à partir de l'ID, si la livraison est déjà termine,
+    le préciser dans un message, sinon, mettre à jour la livraison, et écrire
+    un message.
+    Si la livraison a été mise à jour, et que c'est une livraison sortante,
+    Mettre à jour toutes les quantités des pièces du stock, à l'aide de la table
+    de jointure Livraison_Piece.
+    COMMIT.
+    Effaçage de l'ID actuel, attente d'une potentielle nouvelle mise à jour.
+Annuler :
+    Retour au programme appelant.
