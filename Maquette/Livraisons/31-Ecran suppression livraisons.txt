@@ -20,7 +20,15 @@
 |                                                                              |
 |                                                                              |
 |                                                                              |
-|                               Supprimer livraison ?                          |
-|                               1 - Oui   2 - Annuler                          |
+|                                                                              |
+|                         1 - Supprimer   2 - Annuler                          |
 |                                      [_]                                     | 
 +------------------------------------------------------------------------------+
+Supprimer :
+    Vérifier que la livraison n'est pas terminée avec `liridliv`, si elle ne
+    l'est pas, la supprimer avec `supliv`, et afficher un message expliquant la 
+    réussite, sinon, afficher un message expliquant qu'on ne peut supprimer une
+    livraison terminée.
+    Effacer le champ ID, et attendre une potentielle prochaine suppression.
+Annuler :
+    Retour au programme appelant.
