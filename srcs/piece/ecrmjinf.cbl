@@ -80,12 +80,12 @@
       * confirmer la mise-à-jour.
       *
            PERFORM UNTIL WS-MAJ-RET = '0'
-             PERFORM 0200-SSI-IDT-DEB
-             THRU 0200-SSI-IDT-FIN
-           PERFORM 0300-LIR-PIE-DEB
-             THRU 0300-LIR-PIE-FIN
-           PERFORM 0400-SSI-MOD-DEB
-             THRU 0400-SSI-MOD-FIN
+               PERFORM 0200-SSI-IDT-DEB
+                  THRU 0200-SSI-IDT-FIN
+               PERFORM 0300-LIR-PIE-DEB
+                  THRU 0300-LIR-PIE-FIN
+               PERFORM 0400-SSI-MOD-DEB
+                  THRU 0400-SSI-MOD-FIN
            END-PERFORM.
       
            EXIT PROGRAM.
