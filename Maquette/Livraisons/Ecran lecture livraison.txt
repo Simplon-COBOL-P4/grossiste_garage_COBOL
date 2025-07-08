@@ -1,26 +1,93 @@
 *********************Ecran de lecture de livraison unique***********************
 
+État 1 (inital):
 +------------------------------------------------------------------------------+
 |                               LogiParts Solutions                            |
 +------------------------------------------------------------------------------+
 | Connecte en tant que : Admin                                                 |
-| ID de la livraison : [__________________________________________________]    |
+| ID de la livraison : [__________]                                            |
 |______________________________________________________________________________|
 |                                                                              |
-| ID piece :                                                                   |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                            1 - Rechercher   0 - Annuler                      |
+|                                      [_]                                     |
++------------------------------------------------------------------------------+
+Rechercher :
+    Dans tous les cas, effacer le champ.
+    Appeler le sous programme `liridliv`, si la livraison n'existe pas,
+    attendre une potentielle nouvelle saisie.
+    Si la livraison est entrante, aller à l'État 2, sinon, aller à l'État 3.
+Annuler :
+    Retour au programme appelant.
+
+État 2 (Entrante) :
++------------------------------------------------------------------------------+
+|                               LogiParts Solutions                            |
++------------------------------------------------------------------------------+
+| Connecte en tant que : Admin                                                 |
+| ID de la livraison : [__________]                                            |
+|______________________________________________________________________________|
+|                                                                              |
+| ID :                                                                         |
 | [__________]                                                                 |
-| Nom piece :                                                                  |
-| [__________________________________________________]                         |
 | ID fournisseur :                                                             |
 | [__________]                                                                 |
 | Nom fournisseur :                                                            |
 | [__________________________________________________]                         |
-| Quantite :                                                                   |
+| Nombre pieces uniques :                                                      |
 | [__________]                                                                 |
 | Date :                                                                       |
 | [__________]                                                                 |
 | Statut :                                                                     |
 | [_]                                                                          |
+|                                                                              |
+|                                                                              |
 |                            1 - Rechercher   0 - Annuler                      |
 |                                      [_]                                     |
 +------------------------------------------------------------------------------+
+Rechercher :
+    Même fonction que le "Rechercher de l'État 1".
+Annuler :
+    Retour au programme appelant.
+
+État 3 (Sortante) :
++------------------------------------------------------------------------------+
+|                               LogiParts Solutions                            |
++------------------------------------------------------------------------------+
+| Connecte en tant que : Admin                                                 |
+| ID de la livraison : [__________]                                            |
+|______________________________________________________________________________|
+|                                                                              |
+| ID :                                                                         |
+| [__________]                                                                 |
+| ID client :                                                                  |
+| [__________]                                                                 |
+| Nom client :                                                                 |
+| [__________________________________________________]                         |
+| Nombre pieces uniques :                                                      |
+| [__________]                                                                 |
+| Date :                                                                       |
+| [__________]                                                                 |
+| Statut :                                                                     |
+| [_]                                                                          |
+|                                                                              |
+|                                                                              |
+|                            1 - Rechercher   0 - Annuler                      |
+|                                      [_]                                     |
++------------------------------------------------------------------------------+
+Rechercher :
+    Même fonction que le "Rechercher de l'État 1".
+Annuler :
+    Retour au programme appelant.
