@@ -8,6 +8,7 @@
       * ECR=ECRAN; AJ=AJOUT; PIE=PIECE; QTE=QUANTITE; MIN=MINIMUM;     *
       * FOU=FOURNISSEUR; CHX=CHOIX; VER=VERIFICATION; CHP=CHAMP;       *
       * MSG=MESSAGE; CNX=CONNEXION; MQR=MARQUEUR; VLD=VALIDER;         *
+      * INI=INITIALISATION; VAR=VARIABLE;                              *
       *                                                                *
       ******************************************************************
        
@@ -75,7 +76,9 @@
 
        PROCEDURE DIVISION.
       *    le déroulé du programme, après les vérifications ajupie est
-      *    appelé.           
+           PERFORM 0050-INI-VAR-DEB
+              THRU 0050-INI-VAR-FIN.
+
            PERFORM 0100-AFF-ECR-DEB
               THRU 0100-AFF-ECR-FIN.
 
@@ -92,6 +95,14 @@
               THRU 0500-VLD-ECR-FIN.
     
            EXIT PROGRAM.
+
+      *    Paragraphe pour initialiser les variables.
+       0050-INI-VAR-DEB.  
+           MOVE 0 TO WS-MQR-1.  
+           MOVE 0 TO WS-MQR-2.  
+           MOVE 0 TO WS-MQR-3.  
+           MOVE 1 TO WS-CHX.  
+       0050-INI-VAR-FIN.  
 
       *    Paragrpahe pour afficher constamment l'ecran.
        0100-AFF-ECR-DEB.
