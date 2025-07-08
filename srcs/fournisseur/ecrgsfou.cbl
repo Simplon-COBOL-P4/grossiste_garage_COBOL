@@ -68,7 +68,7 @@
            DISPLAY S-FND-ECR.
            DISPLAY S-ECR-CMN.
            IF LK-ROL = 'ADMIN' THEN
-              DISPLAY S-ECR-ADM
+               DISPLAY S-ECR-ADM
            END-IF.
 
        0100-AFC-ECR-FIN.
@@ -77,46 +77,47 @@
        0200-ACC-ECR-DEB.
            MOVE ' ' TO WS-CHO.
            PERFORM UNTIL WS-CHO = '0'
-             ACCEPT S-ECR-CHO
-             EVALUATE WS-CHO
-                WHEN '0'
-                     CONTINUE
-                WHEN '1'
-                     CALL "ecrajfou"
-                     END-CALL
-                WHEN '2'
-                     CALL "ecrchfou"
-                     END-CALL
-                WHEN '3'
-                     IF LK-ROL = 'ADMIN' THEN
-                        CALL "ecrmjfou"
-                        END-CALL
-                     ELSE 
-                        PERFORM 0300-AFC-ERR-DEB
-                           THRU 0300-AFC-ERR-FIN
-                           END-IF
-                WHEN '4'
-                     IF LK-ROL = 'ADMIN' THEN
-                        CALL "ecrspfou"
-                        END-CALL
-                      ELSE 
-                        PERFORM 0300-AFC-ERR-DEB
-                           THRU 0300-AFC-ERR-FIN
-                     END-IF
-                WHEN OTHER
-                     PERFORM 0300-AFC-ERR-DEB
-                        THRU 0300-AFC-ERR-FIN
-             END-EVALUATE
+               ACCEPT S-ECR-CHO
+               EVALUATE WS-CHO
+                   WHEN '0'
+                       CONTINUE
+                   WHEN '1'
+                       CALL "ecrajfou"
+                       END-CALL
+                   WHEN '2'
+                       CALL "ecrchfou"
+                       END-CALL
+                   WHEN '3'
+                       IF LK-ROL = 'ADMIN' THEN
+                           CALL "ecrmjfou"
+                           END-CALL
+                       ELSE 
+                           PERFORM 0300-AFC-ERR-DEB
+                              THRU 0300-AFC-ERR-FIN
+                       END-IF
+                   WHEN '4'
+                       IF LK-ROL = 'ADMIN' THEN
+                           CALL "ecrspfou"
+                           END-CALL
+                        ELSE 
+                            PERFORM 0300-AFC-ERR-DEB
+                               THRU 0300-AFC-ERR-FIN
+                       END-IF
+                   WHEN OTHER
+                       PERFORM 0300-AFC-ERR-DEB
+                          THRU 0300-AFC-ERR-FIN
+               END-EVALUATE
            END-PERFORM.
 
        0200-ACC-ECR-FIN.
            EXIT.
 
        0300-AFC-ERR-DEB.
-           DISPLAY 'Veuillez saisir une des options existants' AT LINE 
-                                                              23 COL 30. 
-           ACCEPT WS-ERR AT LINE 23 COL 71.
-           DISPLAY '                                          ' AT LINE 
-                                                              23 COL 30. 
+           DISPLAY 'Veuillez saisir une des options existants'
+               AT LINE 23 COL 30. 
+           ACCEPT WS-ERR
+               AT LINE 23 COL 71.
+           DISPLAY '                                          '
+               AT LINE 23 COL 30. 
        0300-AFC-ERR-FIN.
            EXIT.
