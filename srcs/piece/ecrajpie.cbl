@@ -104,7 +104,7 @@
            MOVE 1 TO WS-CHX.  
        0050-INI-VAR-FIN.  
 
-      *    Paragrpahe pour afficher constamment l'ecran.
+      *    Paragraphe pour afficher constamment l'ecran.
        0100-AFF-ECR-DEB.
            IF WS-CHX = 0
                EXIT PROGRAM
