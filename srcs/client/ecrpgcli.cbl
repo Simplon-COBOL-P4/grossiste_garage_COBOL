@@ -39,7 +39,7 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ecrpgcli.
        AUTHOR. Benoit.
-       DATE-WRITTEN.04-07-2025 (fr).
+       DATE-WRITTEN. 04-07-2025 (fr).
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
