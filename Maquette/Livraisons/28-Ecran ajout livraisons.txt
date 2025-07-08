@@ -1,26 +1,138 @@
 *************************Ecran d'ajout de livraisons****************************
 
+État 1 (initial) :
 +------------------------------------------------------------------------------+
 |                               LogiParts Solutions                            |
 +------------------------------------------------------------------------------+
 | Connecte en tant que :                                                       |
 |                                                                              |
+| Type de livraison                                                            |
+|                                                                              |
+| Entree (0) / Sortie (1) : [_]                                                |
 |                                                                              |
 |                                                                              |
 |                                                                              |
-| ID piece :            [__________]                                           |
 |                                                                              |
-| ID fournisseur :      [__________]                                           |
 |                                                                              |
-| Quantite livree :     [__________]                                           |
 |                                                                              |
-| Date livraison :      [__________]                                           |
 |                                                                              |
-| Statut :              [__________]                                           |
-|                                                                              |                                                
-|                                                                              | 
-|                               Ajouter au stock                               |
-|                               1 - Oui   0 - Annuler                          |
-|                                      [_]                                     |  
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                           1 - Suivant   0 - Annuler                          |
+|                                      [_]                                     |
 |                                                                              |
 +------------------------------------------------------------------------------+
+Entrée - Suivant :
+    Aller à État 2.
+Sortie - Suivant :
+    Aller à État 3.
+Annuler :
+    Retour au programme appelant.
+
+État 2 (Livraison entrante) :
++------------------------------------------------------------------------------+
+|                               LogiParts Solutions                            |
++------------------------------------------------------------------------------+
+| Connecte en tant que :                                                       |
+|                                                                              |
+| Livraison entrante                                                           |
+|                                                                              |
+| ID fournisseur : [__________]                                                |
+|                                                                              |
+| Date livraison : [__________]                                                |
+|                                                                              |
+| Statut (0/1) :   [_]                                                         |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                           1 - Suivant   0 - Annuler                          |
+|                                      [_]                                     |
+|                                                                              |
++------------------------------------------------------------------------------+
+Suivant :
+    Insérer livraison en DB (appel 'ajuliv'), vérifier le code retour,
+    notamment pour savoir si l'ID fournisseur existe, ne pas COMMIT.
+    Aller à État 4.
+Annuler :
+    Aller à l'État 1.
+
+État 3 (Livraison sortante) :
++------------------------------------------------------------------------------+
+|                               LogiParts Solutions                            |
++------------------------------------------------------------------------------+
+| Connecte en tant que :                                                       |
+|                                                                              |
+| Livraison entrante                                                           |
+|                                                                              |
+| ID client :      [__________]                                                |
+|                                                                              |
+| Date livraison : [__________]                                                |
+|                                                                              |
+| Statut (0/1) :   [_]                                                         |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                           1 - Suivant   0 - Annuler                          |
+|                                      [_]                                     |
+|                                                                              |
++------------------------------------------------------------------------------+
+Suivant :
+    Insérer livraison en DB (appel 'ajuliv'), vérifier le code retour,
+    notamment pour savoir si l'ID client existe, ne pas COMMIT.
+    Aller à l'État 4.
+Annuler :
+    Aller à l'État 1.
+
+État 4 (Pièce livraison) :
++------------------------------------------------------------------------------+
+|                               LogiParts Solutions                            |
++------------------------------------------------------------------------------+
+| Connecte en tant que :                                                       |
+|                                                                              |
+| Piece de livraison                                                           |
+|                                                                              |
+| ID piece : [__________]                                                      |
+|                                                                              |
+| Quantite : [__________]                                                      |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                  1 - Ajouter   2 - Terminer   0 - Annuler                    |
+|                                      [_]                                     |
+|                                                                              |
++------------------------------------------------------------------------------+
+Ajouter :
+    Vérifier si la pièce n'a pas déjà été ajoutée à cette livraison.
+    Si c'est une livraison entrante, vérifier que la pièce est bien fournie par
+    le fournisseur actuel.
+    Si c'est une livraison sortante, vérifier s'il y a suffisamment
+    d'exemplaires de la pièce en stock.
+    Insérer une ligne dans la table de jointure Livraison_Piece, vérifier le
+    code retour, ne pas COMMIT.
+Terminer :
+    COMMIT.
+    Aller à l'État 1.
+Annuler :
+    ROLLBACK.
+    Aller à l'État 1.
