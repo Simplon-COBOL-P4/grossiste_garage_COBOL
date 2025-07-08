@@ -55,23 +55,23 @@
       *    Traitement de la commande entree par l'utilisateur.
        0200-CHX-MEN-DEB.
            PERFORM UNTIL WS-CHX EQUAL 0
-           ACCEPT S-ECRCHPIE
-           EVALUATE WS-CHX
-               WHEN "1"
-                   CALL "ecrrepie"
-                   END-CALL
-
-               WHEN "2"
-                   CALL "affpie"
-                   END-CALL
-
-               WHEN 0
-                   EXIT PROGRAM
-
-               WHEN OTHER
-                   DISPLAY "Entrer 1 ou 2"
-                   AT LINE 21 COLUMN 3
-           END-EVALUATE
+               ACCEPT S-ECRCHPIE
+               EVALUATE WS-CHX
+                   WHEN "1"
+                       CALL "ecrrepie"
+                       END-CALL
+            
+                   WHEN "2"
+                       CALL "affpie"
+                       END-CALL
+            
+                   WHEN 0
+                       EXIT PROGRAM
+            
+                   WHEN OTHER
+                       DISPLAY "Entrer 1 ou 2"
+                       AT LINE 21 COLUMN 3
+               END-EVALUATE
            END-PERFORM.
 
        0200-CHX-MEN-FIN.
