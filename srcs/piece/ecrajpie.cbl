@@ -164,10 +164,10 @@
            AND WS-MQR-3 EQUAL 1
            CALL "ajupie"
                USING
-                   WS-NOM-PIE
-                   WS-QTE-PIE-NUM
-                   WS-MIN-PIE-NUM
-                   WS-ID-FOU-NUM
+               WS-NOM-PIE
+               WS-QTE-PIE-NUM
+               WS-MIN-PIE-NUM
+               WS-ID-FOU-NUM
            END-CALL
 
       *    MOVE 0 TO WS-CHX pour arrêté le programme.
