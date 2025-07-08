@@ -37,8 +37,8 @@
        01 LK-ID-FOR          PIC 9(10).
        01 LK-NOM-FOR         PIC X(50).
 
-       PROCEDURE DIVISION USING LK-ID-PIE,
-                                LK-NOM-PIE,
+       PROCEDURE DIVISION USING LK-NOM-PIE,
+                                LK-ID-PIE,
                                 LK-QNT-PIE,
                                 LK-SEU-PIE,
                                 LK-ID-FOR,
