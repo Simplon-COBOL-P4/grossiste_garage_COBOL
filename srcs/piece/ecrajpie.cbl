@@ -25,9 +25,9 @@
        01 WS-ID-FOU                 PIC X(10).
     
       *    Déclaration des variables passées en numériques
-       01 WS-QTE-PIE-NUM            PIC 9(01).
-       01 WS-MIN-PIE-NUM            PIC 9(01).
-       01 WS-ID-FOU-NUM             PIC 9(01).
+       01 WS-QTE-PIE-NUM            PIC 9(10).
+       01 WS-MIN-PIE-NUM            PIC 9(10).
+       01 WS-ID-FOU-NUM             PIC 9(10).
        
       *    Déclaration de variables complémentaires nécessaire à 
       *    l'éxécution du programme.
