@@ -112,10 +112,12 @@
                      WS-LOG-DET
                      "Fournisseur"
                      LK-UTI-ID
-               END-CALL      
+               END-CALL
+               SET LK-MAJ-RET-OK       TO TRUE       
            ELSE
       * L'utilisateur n'est pas dans la table ou la table n'existe pas.
                EXEC SQL ROLLBACK END-EXEC
+               SET LK-MAJ-RET-ERR      TO TRUE
            END-IF.
            
        0200-SQL-FIN.
