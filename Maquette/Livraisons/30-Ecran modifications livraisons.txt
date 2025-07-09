@@ -28,7 +28,7 @@ Valider la reception :
     Lire la livraison à partir de l'ID, si la livraison est déjà terminée,
     le préciser dans un message, sinon, passer la livraison en terminée, et
     écrire un message.
-    Si la livraison a été mise à jour, et que c'est une livraison sortante,
+    Si la livraison a été mise à jour, et que c'est une livraison entrante,
     Mettre à jour toutes les quantités des pièces du stock, à l'aide de la table
     de jointure Livraison_Piece.
     COMMIT.
