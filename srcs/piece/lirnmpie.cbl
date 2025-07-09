@@ -62,12 +62,14 @@
            MOVE LK-NOM-PIE TO PG-NOM-PIE.
 
        EXEC SQL
-           SELECT p.nom_pie,
+           SELECT p.id_pie,
+                  p.nom_pie,
                   p.qt_pie,
                   p.seuil_pie,
                   f.id_fou,
                   f.nom_fou
-           INTO :PG-NOM-PIE,
+           INTO :PG-ID-PIE,
+                :PG-NOM-PIE,
                 :PG-QNT-PIE,
                 :PG-SEU-PIE,
                 :PG-ID-FOR,
@@ -79,6 +81,7 @@
 
            IF SQLCODE = 0
       * Si la piece est trouvé, on envoye les infos dans la linkage.
+               MOVE PG-ID-PIE    TO LK-ID-PIE
                MOVE PG-NOM-PIE   TO LK-NOM-PIE
                MOVE PG-QNT-PIE   TO LK-QNT-PIE
                MOVE PG-SEU-PIE   TO LK-SEU-PIE
