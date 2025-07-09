@@ -9,6 +9,7 @@
       * FOU=FOURNISSEUR; CHX=CHOIX; VER=VERIFICATION; CHP=CHAMP;       *
       * MSG=MESSAGE; CNX=CONNEXION; MQR=MARQUEUR; VLD=VALIDER;         *
       * INI=INITIALISATION; VAR=VARIABLE;                              *
+      *                                                                *
       ******************************************************************
        
        IDENTIFICATION DIVISION.
@@ -97,15 +98,15 @@
     
            EXIT PROGRAM.
 
+      *    Paragraphe pour initialiser les variables.
+       0050-INI-VAR-DEB.  
+           MOVE 0 TO WS-MQR-1.  
+           MOVE 0 TO WS-MQR-2.  
+           MOVE 0 TO WS-MQR-3.  
+           MOVE 1 TO WS-CHX.  
+       0050-INI-VAR-FIN.  
 
-       0050-INI-VAR-DEB.
-               MOVE 0 TO WS-MQR-1.
-               MOVE 0 TO WS-MQR-2.
-               MOVE 0 TO WS-MQR-3.
-               MOVE 1 TO WS-CHX.
-       0050-INI-VAR-FIN.
-
-      *    Paragrpahe pour afficher constamment l'ecran.
+      *    Paragraphe pour afficher constamment l'ecran.
        0100-AFF-ECR-DEB.
            IF WS-CHX = 0
                EXIT PROGRAM
@@ -165,10 +166,10 @@
            AND WS-MQR-3 EQUAL 1
            CALL "ajupie"
                USING
-                   WS-NOM-PIE
-                   WS-QTE-PIE-NUM
-                   WS-MIN-PIE-NUM
-                   WS-ID-FOU-NUM
+               WS-NOM-PIE
+               WS-QTE-PIE-NUM
+               WS-MIN-PIE-NUM
+               WS-ID-FOU-NUM
            END-CALL
 
       *    MOVE 0 TO WS-CHX pour arrêté le programme.
