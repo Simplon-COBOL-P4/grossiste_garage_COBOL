@@ -79,14 +79,8 @@
       * Saisir l'ID de la piece et les modifications souhaites puis 
       * confirmer la mise-à-jour.
       *
-           PERFORM UNTIL WS-MAJ-RET = '0'
-               PERFORM 0200-SSI-IDT-DEB
-                  THRU 0200-SSI-IDT-FIN
-               PERFORM 0300-LIR-PIE-DEB
-                  THRU 0300-LIR-PIE-FIN
-               PERFORM 0400-SSI-MOD-DEB
-                  THRU 0400-SSI-MOD-FIN
-           END-PERFORM.
+           PERFORM 0150-SSI-DEB
+              THRU 0150-SSI-FIN.
       
            EXIT PROGRAM.
       * 
@@ -97,6 +91,19 @@
            DISPLAY S-ECR-SSI-01.
 
        0100-AFC-ECR-FIN.
+           EXIT.
+
+       0150-SSI-DEB.
+           PERFORM UNTIL WS-MAJ-RET = '0'
+               PERFORM 0200-SSI-IDT-DEB
+                  THRU 0200-SSI-IDT-FIN
+               PERFORM 0300-LIR-PIE-DEB
+                  THRU 0300-LIR-PIE-FIN
+               PERFORM 0400-SSI-MOD-DEB
+                  THRU 0400-SSI-MOD-FIN
+           END-PERFORM.
+
+       0150-SSI-FIN.
            EXIT.
       *
       * Saisir l'id de la piece à mdifier
