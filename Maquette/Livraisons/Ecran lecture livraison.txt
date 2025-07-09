@@ -28,6 +28,8 @@ Rechercher :
     Dans tous les cas, effacer le champ.
     Appeler le sous programme `liridliv`, si la livraison n'existe pas,
     attendre une potentielle nouvelle saisie.
+    Faire une requête SQL pour compter le nombre de Livraison_Piece associées à
+    la livraison.
     Si la livraison est entrante, aller à l'État 2, sinon, aller à l'État 3.
 Annuler :
     Retour au programme appelant.
