@@ -8,7 +8,7 @@
       * ECR=ECRAN; AJ=AJOUT; PIE=PIECE; QTE=QUANTITE; MIN=MINIMUM;     *
       * FOU=FOURNISSEUR; CHX=CHOIX; VER=VERIFICATION; CHP=CHAMP;       *
       * MSG=MESSAGE; CNX=CONNEXION; MQR=MARQUEUR; VLD=VALIDER;         *
-      *                                                                *
+      * INI=INITIALISATION; VAR=VARIABLE;                              *
       ******************************************************************
        
        IDENTIFICATION DIVISION.
@@ -25,9 +25,9 @@
        01 WS-ID-FOU                 PIC X(10).
     
       *    Déclaration des variables passées en numériques
-       01 WS-QTE-PIE-NUM            PIC 9(01).
-       01 WS-MIN-PIE-NUM            PIC 9(01).
-       01 WS-ID-FOU-NUM             PIC 9(01).
+       01 WS-QTE-PIE-NUM            PIC 9(10).
+       01 WS-MIN-PIE-NUM            PIC 9(10).
+       01 WS-ID-FOU-NUM             PIC 9(10).
        
       *    Déclaration de variables complémentaires nécessaire à 
       *    l'éxécution du programme.
@@ -39,9 +39,9 @@
 
       *    Des marqueurs pour vérifier que les données saisies sont 
       *    correctes.
-       77 WS-MQR-1                  PIC 9(01) VALUE 0.
-       77 WS-MQR-2                  PIC 9(01) VALUE 0.
-       77 WS-MQR-3                  PIC 9(01) VALUE 0.
+       01 WS-MQR                    PIC 9(03) VALUE 0.
+           88 WS-MQR-SUCCESS                  VALUE 111.
+      
        
        SCREEN SECTION.
        COPY ecrprn.
@@ -76,6 +76,10 @@
        PROCEDURE DIVISION.
       *    le déroulé du programme, après les vérifications ajupie est
       *    appelé.           
+           
+           PERFORM 0050-INI-VAR-DEB
+              THRU 0050-INI-VAR-FIN.
+           
            PERFORM 0100-AFF-ECR-DEB
               THRU 0100-AFF-ECR-FIN.
 
@@ -92,6 +96,14 @@
               THRU 0500-VLD-ECR-FIN.
     
            EXIT PROGRAM.
+
+
+       0050-INI-VAR-DEB.
+               MOVE 0 TO WS-MQR-1.
+               MOVE 0 TO WS-MQR-2.
+               MOVE 0 TO WS-MQR-3.
+               MOVE 1 TO WS-CHX.
+       0050-INI-VAR-FIN.
 
       *    Paragrpahe pour afficher constamment l'ecran.
        0100-AFF-ECR-DEB.
