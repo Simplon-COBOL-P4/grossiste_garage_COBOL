@@ -25,7 +25,10 @@
        01  PG-PIE-NOM                   PIC X(80).
        01  PG-PIE-QTE                   PIC 9(10).
        01  PG-PIE-MIN                   PIC 9(10).
-       01  PG-ID-FOU                    PIC 9(10).      
+       01  PG-ID-FOU                    PIC 9(10).
+       EXEC SQL END DECLARE SECTION END-EXEC.
+       EXEC SQL INCLUDE SQLCA END-EXEC.
+      
 
        LINKAGE SECTION.
       * Arguments d'entrée.
@@ -73,10 +76,11 @@
       
       *    Parapgraphe COMMIT pour la requête SQL.
        0200-COM-DEB.
-           EXEC SQL COMMIT END-EXEC.
-           IF SQLCODE NOT EQUAL 0
-                   EXIT PROGRAM
-                   END-IF.
+           IF SQLCODE = 0
+           EXEC SQL COMMIT END-EXEC
+           ELSE
+           EXEC SQL ROLLBACK END-EXEC
+           END-IF.
 
       *    Sortie de paragraphe.
        0200-COM-FIN.
