@@ -47,23 +47,23 @@
       *
       * Positionné le statut d'une livraison à 'terminer'
       *
-           0100-STA-LIV-DEB.
+       0100-STA-LIV-DEB.
 
-               MOVE 1 TO PG-STA-LIV.
-               MOVE LK-IDT TO PG-IDT-LIV.
-               
-               EXEC SQL
-                UPDATE livraison
-                SET statut_liv = :PG-STA-LIV
-                WHERE id_liv = :PG-IDT-LIV
-               END-EXEC.
-               
-               IF SQLCODE = 0 THEN
-                  EXEC SQL COMMIT END-EXEC
-                  SET LK-MAJ-RET-OK TO TRUE
-               ELSE
-                  SET LK-MAJ-RET-ERR TO TRUE
-               END-IF.
+           MOVE 1 TO PG-STA-LIV.
+           MOVE LK-IDT TO PG-IDT-LIV.
+           
+           EXEC SQL
+            UPDATE livraison
+            SET statut_liv = :PG-STA-LIV
+            WHERE id_liv = :PG-IDT-LIV
+           END-EXEC.
+           
+           IF SQLCODE = 0 THEN
+               EXEC SQL COMMIT END-EXEC
+               SET LK-MAJ-RET-OK TO TRUE
+           ELSE
+               SET LK-MAJ-RET-ERR TO TRUE
+           END-IF.
 
-           0100-STA-LIV-FIN.
-               EXIT.
+       0100-STA-LIV-FIN.
+           EXIT.
