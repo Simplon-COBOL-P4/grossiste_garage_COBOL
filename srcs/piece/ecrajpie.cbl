@@ -8,7 +8,7 @@
       * ECR=ECRAN; AJ=AJOUT; PIE=PIECE; QTE=QUANTITE; MIN=MINIMUM;     *
       * FOU=FOURNISSEUR; CHX=CHOIX; VER=VERIFICATION; CHP=CHAMP;       *
       * MSG=MESSAGE; CNX=CONNEXION; MQR=MARQUEUR; VLD=VALIDER;         *
-      * INI=INITIALISATION; VAR=VARIABLE;                              *
+      * INI=INITIALISATION; VAR=VARIABLE; SUC=SUCCES                   *
       *                                                                *
       ******************************************************************
        
@@ -41,7 +41,7 @@
       *    Des marqueurs pour vérifier que les données saisies sont 
       *    correctes.
        01 WS-MQR                    PIC 9(03) VALUE 0.
-           88 WS-MQR-SUCCESS                  VALUE 111.
+           88 WS-MQR-SUC                      VALUE 111.
       
        
        SCREEN SECTION.
@@ -100,9 +100,7 @@
 
       *    Paragraphe pour initialiser les variables.
        0050-INI-VAR-DEB.  
-           MOVE 0 TO WS-MQR-1.  
-           MOVE 0 TO WS-MQR-2.  
-           MOVE 0 TO WS-MQR-3.  
+           MOVE 0 TO WS-MQR.
            MOVE 1 TO WS-CHX.  
        0050-INI-VAR-FIN.  
 
@@ -125,7 +123,7 @@
            MOVE FUNCTION NUMVAL(WS-QTE-PIE) TO WS-QTE-PIE-NUM
            
            IF WS-QTE-PIE GREATER THAN ZERO
-               ADD 1 TO WS-MQR-1
+               ADD 1 TO WS-MQR
            END-IF.
        
       *    Paragraphe de sortie.
@@ -138,7 +136,7 @@
            MOVE FUNCTION NUMVAL(WS-MIN-PIE) TO WS-MIN-PIE-NUM
            
            IF WS-MIN-PIE-NUM IS NUMERIC
-               ADD 1 TO WS-MQR-2
+               ADD 10 TO WS-MQR
            END-IF.
 
       *    Parapgraphe de sortie.
@@ -151,7 +149,7 @@
            MOVE FUNCTION NUMVAL(WS-ID-FOU) TO WS-ID-FOU-NUM
 
            IF WS-ID-FOU-NUM IS NUMERIC
-               ADD 1 TO WS-MQR-3
+               ADD 100 TO WS-MQR
            END-IF.
 
       *    Paragraphe de sortie.
@@ -161,9 +159,7 @@
       *    Paragraphe qui appelle le sous-programme 'ajupie', l'appel
       *    ne se fera que si les marqueurs sont validés.
        0500-VLD-ECR-DEB.
-           IF  WS-MQR-1 EQUAL 1
-           AND WS-MQR-2 EQUAL 1
-           AND WS-MQR-3 EQUAL 1
+           IF  WS-MQR-SUC
            CALL "ajupie"
                USING
                WS-NOM-PIE
