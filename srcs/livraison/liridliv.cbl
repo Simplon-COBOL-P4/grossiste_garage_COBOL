@@ -92,61 +92,61 @@
 
       * On vérifie si la livraison a été trouvée.
            IF SQLCODE = 0
-              MOVE PG-IDT-LIV          TO LK-IDT-LIV
-              MOVE PG-DAT-LIV          TO LK-DAT-LIV
-              SET LK-LIR-RET-OK        TO TRUE
+               MOVE PG-IDT-LIV          TO LK-IDT-LIV
+               MOVE PG-DAT-LIV          TO LK-DAT-LIV
+               SET LK-LIR-RET-OK        TO TRUE
 
       * On détermine le statut si est en cours ou terminé.
-              IF PG-STA-LIV = 0
-                 SET LK-STA-ENC        TO TRUE
-              ELSE
-                 SET LK-STA-TER        TO TRUE  
-              END-IF
+               IF PG-STA-LIV = 0
+                   SET LK-STA-ENC        TO TRUE
+               ELSE
+                   SET LK-STA-TER        TO TRUE  
+               END-IF
 
       * Vérifier si c'est une livraison entrante avec l'id de 
       * fournisseur et client.
-              IF PG-IDT-FOU > 0 AND PG-IDT-CLI = 0
-                 MOVE PG-IDT-FOU       TO LK-IDT-SOR
-                 SET LK-TYP-ENT        TO TRUE
+               IF PG-IDT-FOU > 0 AND PG-IDT-CLI = 0
+                   MOVE PG-IDT-FOU       TO LK-IDT-SOR
+                   SET LK-TYP-ENT        TO TRUE
 
       * La requête SQL pour lire le nom du fournisseur.
-                 EXEC SQL
-                     SELECT nom_fou INTO :PG-NOM-FOU
-                     FROM fournisseur
-                     WHERE id_fou = :PG-IDT-FOU
-                 END-EXEC
-
-                 IF SQLCODE = 0
-                    MOVE PG-NOM-FOU    TO LK-NOM-SOR
-                    SET LK-LIR-RET-OK  TO TRUE
-                 ELSE
-                    SET LK-LIR-RET-ERR TO TRUE
-                 END-IF
-
-              ELSE IF PG-IDT-CLI > 0 AND PG-IDT-FOU = 0
-                 MOVE PG-IDT-CLI       TO LK-IDT-SOR
-                 SET LK-TYP-SOR        TO TRUE
-               
-          
+                   EXEC SQL
+                       SELECT nom_fou INTO :PG-NOM-FOU
+                       FROM fournisseur
+                       WHERE id_fou = :PG-IDT-FOU
+                   END-EXEC
+       
+                   IF SQLCODE = 0
+                       MOVE PG-NOM-FOU    TO LK-NOM-SOR
+                       SET LK-LIR-RET-OK  TO TRUE
+                   ELSE
+                       SET LK-LIR-RET-ERR TO TRUE
+                   END-IF
+      
+               ELSE
+                   IF PG-IDT-CLI > 0 AND PG-IDT-FOU = 0
+                       MOVE PG-IDT-CLI       TO LK-IDT-SOR
+                       SET LK-TYP-SOR        TO TRUE
+                   
       * La requête SQL pour lire le nom du Client.
-                 EXEC SQL
-                     SELECT nom_cli INTO :PG-NOM-CLI
-                     FROM client
-                     WHERE id_cli = :PG-IDT-CLI
-                 END-EXEC
-
-                 IF SQLCODE = 0
-                    MOVE PG-NOM-CLI    TO LK-NOM-SOR
-                    SET LK-LIR-RET-OK  TO TRUE
-                 ELSE
-                    SET LK-LIR-RET-ERR TO TRUE
-                 END-IF
-                END-IF 
-
-              END-IF
+                       EXEC SQL
+                           SELECT nom_cli INTO :PG-NOM-CLI
+                           FROM client
+                           WHERE id_cli = :PG-IDT-CLI
+                       END-EXEC
+              
+                       IF SQLCODE = 0
+                          MOVE PG-NOM-CLI    TO LK-NOM-SOR
+                          SET LK-LIR-RET-OK  TO TRUE
+                       ELSE
+                          SET LK-LIR-RET-ERR TO TRUE
+                       END-IF
+                   END-IF 
+      
+               END-IF
 
            ELSE
-              SET LK-LIR-RET-ERR       TO TRUE
+               SET LK-LIR-RET-ERR       TO TRUE
            END-IF.
 
        0100-LIR-LIV-FIN.
