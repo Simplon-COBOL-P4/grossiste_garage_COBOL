@@ -62,6 +62,7 @@
                EXEC SQL COMMIT END-EXEC
                SET LK-MAJ-RET-OK TO TRUE
            ELSE
+               EXEC SQL ROLLBACK END-EXEC
                SET LK-MAJ-RET-ERR TO TRUE
            END-IF.
 
