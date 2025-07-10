@@ -84,10 +84,11 @@
                    END-CALL
                WHEN <> '0'
                    DISPLAY 'Veillez saisir une des options existantes'
-                                                        AT LINE 23 COL 2
-                   ACCEPT WS-ERR AT LINE 23 COL 43                
+                         AT LINE 23 COL 2
+                   ACCEPT WS-ERR
+                         AT LINE 23 COL 43                
                    DISPLAY '                                         '
-                                                        AT LINE 23 COL 2
+                         AT LINE 23 COL 2
            END-EVALUATE.
 
        0200-EVA-FIN.
