@@ -159,17 +159,17 @@
       *    Paragraphe qui appelle le sous-programme 'ajupie', l'appel
       *    ne se fera que si les marqueurs sont validés.
        0500-VLD-ECR-DEB.
-           IF  WS-MQR-SUC
-           CALL "ajupie"
-               USING
-               WS-NOM-PIE
-               WS-QTE-PIE-NUM
-               WS-MIN-PIE-NUM
-               WS-ID-FOU-NUM
-           END-CALL
+           IF WS-MQR-SUC
+               CALL "ajupie"
+                   USING
+                   WS-NOM-PIE
+                   WS-QTE-PIE-NUM
+                   WS-MIN-PIE-NUM
+                   WS-ID-FOU-NUM
+               END-CALL
 
       *    MOVE 0 TO WS-CHX pour arrêté le programme.
-           MOVE 0 TO WS-CHX
+               MOVE 0 TO WS-CHX
            END-IF.
        
       *    Paragraphe de sortie.
