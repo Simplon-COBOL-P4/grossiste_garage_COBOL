@@ -20,18 +20,17 @@
        01  PG-ID-FOU         PIC 9(10).
        EXEC SQL END DECLARE SECTION END-EXEC.
        77  WS-LOG-DET        PIC X(100).
+       01  WS-UTI-ID         PIC 9(10).
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
        LINKAGE SECTION.
       * Arguments d'entrée.
        01 LK-ID-FOU         PIC 9(10).
-       01 LK-UTI-ID         PIC 9(10).
 
        COPY supret REPLACING ==:PREFIX:== BY ==LK==.
 
        PROCEDURE DIVISION USING LK-ID-FOU,
-                                LK-SUP-RET,
-                                LK-UTI-ID.
+                                LK-SUP-RET.
 
       * SUPPRIME UN FOURNISSEUR.
            PERFORM 0100-SUP-FOU-DEB
@@ -62,7 +61,7 @@
                      USING 
                      WS-LOG-DET
                      "Fournisseur"
-                     LK-UTI-ID
+                     WS-UTI-ID
                END-CALL
                SET LK-SUP-RET-OK       TO TRUE       
            ELSE
