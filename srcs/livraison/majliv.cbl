@@ -26,8 +26,8 @@
        WORKING-STORAGE SECTION.
 
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-           01 PG-IDT-LIV            PIC 9(10).
-           01 PG-STA-LIV            PIC 9(01).
+       01 PG-IDT-LIV            PIC 9(10).
+       01 PG-STA-LIV            PIC 9(01).
        EXEC SQL END DECLARE SECTION END-EXEC.
 
        EXEC SQL INCLUDE SQLCA END-EXEC.
