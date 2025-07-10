@@ -11,11 +11,11 @@
 |                                                                              |
 |                            1 - Rupture de stock                              |
 |                            2 - Entrées et sorties                            |
-|                            3 - Rapport de clients                            |
-|                            4 - Rapport de fournisseurs                       |
-|                            5 - Rapport de livraisons                         |
-|                            6 - Bons de commandes                             |                                
-|                            7 - Rapport statistiques                          |        
+|                            3 - Bons de commandes                             |
+|                                                                              |
+|                                                                              |
+|                                                                              |                                
+|                                                                              |        
 |                                                                              |
 |                            0 - Retour au menu                                |
 |                                                                              |
