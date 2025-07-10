@@ -75,7 +75,7 @@
       * la requête SQL.
            MOVE LK-IDT-LIV             TO PG-IDT-LIV
 
-          EXEC SQL
+           EXEC SQL
                SELECT id_liv,
                       date_deb_liv,
                       statut_liv,
