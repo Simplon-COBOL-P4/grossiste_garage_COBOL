@@ -75,7 +75,7 @@
        0200-SQL-DEB.
 
       * Si on a l'identificant du client.
-           IF LK-TYP EQUAL 1
+           IF LK-TYP-SOR
                EXEC SQL
                INSERT INTO livraison(date_deb_liv, date_fin_liv, 
                statut_liv, id_cli)
