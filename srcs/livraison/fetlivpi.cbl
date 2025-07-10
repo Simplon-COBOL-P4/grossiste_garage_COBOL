@@ -39,53 +39,56 @@
        01  LK-ID-PIE               PIC 9(10).
        01  LK-QTE                  PIC 9(10).
 
-       COPY lirret REPLACING ==:PREFIX:== BY ==LK==.
+       01  LK-ETA-LEC              PIC 9(01).
+           88 LK-ETA-LEC-OK                  VALUE 0.
+           88 LK-ETA-LEC-FIN                 VALUE 1.
        
        PROCEDURE DIVISION USING LK-ID-LIV,
                                 LK-ID-PIE,
                                 LK-QTE,
-                                LK-LIR-RET.
+                                LK-ETA-LEC.
            
-           PERFORM 0100-DEC-CUR-DEB
-              THRU 0100-DEC-CUR-FIN.
-              
-           PERFORM 0200-OUV-CUR-DEB
-              THRU 0200-OUV-CUR-FIN.
+           PERFORM 0050-START-DEB
+              THRU 0050-START-FIN.
 
            PERFORM 0300-FET-LIV-PIE-DEB
               THRU 0300-FET-LIV-PIE-FIN.
-
-           PERFORM 0400-FER-CUR-DEB
-              THRU 0400-FER-CUR-FIN.
                
            EXIT PROGRAM.
 
+       0050-START-DEB.
+           IF WS-CUR-FER
+               PERFORM 0100-DEC-CUR-DEB
+                  THRU 0100-DEC-CUR-FIN
+                  
+               PERFORM 0200-OUV-CUR-DEB
+                  THRU 0200-OUV-CUR-FIN
+           END-IF.
+       0050-START-FIN.
+
       * Déclaration du curseur
        0100-DEC-CUR-DEB.
-           IF WS-CUR-FER
-               MOVE LK-ID-LIV TO PG-ID-LIV
-               EXEC SQL 
-                   DECLARE CUR_LIV CURSOR FOR
-                   SELECT id_pie, qt_liv_pie
-                   FROM livraison
-                   INNER JOIN livraison_piece
-                   ON livraison.id_liv = livraison_piece.id_liv
-                   WHERE livraison.id_liv = :PG-ID-LIV
-               END-EXEC
-           END-IF.    
+           MOVE LK-ID-LIV TO PG-ID-LIV
+           EXEC SQL 
+               DECLARE CUR_LIV CURSOR FOR
+               SELECT id_pie, qt_liv_pie
+               FROM livraison
+               INNER JOIN livraison_piece
+               ON livraison.id_liv = livraison_piece.id_liv
+               WHERE livraison.id_liv = :PG-ID-LIV
+           END-EXEC.
        0100-DEC-CUR-FIN.
 
       * Ouverture du curseur
        0200-OUV-CUR-DEB.
-           IF WS-CUR-FER
-               EXEC SQL 
-                   OPEN CUR_LIV
-               END-EXEC
-               IF SQLCODE NOT = 0
-                   SET LK-LIR-RET-ERR TO TRUE
-               END-IF
-               SET WS-CUR-OUV TO TRUE
-           END-IF.    
+           EXEC SQL
+               OPEN CUR_LIV
+           END-EXEC
+           IF SQLCODE NOT = 0
+               SET LK-ETA-LEC-FIN TO TRUE
+               EXIT PROGRAM
+           END-IF
+           SET WS-CUR-OUV TO TRUE.
        0200-OUV-CUR-FIN.
 
       * Lecture d'une ligne 
@@ -95,28 +98,22 @@
            END-EXEC.
 
            IF SQLCODE = 0
-               MOVE PG-ID-PIE TO LK-ID-PIE
-               MOVE PG-QTE    TO LK-QTE
+               SET LK-ETA-LEC-OK TO TRUE
+               MOVE PG-ID-PIE    TO LK-ID-PIE
+               MOVE PG-QTE       TO LK-QTE
            ELSE
-               IF SQLCODE = 100
-                   SET LK-LIR-RET-OK TO TRUE
-                   SET WS-CUR-FER    TO TRUE
-               ELSE
-                   SET LK-LIR-RET-ERR TO TRUE
-                   SET WS-CUR-FER     TO TRUE
-               END-IF
+      * Si SQLCODE = 100, plus de données.
+               SET LK-ETA-LEC-FIN TO TRUE
+               PERFORM 0400-FER-CUR-DEB
+                  THRU 0400-FER-CUR-FIN
            END-IF.
        0300-FET-LIV-PIE-FIN.
 
       * Fermeture du curseur
        0400-FER-CUR-DEB.
-           IF WS-CUR-FER
-               EXEC SQL
-                   CLOSE CUR_LIV
-               END-EXEC
-               IF SQLCODE NOT = 0
-                   SET LK-LIR-RET-ERR TO TRUE
-               END-IF
-           END-IF.    
+           EXEC SQL
+               CLOSE CUR_LIV
+           END-EXEC
+           SET WS-CUR-FER TO TRUE.
        0400-FER-CUR-FIN.
        
