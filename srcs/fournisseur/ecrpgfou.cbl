@@ -22,6 +22,7 @@
       * Arguments de sortie.
        01 TABLEAU.
            05 FOURNISSEUR OCCURS 25 TIMES.
+               10 IDENTIFIANT             PIC 9(10).
                10 NOM                     PIC X(50).
                10 ADRESSE                 PIC X(50).
                10 VILLE                   PIC X(50).
