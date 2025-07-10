@@ -73,7 +73,7 @@
        0100-LIR-LIV-DEB.
       * On copie l'argument d'entrée vers la variable PG-IDT-LIV pour
       * la requête SQL.
-           MOVE LK-IDT-LIV             TO PG-IDT-LIV
+           MOVE LK-IDT-LIV             TO PG-IDT-LIV.
 
            EXEC SQL
                SELECT id_liv,
