@@ -26,7 +26,7 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
 
-       77  WS-STD                 PIC X(08) VALUE 'STANDARD'.
+       77  WS-STD                 PIC X(14) VALUE 'STANDARD'.
        77  WS-CH                  PIC X(01).
        77  WS-ERR                 PIC X(01).
 
@@ -35,7 +35,7 @@
 
        01  S-ECR-CH-FOU.
            05 LINE 04 COL 03 VALUE 'Connecte en tant que : '.
-           05 LINE 04 COL 26 PIC X(08) FROM WS-STD.
+           05 LINE 04 COL 26 PIC X(14) FROM WS-STD.
            05 LINE 09 COL 30 VALUE 'Afficher :'.
            05 LINE 13 COL 30 VALUE '1 - Un fournisseur'.
            05 LINE 14 COL 30 VALUE '2 - La liste complete'.
