@@ -5,7 +5,8 @@
       * TRIGRAMMES                                                     *
       * LIR=LIRE; IDT=IDENTIFIANT; LIV=LIVRAISON; FOU=FOURNISSEUR;     *
       * CLI=CLIENT; TYP=TYPE; STA=STATUT; DAT=DATE; ENC=ENCORE;        *
-      * TER=TERMINER; ENT=ENTRER; SOR=SORTIE.                          *
+      * TER=TERMINER; ENT=ENTRER; SOR=SORTIE; DEP=DEPLACER;            *
+      * VAR=VARIABLE; GES=GESTION; ERR=ERREUR;                         *
       ******************************************************************
 
        IDENTIFICATION DIVISION.
@@ -19,16 +20,12 @@
 
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
        01 PG-IDT-LIV          PIC 9(10).
-       01 PG-IDT-FOU          PIC 9(10).
-       01 PG-IDT-CLI          PIC 9(10).
-       01 PG-NOM-FOU          PIC X(50).
-       01 PG-NOM-CLI          PIC X(50).
        01 PG-DAT-LIV          PIC X(10).
        01 PG-STA-LIV          PIC 9(01).
+       01 PG-IDT-SOR          PIC 9(10).
+       01 PG-NOM-SOR          PIC X(50).
        01 PG-TYP-LIV          PIC 9(01).
        EXEC SQL END DECLARE SECTION END-EXEC.
-
-       01 WS-NULL             PIC X.
 
        LINKAGE SECTION.
       * Argument d'entrée
@@ -70,83 +67,43 @@
       ******************************************************************
       *********************   LitR une livraison   *********************
       ******************************************************************
+
        0100-LIR-LIV-DEB.
-      * On copie l'argument d'entrée vers la variable PG-IDT-LIV pour
-      * la requête SQL.
+       0110-DEP-VAR-ENT-DEB.
            MOVE LK-IDT-LIV             TO PG-IDT-LIV.
-
+       0110-DEP-VAR-ENT-FIN.
+       0120-SQL-DEB.
            EXEC SQL
-               SELECT id_liv,
-                      date_deb_liv,
-                      statut_liv,
-                      id_fou,
-                      id_cli
-               INTO :PG-IDT-LIV,
-                    :PG-DAT-LIV,
+               SELECT livraison.date_deb_liv, livraison.statut_liv,
+               COALESCE(client.nom_cli, fournisseur.nom_fou) AS nom_sor,
+               COALESCE(client.id_cli, fournisseur.id_fou) AS id_sor,
+               CASE 
+                   WHEN client.id_cli IS NOT NULL THEN 1
+                   WHEN fournisseur.id_fou IS NOT NULL THEN 0
+               END AS type_liv
+               INTO :PG-DAT-LIV,
                     :PG-STA-LIV,
-                    :PG-IDT-FOU,
-                    :PG-IDT-CLI
+                    :PG-NOM-SOR,
+                    :PG-IDT-SOR,
+                    :PG-TYP-LIV
                FROM livraison
-               WHERE id_liv = :PG-IDT-LIV
+               LEFT JOIN client
+                         ON livraison.id_cli = client.id_cli
+               LEFT JOIN fournisseur
+                         ON livraison.id_fou = fournisseur.id_fou
+               WHERE livraison.id_liv = :PG-IDT-LIV
            END-EXEC.
-
-      * On vérifie si la livraison a été trouvée.
+       0120-SQL-FIN.
+       0130-GES-ERR-DEB.
            IF SQLCODE = 0
-               MOVE PG-IDT-LIV          TO LK-IDT-LIV
-               MOVE PG-DAT-LIV          TO LK-DAT-LIV
-               SET LK-LIR-RET-OK        TO TRUE
-
-      * On détermine le statut si est en cours ou terminé.
-               IF PG-STA-LIV = 0
-                   SET LK-STA-ENC        TO TRUE
-               ELSE
-                   SET LK-STA-TER        TO TRUE  
-               END-IF
-
-      * Vérifier si c'est une livraison entrante avec l'id de 
-      * fournisseur et client.
-               IF PG-IDT-FOU > 0 AND PG-IDT-CLI = 0
-                   MOVE PG-IDT-FOU       TO LK-IDT-SOR
-                   SET LK-TYP-ENT        TO TRUE
-
-      * La requête SQL pour lire le nom du fournisseur.
-                   EXEC SQL
-                       SELECT nom_fou INTO :PG-NOM-FOU
-                       FROM fournisseur
-                       WHERE id_fou = :PG-IDT-FOU
-                   END-EXEC
-       
-                   IF SQLCODE = 0
-                       MOVE PG-NOM-FOU    TO LK-NOM-SOR
-                       SET LK-LIR-RET-OK  TO TRUE
-                   ELSE
-                       SET LK-LIR-RET-ERR TO TRUE
-                   END-IF
-      
-               ELSE
-                   IF PG-IDT-CLI > 0 AND PG-IDT-FOU = 0
-                       MOVE PG-IDT-CLI       TO LK-IDT-SOR
-                       SET LK-TYP-SOR        TO TRUE
-                   
-      * La requête SQL pour lire le nom du Client.
-                       EXEC SQL
-                           SELECT nom_cli INTO :PG-NOM-CLI
-                           FROM client
-                           WHERE id_cli = :PG-IDT-CLI
-                       END-EXEC
-              
-                       IF SQLCODE = 0
-                          MOVE PG-NOM-CLI    TO LK-NOM-SOR
-                          SET LK-LIR-RET-OK  TO TRUE
-                       ELSE
-                          SET LK-LIR-RET-ERR TO TRUE
-                       END-IF
-                   END-IF 
-      
-               END-IF
-
+               MOVE PG-DAT-LIV         TO LK-DAT-LIV
+               MOVE PG-STA-LIV         TO LK-STA-LIV
+               MOVE PG-NOM-SOR         TO LK-NOM-SOR
+               MOVE PG-IDT-SOR         TO LK-IDT-SOR
+               MOVE PG-TYP-LIV         TO LK-TYP-LIV
+               SET LK-LIR-RET-OK       TO TRUE
            ELSE
-               SET LK-LIR-RET-ERR       TO TRUE
+               SET LK-LIR-RET-ERR      TO TRUE
            END-IF.
-
+       0130-GES-ERR-FIN.
        0100-LIR-LIV-FIN.
