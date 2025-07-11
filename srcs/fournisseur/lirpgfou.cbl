@@ -7,8 +7,8 @@
       *                           TRIGRAMMES                           *
       * LIR=LIRE; PG=PAGE; FOU=FOURNISSEUR; TAB=tableau; NB=nombre     *
       * EMA=email; TEL=telephone; IDE=identifiant; ADR=adresse         *
-      * CP=code postal; IND=indicatif; VI=ville; QUA=quantité          *
-      * ELT=element; AJO=ajout
+      * CP=code postal; IND=indicatif; VI=ville;                       *
+      * ELT=element; AJO=ajout                                         *
       ******************************************************************
        
        IDENTIFICATION DIVISION.
@@ -22,7 +22,7 @@
 
        EXEC SQL INCLUDE SQLCA END-EXEC.
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-       01 PG-QUA                   PIC 9(02). *> Min 1 - Max 25.
+       01 PG-NB                   PIC 9(02). *> Min 1 - Max 25.
       * L'offset pour la requête SQL
        01 PG-OFS                   PIC 9(03).
        01 PG-IDE                   PIC 9(10).
@@ -79,19 +79,18 @@
        0100-OFS-DEB.
       * Récupération de l'offset.
            MULTIPLY LK-PG BY LK-NB GIVING PG-OFS.
-           MOVE LK-NB TO PG-QUA.
+           MOVE LK-NB TO PG-NB.
        0100-OFS-FIN.
 
-       0200-SQL-DEB.
+       0200-SQL-DEB. 
       * Requête sql + déclaration du curseur.
            EXEC SQL
            DECLARE curseur CURSOR FOR 
            SELECT id_fou, nom_fou, adresse_fou, ville_fou, cp_fou,
            tel_fou, mail_fou,
-           indic_four
-      *    indic_fou     
+           indic_fou     
            FROM Fournisseur    
-           LIMIT :PG-QUA
+           LIMIT :PG-NB
            OFFSET :PG-OFS
            FOR READ ONLY
            END-EXEC.
@@ -100,11 +99,18 @@
            EXEC SQL
                OPEN curseur
            END-EXEC. 
+      * Si l'ouverture du curseur se passe mal, on arrête en renvoyant
+      * un code d'erreur
+           IF SQLCODE NOT EQUAL 0
+               SET LK-LIR-RET-ERR TO TRUE 
+               EXIT PROGRAM
+           END-IF.
 
       * On lit le curseur tant que le sqlcode n'est pas à 100.
            PERFORM UNTIL SQLCODE = 100 
                EXEC SQL
-                   FETCH curseur into :PG-IDE, 
+                   FETCH curseur into 
+                   :PG-IDE, 
                    :PG-NOM, 
                    :PG-ADR, 
                    :PG-VI,
@@ -130,5 +136,6 @@
       * On ferme le curseur.
            EXEC SQL
                CLOSE curseur
-           END-EXEC. 
+           END-EXEC.
+           SET LK-LIR-RET-OK TO TRUE. 
        0200-SQL-FIN.
