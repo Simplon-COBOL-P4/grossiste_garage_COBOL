@@ -1,7 +1,7 @@
       ******************************************************************
       *                             ENTÊTE                             *
       *                                                                *
-      * LE PARAGRAPHE PERMET À L'UTILISATEUR DE RENTRER LES            *
+      * LE PROGRAMME PERMET À L'UTILISATEUR DE RENTRER LES             *
       * DIFFÉRENTS ARGUMENTS NÉCESSSAIRE À L'AJOUT D'UN FOURNISSEUR    *
       * DANS LA BD.                                                    *
       *                                                                *
