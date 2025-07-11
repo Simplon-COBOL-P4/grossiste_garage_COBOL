@@ -115,10 +115,11 @@
                                    END-CALL
 
       * Mise à jour de la pièce avec un retrait de la quantité
-                                   CALL "majpie"
-                                       USING WS-ID-PIE, WS-QTE, 0
-                                   END-CALL
-      
+                                   IF WS-ETA-LEC-OK
+                                       CALL "majpie"
+                                           USING WS-ID-PIE, WS-QTE, 0
+                                       END-CALL
+                                   END-IF
                                END-PERFORM
       
                            END-IF
