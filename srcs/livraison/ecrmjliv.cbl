@@ -337,14 +337,14 @@
 
       * Mise à jour du stock des pièces comprises dans la livraison 
       * correspondante.
-
-               CALL "majpie"
-                   USING
-                   WS-IDF-PIE
-                   WS-QTE-PIE
-                   WS-TYP-CHG
-               END-CALL
-               
+               IF WS-RET-DON-LUE
+                   CALL "majpie"
+                       USING
+                       WS-IDF-PIE
+                       WS-QTE-PIE
+                       WS-TYP-CHG
+                   END-CALL
+               END-IF 
 
            END-PERFORM.
            
