@@ -8,7 +8,7 @@
       * ECR=ECRAN; AJ=AJOUT; PIE=PIECE; QTE=QUANTITE; MIN=MINIMUM;     *
       * FOU=FOURNISSEUR; CHX=CHOIX; VER=VERIFICATION; CHP=CHAMP;       *
       * MSG=MESSAGE; CNX=CONNEXION; MQR=MARQUEUR; VLD=VALIDER;         *
-      * INI=INITIALISATION; VAR=VARIABLE;                              *
+      * INI=INITIALISATION; VAR=VARIABLE; ACP=ACCEPTE                  *
       *                                                                *
       ******************************************************************
        
@@ -24,25 +24,24 @@
        01 WS-QTE-PIE                PIC X(10).
        01 WS-MIN-PIE                PIC X(10).
        01 WS-ID-FOU                 PIC X(10).
-    
-      *    Déclaration des variables passées en numériques
+
+      *    Déclarations des variables numériques nécessaires à
+      *    l'appel du sous-programme.
        01 WS-QTE-PIE-NUM            PIC 9(10).
        01 WS-MIN-PIE-NUM            PIC 9(10).
        01 WS-ID-FOU-NUM             PIC 9(10).
-       
-      *    Déclaration de variables complémentaires nécessaire à 
+
+      *    Déclaration de variables complémentaires nécessaires à 
       *    l'éxécution du programme.
        01 WS-CHX                    PIC X(01).
-       01 WS-MSG-NOM                PIC X(30) VALUE SPACES.
-       01 WS-MSG-QTE                PIC X(30) VALUE SPACES.
-       01 WS-MSG-MIN                PIC X(30) VALUE SPACES.
-       01 WS-MSG-FOU                PIC X(30) VALUE SPACES.
 
       *    Des marqueurs pour vérifier que les données saisies sont 
       *    correctes.
-       01 WS-MQR                    PIC 9(03) VALUE 0.
-           88 WS-MQR-SUCCESS                  VALUE 111.
-      
+       01 WS-MQR.
+           05 WS-MQR-1              PIC 9(01).
+           05 WS-MQR-2              PIC 9(01).    
+           05 WS-MQR-3              PIC 9(01).   
+           
        
        SCREEN SECTION.
        COPY ecrprn.
@@ -77,86 +76,103 @@
        PROCEDURE DIVISION.
       *    le déroulé du programme, après les vérifications ajupie est
       *    appelé.           
-           
-           PERFORM 0050-INI-VAR-DEB
-              THRU 0050-INI-VAR-FIN.
-           
-           PERFORM 0100-AFF-ECR-DEB
-              THRU 0100-AFF-ECR-FIN.
-
-           PERFORM 0200-VER-QTE-DEB
-              THRU 0200-VER-QTE-FIN.
-       
-           PERFORM 0300-VER-MIN-DEB
-              THRU 0300-VER-MIN-FIN.
-       
-           PERFORM 0400-VER-FOU-DEB
-              THRU 0400-VER-FOU-FIN.
-
-           PERFORM 0500-VLD-ECR-DEB
-              THRU 0500-VLD-ECR-FIN.
-    
+             
+           PERFORM 0025-BCL-PCP-DEB
+              THRU 0025-BCL-PCP-FIN.
+      
            EXIT PROGRAM.
 
-      *    Paragraphe pour initialiser les variables.
-       0050-INI-VAR-DEB.  
-           MOVE 0 TO WS-MQR-1.  
-           MOVE 0 TO WS-MQR-2.  
-           MOVE 0 TO WS-MQR-3.  
+
+       0025-BCL-PCP-DEB.
            MOVE 1 TO WS-CHX.  
+
+               PERFORM 0050-INI-VAR-DEB
+                  THRU 0050-INI-VAR-FIN
+           
+               PERFORM 0100-AFF-ECR-DEB
+                  THRU 0100-AFF-ECR-FIN
+
+                   PERFORM UNTIL WS-CHX = 0  
+
+                       PERFORM 0150-ACP-ECR-DEB
+                          THRU 0150-ACP-ECR-FIN
+    
+                       PERFORM 0200-VER-QTE-DEB
+                          THRU 0200-VER-QTE-FIN
+                   
+                       PERFORM 0300-VER-MIN-DEB
+                          THRU 0300-VER-MIN-FIN
+                   
+                       PERFORM 0400-VER-FOU-DEB
+                          THRU 0400-VER-FOU-FIN
+            
+                       PERFORM 0500-VLD-ECR-DEB
+                          THRU 0500-VLD-ECR-FIN
+
+                   END-PERFORM.
+       0025-BCL-PCP-FIN.
+
+
+      *    Paragraphe pour initialiser les variables.
+       0050-INI-VAR-DEB. 
+           MOVE SPACE    TO WS-NOM-PIE. 
+           MOVE SPACE    TO WS-QTE-PIE.
+           MOVE SPACE    TO WS-MIN-PIE.
+           MOVE SPACE    TO WS-ID-FOU.
+           MOVE 0        TO WS-MQR-1.  
+           MOVE 0        TO WS-MQR-2.  
+           MOVE 0        TO WS-MQR-3.  
        0050-INI-VAR-FIN.  
 
       *    Paragraphe pour afficher constamment l'ecran.
        0100-AFF-ECR-DEB.
-           IF WS-CHX = 0
-               EXIT PROGRAM
-           ELSE
-               DISPLAY S-FND-ECR
-               DISPLAY ECRAJPCS
-               ACCEPT  ECRAJPCS
-           END-IF.
-
+           DISPLAY S-FND-ECR.
+           DISPLAY ECRAJPCS.
        0100-AFF-ECR-FIN.
-               EXIT.
-      
-      *    Parapgraphe pour vérifier que la quantité enregistrée est
+
+      *    Paragraphe pour accepter l'écran.         
+       0150-ACP-ECR-DEB.
+           ACCEPT  ECRAJPCS.
+
+               IF WS-CHX = 0
+                   EXIT PROGRAM
+               END-IF.
+
+      *    Paragraphe de sortie.      
+       0150-ACP-ECR-FIN.
+
+      *    Paragraphe pour vérifier que la quantité enregistrée est
       *    bien au format numérique.
        0200-VER-QTE-DEB.
-           MOVE FUNCTION NUMVAL(WS-QTE-PIE) TO WS-QTE-PIE-NUM
            
-           IF WS-QTE-PIE GREATER THAN ZERO
+           IF FUNCTION TRIM(WS-QTE-PIE) IS NUMERIC
                ADD 1 TO WS-MQR-1
            END-IF.
        
       *    Paragraphe de sortie.
        0200-VER-QTE-FIN.
-           EXIT.
 
-      *    Parapgraphe pour vérifier que le seuil minimum enregistré
+      *    Parapraphe pour vérifier que le seuil minimum enregistré
       *    est bien au format numérique.
        0300-VER-MIN-DEB.
-           MOVE FUNCTION NUMVAL(WS-MIN-PIE) TO WS-MIN-PIE-NUM
            
-           IF WS-MIN-PIE-NUM IS NUMERIC
+           IF FUNCTION TRIM(WS-MIN-PIE) IS NUMERIC
                ADD 1 TO WS-MQR-2
            END-IF.
 
-      *    Parapgraphe de sortie.
+      *    Parapraphe de sortie.
        0300-VER-MIN-FIN.
-               EXIT.
 
       *    Paragraphe pour vérifier que l'ID fournisseur est bien au
       *    format numérique.
        0400-VER-FOU-DEB.
-           MOVE FUNCTION NUMVAL(WS-ID-FOU) TO WS-ID-FOU-NUM
 
-           IF WS-ID-FOU-NUM IS NUMERIC
+           IF FUNCTION TRIM(WS-ID-FOU) IS NUMERIC
                ADD 1 TO WS-MQR-3
            END-IF.
 
       *    Paragraphe de sortie.
        0400-VER-FOU-FIN.
-           EXIT.
 
       *    Paragraphe qui appelle le sous-programme 'ajupie', l'appel
       *    ne se fera que si les marqueurs sont validés.
@@ -164,18 +180,24 @@
            IF  WS-MQR-1 EQUAL 1
            AND WS-MQR-2 EQUAL 1
            AND WS-MQR-3 EQUAL 1
-           CALL "ajupie"
-               USING
-               WS-NOM-PIE
-               WS-QTE-PIE-NUM
-               WS-MIN-PIE-NUM
-               WS-ID-FOU-NUM
-           END-CALL
+           MOVE FUNCTION NUMVAL (WS-QTE-PIE) TO WS-QTE-PIE-NUM
+           MOVE FUNCTION NUMVAL (WS-MIN-PIE) TO WS-MIN-PIE-NUM
+           MOVE FUNCTION NUMVAL (WS-ID-FOU)  TO WS-ID-FOU-NUM
 
-      *    MOVE 0 TO WS-CHX pour arrêté le programme.
-           MOVE 0 TO WS-CHX
+               CALL "ajupie"
+                   USING
+                   WS-NOM-PIE
+                   WS-QTE-PIE-NUM
+                   WS-MIN-PIE-NUM
+                   WS-ID-FOU-NUM
+               
+               END-CALL
+
+           ELSE
+
+               DISPLAY 'ERREUR DE VALIDATION'
+
            END-IF.
-       
+           
       *    Paragraphe de sortie.
        0500-VLD-ECR-FIN.
-               EXIT.
