@@ -22,8 +22,8 @@
 
        EXEC SQL INCLUDE SQLCA END-EXEC.
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-       01 PG-NB-LIV-PIE  PIC 9(10).
-       01 PG-ID            PIC 9(10).
+       01 PG-NB-LIV-PIE     PIC 9(10).
+       01 PG-ID             PIC 9(10).
        EXEC SQL END DECLARE SECTION END-EXEC.
 
       * Variable pour savoir si on quitte le sous-programme ou non.
@@ -33,13 +33,13 @@
        01 WS-STA            PIC 9(01).
            88 WS-STA-EN-CRS               VALUE 0.
            88 WS-STA-TER                  VALUE 1.
-       01 WS-TYP                    PIC 9(01).
+       01 WS-TYP            PIC 9(01).
            88 WS-TYP-ENT                  VALUE 0.
            88 WS-TYP-SOR                  VALUE 1.
       * Identifiant et nom fournisseur si entrante,
       * et client si sortante.
-       01 WS-ID-ST      PIC 9(10).
-       01 WS-NOM-ST     PIC X(50).
+       01 WS-ID-ST          PIC 9(10).
+       01 WS-NOM-ST         PIC X(50).
 
        COPY lirret REPLACING ==:PREFIX:== BY ==WS==.
 
