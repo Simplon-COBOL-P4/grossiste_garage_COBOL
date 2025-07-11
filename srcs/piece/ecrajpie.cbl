@@ -192,6 +192,8 @@
                DISPLAY 'ERREUR DE VALIDATION' AT LINE 23 COL 28
 
            END-IF.
+
+           MOVE 0 TO WS-MQR.
            
       *    Paragraphe de sortie.
        0500-VLD-ECR-FIN.
