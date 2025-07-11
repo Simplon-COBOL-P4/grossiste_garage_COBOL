@@ -1,7 +1,7 @@
       ******************************************************************
       *                             ENTÊTE                             *
       * Cet écran permet à l’utilisateur de rentrer les différents     *
-      * arguments nécessaire à la mise à jour d’un fournisseur.        *                                                       *
+      * arguments nécessaire à la mise à jour d’un fournisseur.        *
       * L’utilisateur rentre l’ID du fournisseur, puis appuie sur      *
       * entrée. Cela appelle le sous programme liridfou, qui récupère  *
       * les informations du fournisseur, en fonction de l’ID.          *
