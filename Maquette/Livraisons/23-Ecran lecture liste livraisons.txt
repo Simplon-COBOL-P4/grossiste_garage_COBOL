@@ -34,6 +34,7 @@ Filtre 3 , État 4.
 "qtt pie", nombre de variétés de pièces (table Livraison_Piece).
 "date", date_deb_liv (table livraison)
 
+État 2:
 +------------------------------------------------------------------------------+
 |                               LogiParts Solutions                            |
 +------------------------------------------------------------------------------+
@@ -61,6 +62,7 @@ Filtre 3 , État 4.
 "qtt pie", nombre de variétés de pièces (table Livraison_Piece).
 "date", date_deb_liv (table livraison)
 
+État 3:
 +------------------------------------------------------------------------------+
 |                               LogiParts Solutions                            |
 +------------------------------------------------------------------------------+
@@ -88,6 +90,7 @@ Filtre 3 , État 4.
 "qtt pie", nombre de variétés de pièces (table Livraison_Piece).
 "date", date_deb_liv (table livraison)
 
+État 4:
 +------------------------------------------------------------------------------+
 |                               LogiParts Solutions                            |
 +------------------------------------------------------------------------------+
