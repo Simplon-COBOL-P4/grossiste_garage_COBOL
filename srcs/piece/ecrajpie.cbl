@@ -1,6 +1,6 @@
       ******************************************************************
       *                             ENTÊTE                             *
-      * Le sous-programme 'ecrajpie'sert de formulaire pour ajouter    *
+      * Le sous-programme 'ecrajpie' sert de formulaire pour ajouter   *
       * une pièce dans la base de données.                             *
       *                                                                *
       *                           TRIGRAMMES                           *
@@ -8,8 +8,8 @@
       * ECR=ECRAN; AJ=AJOUT; PIE=PIECE; QTE=QUANTITE; MIN=MINIMUM;     *
       * FOU=FOURNISSEUR; CHX=CHOIX; VER=VERIFICATION; CHP=CHAMP;       *
       * MSG=MESSAGE; CNX=CONNEXION; MQR=MARQUEUR; VLD=VALIDER;         *
-      * INI=INITIALISATION; VAR=VARIABLE; ACP=ACCEPTE                  *
-      *                                                                *
+      * INI=INITIALISATION; VAR=VARIABLE; ACP=ACCEPTE; SUC=SUCCES;     *
+      * BCL=BOUCLE; PCP=PRINCIPAL                                      *
       ******************************************************************
        
        IDENTIFICATION DIVISION.
@@ -37,17 +37,15 @@
 
       *    Des marqueurs pour vérifier que les données saisies sont 
       *    correctes.
-       01 WS-MQR.
-           05 WS-MQR-1              PIC 9(01).
-           05 WS-MQR-2              PIC 9(01).    
-           05 WS-MQR-3              PIC 9(01).   
-           
+       01 WS-MQR                    PIC 9(03) VALUE 0.
+           88 WS-MQR-SUC                      VALUE 111.
+      
        
        SCREEN SECTION.
        COPY ecrprn.
 
       *    Ajout des éléments propres à l'écran d'ajout de pièce.
-       01 ECRAJPCS.
+       01 S-ECR-AJ-PCS.
            05 LINE 04 COLUMN 01 VALUE "| Connecte en tant que : ".
 
            05 LINE 09 COLUMN 03 VALUE "Nom :".
@@ -84,59 +82,57 @@
 
 
        0025-BCL-PCP-DEB.
-           MOVE 1 TO WS-CHX.  
 
-               PERFORM 0050-INI-VAR-DEB
-                  THRU 0050-INI-VAR-FIN
+           PERFORM 0050-INI-VAR-DEB
+              THRU 0050-INI-VAR-FIN.
+
+           PERFORM 0100-AFF-ECR-DEB
+              THRU 0100-AFF-ECR-FIN.
+
+           PERFORM UNTIL WS-CHX = 0  
+
+               PERFORM 0150-ACP-ECR-DEB
+                  THRU 0150-ACP-ECR-FIN
+
+               PERFORM 0200-VER-QTE-DEB
+                  THRU 0200-VER-QTE-FIN
            
-               PERFORM 0100-AFF-ECR-DEB
-                  THRU 0100-AFF-ECR-FIN
+               PERFORM 0300-VER-MIN-DEB
+                  THRU 0300-VER-MIN-FIN
+           
+               PERFORM 0400-VER-FOU-DEB
+                  THRU 0400-VER-FOU-FIN
 
-                   PERFORM UNTIL WS-CHX = 0  
+               PERFORM 0500-VLD-ECR-DEB
+                  THRU 0500-VLD-ECR-FIN
 
-                       PERFORM 0150-ACP-ECR-DEB
-                          THRU 0150-ACP-ECR-FIN
-    
-                       PERFORM 0200-VER-QTE-DEB
-                          THRU 0200-VER-QTE-FIN
-                   
-                       PERFORM 0300-VER-MIN-DEB
-                          THRU 0300-VER-MIN-FIN
-                   
-                       PERFORM 0400-VER-FOU-DEB
-                          THRU 0400-VER-FOU-FIN
-            
-                       PERFORM 0500-VLD-ECR-DEB
-                          THRU 0500-VLD-ECR-FIN
-
-                   END-PERFORM.
+           END-PERFORM.
        0025-BCL-PCP-FIN.
 
 
       *    Paragraphe pour initialiser les variables.
        0050-INI-VAR-DEB. 
+           MOVE 1        TO WS-CHX.
            MOVE SPACE    TO WS-NOM-PIE. 
            MOVE SPACE    TO WS-QTE-PIE.
            MOVE SPACE    TO WS-MIN-PIE.
            MOVE SPACE    TO WS-ID-FOU.
-           MOVE 0        TO WS-MQR-1.  
-           MOVE 0        TO WS-MQR-2.  
-           MOVE 0        TO WS-MQR-3.  
+           MOVE 0        TO WS-MQR.  
        0050-INI-VAR-FIN.  
 
       *    Paragraphe pour afficher constamment l'ecran.
        0100-AFF-ECR-DEB.
            DISPLAY S-FND-ECR.
-           DISPLAY ECRAJPCS.
+           DISPLAY S-ECR-AJ-PCS.
        0100-AFF-ECR-FIN.
 
       *    Paragraphe pour accepter l'écran.         
        0150-ACP-ECR-DEB.
-           ACCEPT  ECRAJPCS.
+           ACCEPT  S-ECR-AJ-PCS.
 
-               IF WS-CHX = 0
-                   EXIT PROGRAM
-               END-IF.
+           IF WS-CHX = 0
+               EXIT PROGRAM
+           END-IF.
 
       *    Paragraphe de sortie.      
        0150-ACP-ECR-FIN.
@@ -146,7 +142,7 @@
        0200-VER-QTE-DEB.
            
            IF FUNCTION TRIM(WS-QTE-PIE) IS NUMERIC
-               ADD 1 TO WS-MQR-1
+               ADD 1 TO WS-MQR
            END-IF.
        
       *    Paragraphe de sortie.
@@ -157,7 +153,7 @@
        0300-VER-MIN-DEB.
            
            IF FUNCTION TRIM(WS-MIN-PIE) IS NUMERIC
-               ADD 1 TO WS-MQR-2
+               ADD 10 TO WS-MQR
            END-IF.
 
       *    Parapraphe de sortie.
@@ -168,7 +164,7 @@
        0400-VER-FOU-DEB.
 
            IF FUNCTION TRIM(WS-ID-FOU) IS NUMERIC
-               ADD 1 TO WS-MQR-3
+               ADD 100 TO WS-MQR
            END-IF.
 
       *    Paragraphe de sortie.
@@ -177,12 +173,10 @@
       *    Paragraphe qui appelle le sous-programme 'ajupie', l'appel
       *    ne se fera que si les marqueurs sont validés.
        0500-VLD-ECR-DEB.
-           IF  WS-MQR-1 EQUAL 1
-           AND WS-MQR-2 EQUAL 1
-           AND WS-MQR-3 EQUAL 1
-           MOVE FUNCTION NUMVAL (WS-QTE-PIE) TO WS-QTE-PIE-NUM
-           MOVE FUNCTION NUMVAL (WS-MIN-PIE) TO WS-MIN-PIE-NUM
-           MOVE FUNCTION NUMVAL (WS-ID-FOU)  TO WS-ID-FOU-NUM
+           IF WS-MQR-SUC
+               MOVE FUNCTION NUMVAL (WS-QTE-PIE) TO WS-QTE-PIE-NUM
+               MOVE FUNCTION NUMVAL (WS-MIN-PIE) TO WS-MIN-PIE-NUM
+               MOVE FUNCTION NUMVAL (WS-ID-FOU)  TO WS-ID-FOU-NUM
 
                CALL "ajupie"
                    USING
@@ -195,7 +189,7 @@
 
            ELSE
 
-               DISPLAY 'ERREUR DE VALIDATION'
+               DISPLAY 'ERREUR DE VALIDATION' AT LINE 23 COL 28
 
            END-IF.
            
