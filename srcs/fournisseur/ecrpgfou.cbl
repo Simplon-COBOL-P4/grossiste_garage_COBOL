@@ -50,6 +50,8 @@
       * Arguments d'entrée.
        77 WS-TRT                 PIC X(78) VALUE ALL '_'.
        77 WS-RET-MNU             PIC X(01) VALUE SPACE.
+      * TODO : Créer une variable a part pour le retour du sous
+      * programme, afin que la quantite ne sois pas affectee
        77 WS-QTE                 PIC 9(02) VALUE 12. *> Min 1 - Max 25.
        77 WS-PGE                 PIC 9(10). *> Min 0 - Max 1,000,000,000
        77 WS-ERR                 PIC X(01).
@@ -208,8 +210,7 @@
 
        0300-AFC-FOU-DEB.
            PERFORM VARYING WS-TBL-IDX 
-                   FROM 1 BY 1 UNTIL WS-TBL-IDX > WS-QTE OR 
-                                     WS-TBL-IDT(WS-TBL-IDX) = 0
+                   FROM 1 BY 1 UNTIL WS-TBL-IDX > WS-QTE
 
                DISPLAY WS-TBL-IDT(WS-TBL-IDX) 
                AT LINE WS-LIN-PRM COL 02
