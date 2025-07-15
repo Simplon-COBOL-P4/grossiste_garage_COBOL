@@ -137,5 +137,8 @@
            EXEC SQL
                CLOSE curseur
            END-EXEC.
+
+           MOVE WS-ELT-AJO TO LK-NB.
+
            SET LK-LIR-RET-OK TO TRUE. 
        0200-SQL-FIN.
