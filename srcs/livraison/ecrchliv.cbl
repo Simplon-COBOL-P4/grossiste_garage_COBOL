@@ -53,7 +53,7 @@
 
       *    Traitement de la commande entree par l'utilisateur.
        0200-CHX-MEN-DEB.
-           MOVE 3 TO WS-CHX
+           MOVE "3" TO WS-CHX
            PERFORM UNTIL WS-CHX EQUAL 0
                ACCEPT S-ECR-CHX-FOU
                EVALUATE WS-CHX
@@ -67,7 +67,7 @@
                        CALL "ecrpgliv"
                        END-CALL
             
-                   WHEN 0
+                   WHEN "0"
                        EXIT PROGRAM
             
                    WHEN OTHER
