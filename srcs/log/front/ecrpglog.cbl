@@ -67,7 +67,7 @@
       ******************************************************************
 
        0100-APL-LEC-LOG-DEB.
-           CALL "leclog" USING WS-LOG-TAB WS-MAX-LIN
+           CALL "lirpglog" USING WS-LOG-TAB WS-MAX-LIN
            END-CALL.
        0100-APL-LEC-LOG-FIN.
 

@@ -13,7 +13,7 @@
       * idu=identifiant utilisateur; idx=index ; err=erreur            *
       ******************************************************************   
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. leclog.
+       PROGRAM-ID. lirpglog.
        Author. Thomas Baudrin.
        DATE-WRITTEN. 26-06-2025 (fr).
 
