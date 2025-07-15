@@ -7,7 +7,7 @@
       * INSÈRE LES DONNÉES DANS LA TABLE 'logs'.
 
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. crelog.
+       PROGRAM-ID. ajulog.
        AUTHOR. Anaisktl.
        DATE-WRITTEN. 25-06-2025 (fr).
 

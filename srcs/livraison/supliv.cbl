@@ -37,7 +37,7 @@
        01 WS-IDF-LIV-EDT         PIC Z(10).
 
       * Déclaration de la variable correspondant à l'identifiant de 
-      * l'utilisateur (à transmettre au sous-programme "crelog").
+      * l'utilisateur (à transmettre au sous-programme "ajulog").
        01 WS-IDF-UTI             PIC 9(10). 
 
 
@@ -114,7 +114,7 @@
       * suppression. 
                SET LK-SUP-RET-OK TO TRUE
 
-      * Génération du message de log à envoyer au sous-programme crelog.
+      * Génération du message de log à envoyer au sous-programme ajulog.
 
                PERFORM 0300-GEN-LOG-DEB
                   THRU 0300-GEN-LOG-FIN
@@ -157,12 +157,12 @@
        
        0400-APL-CRE-LOG-DEB.
        
-      * Appel du sous-programme crelog pour l'insertion du log dans la
+      * Appel du sous-programme ajulog pour l'insertion du log dans la
       * base de données SQL. Il prend le message de log généré, le type
       * de log défini dans ce programme et l'id utilisateur en 
       * arguments. 
            
-           CALL "crelog"
+           CALL "ajulog"
                USING 
                WS-MSG-LOG
                WS-TYP-LOG

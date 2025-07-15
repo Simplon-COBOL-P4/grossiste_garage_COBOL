@@ -110,7 +110,7 @@
        0300-LG-DEB.
            MOVE "ajout d'une livraison" TO WS-DTL-LG.
            MOVE "utilisateur" TO WS-TYP-LG.
-           CALL "crelog" USING WS-DTL-LG,
+           CALL "ajulog" USING WS-DTL-LG,
                                WS-TYP-LG,
                                WS-UTI-ID
                                LK-AJU-RET

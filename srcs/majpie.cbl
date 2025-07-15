@@ -324,12 +324,12 @@
        
        0500-APL-CRE-LOG-DEB.
 
-      * Appel du sous-programme crelog pour l'insertion du log dans la
+      * Appel du sous-programme ajulog pour l'insertion du log dans la
       * base de données SQL. Il prend le message de log généré ainsi
       * que le type de log défini dans ce programme en arguments.
 
 
-           CALL "crelog" 
+           CALL "ajulog" 
                USING 
                WS-MSG-LOG
                WS-TYP-LOG

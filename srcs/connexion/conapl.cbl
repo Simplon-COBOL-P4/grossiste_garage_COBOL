@@ -142,7 +142,7 @@
                        INTO WS-DTL-LG 
                    END-STRING
                    MOVE 0 TO WS-ID-UTL
-                   CALL "crelog"
+                   CALL "ajulog"
                        USING
                        WS-DTL-LG
                        WS-TYP-LG
@@ -158,7 +158,7 @@
                        DELIMITED BY SIZE 
                        INTO WS-DTL-LG 
                    END-STRING
-                   CALL "crelog"
+                   CALL "ajulog"
                        USING
                        WS-DTL-LG
                        WS-TYP-LG

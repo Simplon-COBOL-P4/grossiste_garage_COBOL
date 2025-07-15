@@ -109,7 +109,7 @@
                       "] Mise a jour"
                       INTO WS-LOG-DET
                END-STRING
-               CALL "crelog"
+               CALL "ajulog"
                      USING 
                      WS-LOG-DET
                      "Fournisseur"
