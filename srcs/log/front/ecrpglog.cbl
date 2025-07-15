@@ -14,7 +14,7 @@
       * AFF=affichage;
       ******************************************************************  
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. ecrlog.
+       PROGRAM-ID. ecrpglog.
        AUTHOR. Thomas Baudrin.
        DATE-WRITTEN. 26-06-2025 (fr).
 

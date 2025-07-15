@@ -86,7 +86,7 @@
 
                    WHEN 6 
       * Appel du sous-programme d'affichage du journal de logs.
-                        CALL 'ecrlog'
+                        CALL 'ecrpglog'
                         END-CALL
 
                    WHEN 7 
