@@ -81,29 +81,29 @@
              ACCEPT S-ECR-CHO
              EVALUATE WS-CHO
                 WHEN '0'
-                     CONTINUE
+                    CONTINUE
                 WHEN '1'
-                     CALL "ecrajliv"
-                     END-CALL
+                    CALL "ecrajliv"
+                    END-CALL
                 WHEN '2'
-                     CALL "ecrchliv"
-                     END-CALL
+                    CALL "ecrchliv"
+                    END-CALL
                 WHEN '3'
-                     IF LK-ROL = 'ADMIN' THEN
+                    IF LK-ROL = 'ADMIN' THEN
                         CALL "ecrmjliv"
                         END-CALL
-                     ELSE 
+                    ELSE 
                         PERFORM 0300-AFC-ERR-DEB
                            THRU 0300-AFC-ERR-FIN
-                           END-IF
+                    END-IF
                 WHEN '4'
-                     IF LK-ROL = 'ADMIN' THEN
+                    IF LK-ROL = 'ADMIN' THEN
                         CALL "ecrspliv"
                         END-CALL
-                      ELSE 
+                    ELSE 
                         PERFORM 0300-AFC-ERR-DEB
                            THRU 0300-AFC-ERR-FIN
-                     END-IF
+                    END-IF
                 WHEN OTHER
                      PERFORM 0300-AFC-ERR-DEB
                         THRU 0300-AFC-ERR-FIN
