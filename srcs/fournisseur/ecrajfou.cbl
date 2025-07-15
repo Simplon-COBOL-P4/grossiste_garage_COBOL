@@ -30,7 +30,7 @@
       * VARIABLE POUR LE CHOIX DE L'UTILISATEUR.
        01 WS-CHX                 PIC 9(01).
 
-       COPY ajuret REPLACING ==:PREFIX:== BY ==LK==.
+       COPY ajuret REPLACING ==:PREFIX:== BY ==WS==.
 
        SCREEN SECTION.
        COPY ecrprn.
@@ -126,7 +126,7 @@
                        WS-IND
                        WS-TEL
                        WS-EML
-                       LK-AJU-RET
+                       WS-AJU-RET
                    END-CALL
            
                WHEN 0
