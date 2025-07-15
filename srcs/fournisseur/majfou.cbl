@@ -36,6 +36,8 @@
 
        77  WS-LOG-DET              PIC X(100). 
 
+       COPY ajuret REPLACING ==:PREFIX:== BY ==WS==.
+
        LINKAGE SECTION.
       * Arguments d'entrée.
        01  LK-ID                   PIC 9(10).
@@ -112,6 +114,7 @@
                      WS-LOG-DET
                      "Fournisseur"
                      LK-UTI-ID
+                     WS-AJU-RET
                END-CALL
                SET LK-MAJ-RET-OK       TO TRUE       
            ELSE

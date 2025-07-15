@@ -25,10 +25,13 @@
        01 LK-TYP-LG       PIC X(12).
        01 LK-UTI-ID       PIC 9(10).
 
+       COPY ajuret REPLACING ==:PREFIX:== BY ==LK==.
+
 
        PROCEDURE DIVISION USING LK-DTL-LG,
                                 LK-TYP-LG,
-                                LK-UTI-ID.
+                                LK-UTI-ID,
+                                LK-AJU-RET.
 
       * DEPLACE LES VARIABLES.
            PERFORM 0100-DEP-LES-VAR-DEB
@@ -51,18 +54,25 @@
        0100-DEP-LES-VAR-FIN.
 
        0200-INS-DON-DEB.
-       IF PG-UTI-ID EQUAL 0 THEN
-       EXEC SQL
-           INSERT INTO logs (detail_log, type_log)
-           VALUES (:PG-DTL-LG, :PG-TYP-LG)
-       END-EXEC
-       ELSE
-       EXEC SQL
-           INSERT INTO logs (detail_log, type_log, id_uti)
-           VALUES (:PG-DTL-LG, :PG-TYP-LG, :PG-UTI-ID)
-       END-EXEC
-       END-IF.
-       EXEC SQL COMMIT WORK END-EXEC.
+           IF PG-UTI-ID EQUAL 0 THEN
+               EXEC SQL
+                   INSERT INTO logs (detail_log, type_log)
+                   VALUES (:PG-DTL-LG, :PG-TYP-LG)
+               END-EXEC
+           ELSE
+               EXEC SQL
+                   INSERT INTO logs (detail_log, type_log, id_uti)
+                   VALUES (:PG-DTL-LG, :PG-TYP-LG, :PG-UTI-ID)
+               END-EXEC
+           END-IF.
+
+           IF SQLCODE EQUAL 0 THEN
+               EXEC SQL COMMIT WORK END-EXEC
+               SET LK-AJU-RET-OK TO TRUE
+           ELSE
+               EXEC SQL ROLLBACK END-EXEC
+               SET LK-AJU-RET-ERR TO TRUE
+           END-IF.
        0200-INS-DON-FIN.
 
       

@@ -68,6 +68,8 @@
 
        77  WS-CDR-008           PIC X(14) VALUE 'Mot de passe :'.
 
+       COPY ajuret REPLACING ==:PREFIX:== BY ==WS==.
+
        LINKAGE SECTION.
        01  LK-COD-RET           PIC 9(01).
            88 LK-STT-ERR                  VALUE 0.
@@ -145,6 +147,7 @@
                        WS-DTL-LG
                        WS-TYP-LG
                        WS-ID-UTL
+                       WS-AJU-RET
                    END-CALL
                ELSE
                    MOVE "CON_SUC" TO WS-TYP-LG
@@ -160,6 +163,7 @@
                        WS-DTL-LG
                        WS-TYP-LG
                        WS-ID-UTL
+                       WS-AJU-RET
                    END-CALL
                END-IF
            END-PERFORM.

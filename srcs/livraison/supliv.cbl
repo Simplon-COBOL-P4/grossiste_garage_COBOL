@@ -48,6 +48,7 @@
       * Déclaration de la variable définissant le type de log. 
        01 WS-TYP-LOG             PIC X(12). 
 
+       COPY ajuret REPLACING ==:PREFIX:== BY ==WS==.
 
        LINKAGE SECTION.
       * Arguments d'entrée.
@@ -166,6 +167,7 @@
                WS-MSG-LOG
                WS-TYP-LOG
                WS-IDF-UTI
+               WS-AJU-RET
            END-CALL.
 
            EXIT.

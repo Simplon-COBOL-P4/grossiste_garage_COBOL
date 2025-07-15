@@ -19,8 +19,12 @@
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
        01  PG-ID-FOU         PIC 9(10).
        EXEC SQL END DECLARE SECTION END-EXEC.
+
        77  WS-LOG-DET        PIC X(100).
        01  WS-UTI-ID         PIC 9(10).
+
+       COPY ajuret REPLACING ==:PREFIX:== BY ==WS==.
+
        EXEC SQL INCLUDE SQLCA END-EXEC.
 
        LINKAGE SECTION.
@@ -62,6 +66,7 @@
                      WS-LOG-DET
                      "Fournisseur"
                      WS-UTI-ID
+                     WS-AJU-RET
                END-CALL
                SET LK-SUP-RET-OK       TO TRUE       
            ELSE

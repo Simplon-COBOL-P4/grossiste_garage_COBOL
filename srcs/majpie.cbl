@@ -45,7 +45,9 @@
       * Déclaration de la variable d'édition pour un meilleur affichage 
       * des variables LK-QTE-PIE et LK-IDF-PIE dans les logs. 
        01 WS-IDF-EDT           PIC Z(10). 
-       01 WS-QTE-EDT           PIC Z(10). 
+       01 WS-QTE-EDT           PIC Z(10).
+        
+       COPY ajuret REPLACING ==:PREFIX:== BY ==WS==.
 
       * Déclaration des variables correspondant aux attributs  
       * id_pie et qt_pie de la table piece.
@@ -332,7 +334,7 @@
                WS-MSG-LOG
                WS-TYP-LOG
                WS-IDF-UTI
-                               
+               WS-AJU-RET   
            END-CALL.
 
            EXIT.

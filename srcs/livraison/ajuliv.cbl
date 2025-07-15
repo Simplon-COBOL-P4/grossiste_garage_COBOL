@@ -97,13 +97,13 @@
            IF SQLCODE = 0
       * On rajoute, pour le log, si l'ajout dans la bdd est un succès 
       * ou non.     
-               SET LK-AJU-RET-OK TO TRUE
                EXEC SQL COMMIT WORK END-EXEC
                PERFORM 0300-LG-DEB
                   THRU 0300-LG-FIN
+               SET LK-AJU-RET-OK TO TRUE
            ELSE 
-               SET LK-AJU-RET-ERR TO TRUE
                EXEC SQL ROLLBACK WORK END-EXEC
+               SET LK-AJU-RET-ERR TO TRUE
            END-IF.
        0200-SQL-FIN.
 
@@ -113,5 +113,6 @@
            CALL "crelog" USING WS-DTL-LG,
                                WS-TYP-LG,
                                WS-UTI-ID
+                               LK-AJU-RET
            END-CALL.
        0300-LG-FIN.

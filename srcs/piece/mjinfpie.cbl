@@ -41,6 +41,8 @@
       * Déclaration des variables correspondant aux attributs id_pie,
       * nom_pie, seuil_pie, id_fou.
 
+       COPY ajuret REPLACING ==:PREFIX:== BY ==WS==.
+
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
 
        01 PG-IDF-PIE               PIC 9(10).
@@ -174,6 +176,7 @@
                WS-MSG-LOG
                WS-TYP-LOG
                WS-IDF-UTI
+               WS-AJU-RET
            END-CALL.
 
            EXIT.
