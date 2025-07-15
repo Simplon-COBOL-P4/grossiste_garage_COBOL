@@ -164,7 +164,7 @@
 
                    PERFORM 0200-CAL-SPG-DEB
                       THRU 0200-CAL-SPG-FIN
-                   IF  WS-LIR-RET = 0 THEN
+                   IF  WS-LIR-RET-OK THEN
       *
       * Reinitialisé l'ecran
       *
