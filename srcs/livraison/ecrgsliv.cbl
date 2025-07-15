@@ -52,7 +52,7 @@
            05 LINE 13 COL 30 VALUE '3 - Modifier uune livraison'.
            05 LINE 14 COL 30 VALUE '4 - Supprimer une livraison'.
 
-           01  S-ECR-CHO.
+       01  S-ECR-CHO.
            05 LINE 22 COL 52 PIC X(01) TO WS-CHO AUTO.
 
 
