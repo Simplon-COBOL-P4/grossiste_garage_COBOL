@@ -11,8 +11,8 @@
       * ecr=ecran, lin=ligne; tab=table det=detail; fnd=fond           *
       * ID=IDENTIFIANT; UTI=UTILISATEUR; heu=heure; jou=jour;          *
       * typ=type; acc=accept; num=nombre; mnu=menu;  cmp=complet       *
-      * AFF=affichage;
-      ******************************************************************  
+      * AFF=affichage; pag,pg=page                                     *
+      ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ecrpglog.
        AUTHOR. Thomas Baudrin.
@@ -40,7 +40,11 @@
        77  WS-LIN-CMP           PIC X(78).
        77  WS-ACC               PIC X.
 
+       77  WS-NUM-PAG           PIC 9(02).
+
        77  WS-AFF-ID            PIC Z(09)9(01).
+
+       COPY lirret REPLACING ==:PREFIX:== BY ==WS==.
 
       *Déclaration de l'écran d'affichage.
        SCREEN SECTION.
@@ -67,7 +71,12 @@
       ******************************************************************
 
        0100-APL-LEC-LOG-DEB.
-           CALL "lirpglog" USING WS-LOG-TAB WS-MAX-LIN
+           CALL "lirpglog"
+               USING
+               WS-LOG-TAB
+               WS-NUM-PAG
+               WS-MAX-LIN
+               WS-LIR-RET
            END-CALL.
        0100-APL-LEC-LOG-FIN.
 

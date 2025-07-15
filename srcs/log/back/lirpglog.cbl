@@ -10,8 +10,9 @@
       * lec=Lecture, lin=ligne; tab=table det=detail                   *
       * idl=identifiant log; UTI=UTILISATEUR; heu=heure; jou=jour;     *
       * typ=type; acc=accept; num=nombre; mnu=menu;  cmp=complet       *
-      * idu=identifiant utilisateur; idx=index ; err=erreur            *
-      ******************************************************************   
+      * idu=identifiant utilisateur; idx=index ; err=erreur; ofs=offset*
+      * pag=page;                                                      *
+      ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. lirpglog.
        Author. Thomas Baudrin.
@@ -24,20 +25,19 @@
       *Déclaration des variables correspondants aux attributs de la 
       *table logs et utilisateur
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-       01  PG-IDL   PIC 9(10).
-       01  PG-DET   PIC X(100).
-       01  PG-HEU   PIC X(08).
-       01  PG-JOU   PIC X(10).
-       01  PG-TYP   PIC X(12). 
-       01  PG-IDU   PIC 9(10).
-       01  PG-NOM   PIC X(80).
+       01  PG-IDL     PIC 9(10).
+       01  PG-DET     PIC X(100).
+       01  PG-HEU     PIC X(08).
+       01  PG-JOU     PIC X(10).
+       01  PG-TYP     PIC X(12). 
+       01  PG-IDU     PIC 9(10).
+       01  PG-NOM     PIC X(80).
+       01  PG-OFS     PIC 9(10).
+       01  PG-MAX-LIN PIC 9(10).
        EXEC SQL END DECLARE SECTION END-EXEC.
 
       * Déclaration d'un index
        77  WS-IDX             PIC 9(02).
-
-      * Déclaration d'une variable d'erreur
-       77  WS-ERR             PIC S9(9) COMP-5.
 
       * Inclusion des codes d'erreur SQLCA.
        EXEC SQL INCLUDE SQLCA END-EXEC.
@@ -55,9 +55,15 @@
                10  LK-UTI-ID    PIC 9(10).
                10  LK-UTI-NOM   PIC X(30).
 
-       77  LK-MAX-LIN           PIC 9(02).        
+       77  LK-NUM-PAG           PIC 9(10).
+       77  LK-MAX-LIN           PIC 9(02).
+
+       COPY lirret REPLACING ==:PREFIX:== BY ==LK==.
        
-       PROCEDURE DIVISION USING LK-LOG-TAB LK-MAX-LIN.
+       PROCEDURE DIVISION USING LK-LOG-TAB,
+                                LK-NUM-PAG,
+                                LK-MAX-LIN,
+                                LK-LIR-RET.
 
       * Initialisation des variables.
            PERFORM 0100-INI-VAR-DEB
@@ -86,7 +92,8 @@
       
        0100-INI-VAR-DEB.
            MOVE 0 TO WS-IDX.
-           MOVE 25 TO LK-MAX-LIN.
+           COMPUTE PG-OFS EQUAL LK-MAX-LIN * LK-NUM-PAG.
+           MOVE LK-MAX-LIN TO PG-MAX-LIN.
        0100-INI-VAR-FIN.   
 
        0200-DEC-CUR-DEB.
@@ -95,6 +102,8 @@
                SELECT id_logs, detail_log, heure_log, date_log, 
                    type_log, logs.id_uti, nom_uti 
                FROM logs
+               LIMIT :PG-MAX-LIN
+               OFFSET :PG-OFS
                LEFT JOIN utilisateur
                ON logs.id_uti = utilisateur.id_uti
            END-EXEC.
@@ -105,31 +114,33 @@
                OPEN CUR_LOGS
            END-EXEC.
            IF SQLCODE NOT = 0
-               MOVE SQLCODE TO WS-ERR
+               SET LK-LIR-RET-ERR TO TRUE
+               EXIT PROGRAM
            END-IF.
        0300-OPN-CUR-FIN.    
 
        0400-FET-LOG-DEB.
-           PERFORM UNTIL SQLCODE NOT = 0 OR WS-IDX > LK-MAX-LIN
+           PERFORM UNTIL SQLCODE EQUAL 100
 
                EXEC SQL
-                       FETCH CUR_LOGS INTO :PG-IDL, :PG-DET, :PG-HEU, 
-                           :PG-JOU, :PG-TYP, :PG-IDU, :PG-NOM
+                   FETCH CUR_LOGS INTO :PG-IDL, :PG-DET, :PG-HEU, 
+                       :PG-JOU, :PG-TYP, :PG-IDU, :PG-NOM
                END-EXEC
                
                IF SQLCODE = 0
-                       ADD 1 TO WS-IDX
-                       MOVE PG-IDL TO LK-LOG-ID(WS-IDX)
-                       MOVE PG-DET TO LK-LOG-DET(WS-IDX)
-                       MOVE PG-HEU TO LK-LOG-HEU(WS-IDX)
-                       MOVE PG-JOU TO LK-LOG-JOU(WS-IDX)
-                       MOVE PG-TYP TO LK-LOG-TYP(WS-IDX)
-                       MOVE PG-IDU TO LK-UTI-ID(WS-IDX)
-                       MOVE PG-NOM TO LK-UTI-NOM(WS-IDX)
-               ELSE IF SQLCODE = 100
-                       MOVE SQLCODE TO WS-ERR
+                   ADD 1 TO WS-IDX
+                   MOVE PG-IDL TO LK-LOG-ID(WS-IDX)
+                   MOVE PG-DET TO LK-LOG-DET(WS-IDX)
+                   MOVE PG-HEU TO LK-LOG-HEU(WS-IDX)
+                   MOVE PG-JOU TO LK-LOG-JOU(WS-IDX)
+                   MOVE PG-TYP TO LK-LOG-TYP(WS-IDX)
+                   MOVE PG-IDU TO LK-UTI-ID(WS-IDX)
+                   MOVE PG-NOM TO LK-UTI-NOM(WS-IDX)
                ELSE
-                       MOVE SQLCODE TO WS-ERR
+                   IF SQLCODE NOT EQUAL 100
+                       SET LK-LIR-RET-ERR TO TRUE
+                       EXIT PROGRAM
+                   END-IF
                END-IF
                
            END-PERFORM.
@@ -142,7 +153,12 @@
            END-EXEC.
                
            IF SQLCODE NOT = 0
-               MOVE SQLCODE TO WS-ERR
+               EXEC SQL ROLLBACK END-EXEC
+               SET LK-LIR-RET-ERR TO TRUE
+               EXIT PROGRAM
            END-IF.
+
+           EXEC SQL COMMIT END-EXEC.
+           SET LK-LIR-RET-OK TO TRUE.
        0500-CLS-CUR-FIN.    
        
