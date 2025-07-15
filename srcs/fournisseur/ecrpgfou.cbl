@@ -106,7 +106,7 @@
            05 FILLER             PIC X(01) VALUE "|".
            05 FILLER             PIC X(11) VALUE ALL "-".
            
-       COPY lirret REPLACING ==:PREFIX:== BY ==LK==.
+       COPY lirret REPLACING ==:PREFIX:== BY ==WS==.
 
        SCREEN SECTION.
        COPY ecrprn.
@@ -164,7 +164,7 @@
 
                    PERFORM 0200-CAL-SPG-DEB
                       THRU 0200-CAL-SPG-FIN
-                   IF  LK-LIR-RET = 0 THEN
+                   IF  WS-LIR-RET = 0 THEN
       *
       * Reinitialisé l'ecran
       *
@@ -199,7 +199,7 @@
       * Fin des arguments d'entrée
       * Début des arguments de sortie
                WS-TBL
-               LK-LIR-RET
+               WS-LIR-RET
       * Fin des arguments de sortie
            END-CALL.
 
