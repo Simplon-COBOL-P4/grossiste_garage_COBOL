@@ -62,7 +62,7 @@
        01 WS-CLR-TXT           PIC 9(01)       VALUE 7. *> Blanc
        01 WS-CLR-FND           PIC 9(01)       VALUE 0. *> Noir
 
-
+       COPY ajuret REPLACING ==:PREFIX:== BY ==WS==.
 
        SCREEN SECTION.
 
@@ -241,10 +241,13 @@
       * base de données. 
        0200-APL-PRG-DEB.
        
-           CALL "ajuuti" USING WS-IDF-UTI
-                               WS-MDP-UTI
-                               WS-ROL-UTI
-           END-CALL. 
+           CALL "ajuuti" 
+                USING 
+                WS-IDF-UTI
+                WS-MDP-UTI
+                WS-ROL-UTI
+                WS-AJU-RET
+           END-CALL.
 
            PERFORM 0250-CDE-ERR-MSG-DEB
               THRU 0250-CDE-ERR-MSG-FIN.
@@ -260,15 +263,12 @@
       * entrées par l'utilisateur. 
        0250-CDE-ERR-MSG-DEB.
            
-
-           SET WS-CDE-RTR-BON TO TRUE. 
-
            EVALUATE TRUE 
 
       * Si le code retour indique une réussite de l'insertion dans la 
       * base de données, affiche un message à l'utilisateur à l'écran.
 
-               WHEN WS-CDE-RTR-BON
+               WHEN WS-AJU-RET-OK
                    
                    DISPLAY WS-VID 
                    AT LINE 22 COL 03
@@ -282,8 +282,9 @@
 
       * Si le nom d'utilisateur entré existe déjà dans la base de 
       * données, affiche un message à l'utilisateur à l'écran.
+      * TEMPORAIREMENT NON UTILISE, COPYBOOK AJURET A FAIRE EVOLUER
 
-               WHEN WS-CDE-RTR-DJA-EXS
+               WHEN FALSE
 
                    DISPLAY WS-VID 
                    AT LINE 22 COL 03
@@ -299,7 +300,7 @@
       * que le nom d'utilisateur déjà existant, affiche un message à 
       * l'utilisateur à l'écran. 
 
-               WHEN WS-CDE-RTR-ERR
+               WHEN WS-AJU-RET-ERR
 
                    DISPLAY WS-VID 
                    AT LINE 22 COL 03
@@ -313,7 +314,3 @@
            END-EVALUATE.
            EXIT.
        0250-CDE-ERR-MSG-FIN.
-
-
-
-
