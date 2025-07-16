@@ -62,6 +62,8 @@
        01 WS-CLR-TXT           PIC 9(01)       VALUE 7. *> Blanc
        01 WS-CLR-FND           PIC 9(01)       VALUE 0. *> Noir
 
+       COPY utiglb.
+
        COPY ajuret REPLACING ==:PREFIX:== BY ==WS==.
 
        SCREEN SECTION.
@@ -71,6 +73,7 @@
        01 S-ECR-CRE-UTI 
            FOREGROUND-COLOR WS-CLR-TXT    
            BACKGROUND-COLOR WS-CLR-FND.
+           COPY ecrutlin.
            05 LINE 07 COL 03 VALUE "Nom :".
            05 LINE 07 COL 30 PIC X(01) FROM WS-CRG.
            05 LINE 07 COL 31 PIC X(30) TO   WS-IDF-UTI.
