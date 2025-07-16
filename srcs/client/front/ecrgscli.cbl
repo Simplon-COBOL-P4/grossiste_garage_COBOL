@@ -90,7 +90,7 @@
                        CALL "ecrspcli"
                        END-CALL
                    WHEN 0
-                   
+                       EXIT PROGRAM
                    WHEN OTHER 
                        DISPLAY "commande incorrecte" 
                        AT LINE 21 COLUMN 5

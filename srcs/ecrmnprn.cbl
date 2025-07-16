@@ -84,10 +84,12 @@
            EVALUATE WS-CHX
                WHEN 1 
       * Appel du sous-programme de gestion du stock.
-
+                   CALL "ecrgspie"
+                   END-CALL
                WHEN 2 
       * Appel du sous-programme de gestion des clients.
-
+                   CALL "ecrgscli"
+                   END-CALL
                WHEN 3 
       * Appel du sous-programme de gestion des fournisseurs.
 
