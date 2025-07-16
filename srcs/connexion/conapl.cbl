@@ -23,6 +23,7 @@
       *  NBR = Nombre
       *  NOM = nom
       *  RET = Retour
+      *  RLE = Role
       *  RST = Reste
       *  SSI = Saisie
       *  STT = Statut
@@ -61,6 +62,7 @@
        77  WS-NOM-UTL           PIC X(20).
        77  WS-MDP-UTL           PIC X(20).
        01  WS-ID-UTL            PIC 9(10).
+       01  WS-RLE-UTL           PIC X(14).
 
 
        77  WS-CDR-005           PIC X(13) VALUE 'Identifiant :'.
@@ -71,14 +73,9 @@
        77  WS-CDR-008           PIC X(14) VALUE 'Mot de passe :'.
 
        COPY ajuret REPLACING ==:PREFIX:== BY ==WS==.
+       COPY lirret REPLACING ==:PREFIX:== BY ==WS==.
 
        COPY utiglb.
-
-       LINKAGE SECTION.
-       01  LK-COD-RET           PIC 9(01).
-           88 LK-STT-ERR                  VALUE 0.
-           88 LK-STT-ADM                  VALUE 1.
-           88 LK-STT-STD                  VALUE 2.
 
        SCREEN SECTION.
        COPY ecrprn.
@@ -103,7 +100,7 @@
       ******************************************************************
       *
       ******************************************************************
-       PROCEDURE DIVISION USING LK-COD-RET.
+       PROCEDURE DIVISION.
 
            PERFORM 0100-CON-DEB
               THRU 0100-CON-FIN.
@@ -119,14 +116,15 @@
                DISPLAY ECR-SSI-01
                ACCEPT ECR-SSI-01
       * Appel sous-progrmme
-               CALL 'accutl' 
+               CALL "liruti"
                    USING
                    WS-NOM-UTL
                    WS-MDP-UTL
+                   WS-ROL-UTL
                    WS-ID-UTL
-                   LK-COD-RET
+                   WS-LIR-RET
                END-CALL
-               IF LK-STT-ERR THEN
+               IF WS-LIR-RET-ERR THEN
                    DISPLAY 'Identifiant et/ou mot de passe incorrecte'
                        AT LINE 22 COL 10
                    DISPLAY 'Nombre de tentative restant: ' 
@@ -180,11 +178,6 @@
        0200-DEP-VER-GBL-DEB.
            MOVE WS-NOM-UTL TO G-UTI-NOM.
            MOVE WS-ID-UTL TO G-UTI-ID.
-           EVALUATE TRUE
-               WHEN LK-STT-ADM
-                   MOVE "ADMIN" TO G-UTI-RLE
-               WHEN LK-STT-STD
-                   MOVE "STANDARD" TO G-UTI-RLE
-           END-EVALUATE.
+           MOVE WS-RLE-UTL TO G-UTI-RLE.
        0200-DEP-VER-GBL-FIN.    
 
