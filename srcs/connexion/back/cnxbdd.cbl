@@ -11,7 +11,7 @@
       * COR=correct; BSE=base; DON=donnée                              *
       ******************************************************************       
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. conbdd.
+       PROGRAM-ID. cnxbdd.
        AUTHOR. lucas.
        DATE-WRITTEN. 25-06-2025 (fr).
 

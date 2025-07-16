@@ -63,7 +63,7 @@
            DISPLAY S-FND-ECR.
            DISPLAY S-ECR-SSI.
 
-           CALL 'conbdd' USING LK-COD-RET.
+           CALL 'cnxbdd' USING LK-COD-RET.
            IF LK-COD-RET <> 0 THEN
               DISPLAY 'Connexion echouee.' AT LINE 23 COL 3
               ACCEPT WS-NUL AT LINE 23 COL 20
