@@ -8,7 +8,7 @@
       * TABLE SQL 'utilisateur'.
 
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. letutl.
+       PROGRAM-ID. liruti.
        AUTHOR. Anaisktl.
        DATE-WRITTEN. 24-06-2025 (fr)
 

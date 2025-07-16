@@ -48,7 +48,7 @@
            EXIT PROGRAM.
 
        0200-SQL-DEB.
-           CALL "letutl"
+           CALL "liruti"
                USING
                LK-NOM
                LK-MDP
