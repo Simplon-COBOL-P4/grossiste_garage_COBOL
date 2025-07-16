@@ -1,13 +1,12 @@
       ******************************************************************
       *                             ENTÊTE                             *
       *                                                                *
-      * Variables globales pour les infos de l'utilisateur connecte.   *
+      * Morceau d'ecran qui affiche le type d'utilisateur connecte.    *
       *                                                                *
       *                           TRIGRAMMES                           *
       *                                                                *
-      * UTI=UTILISATEUR; G=GLOBAL; ID=IDENTIFIANT; RLE=ROLE;           *
+      * UTI=UTILISATEUR; G=GLOBAL; RLE=ROLE;                           *
       ****************************************************************** 
-       01 G-UTI GLOBAL.
-           G-UTI-NOM       PIC X(20).
-           G-UTI-ID        PIC 9(10).
-           G-UTI-RLE       PIC X(14).
+       05 LINE 04.
+           10 COL 03 VALUE "Connecte en tant que : ".
+           10 COL 26 FROM G-UTI-RLE.
