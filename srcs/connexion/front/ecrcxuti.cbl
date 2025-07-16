@@ -71,6 +71,11 @@
 
        COPY utiglb.
 
+       LINKAGE SECTION.
+       01 LK-STT                PIC 9(01).
+           88 LK-STT-OK                   VALUE 1.
+           88 LK-STT-ERR                  VALUE 2.
+
        SCREEN SECTION.
        COPY ecrprn.
 
@@ -103,7 +108,7 @@
       ******************************************************************
       *
       ******************************************************************
-       PROCEDURE DIVISION.
+       PROCEDURE DIVISION USING LK-STT.
 
            PERFORM 0100-CON-DEB
               THRU 0100-CON-FIN.
@@ -125,12 +130,14 @@
 
                    WHEN OTHER
                        SET WS-ETT-BCL-FIN TO TRUE
-
+                       SET LK-STT-ERR TO TRUE
                END-EVALUATE
 
            END-PERFORM.
 
        0100-CON-FIN.
+
+       0150-LGQ-PRN-DEB.
            DISPLAY S-FND-ECR.
       
            CALL "liruti"
@@ -158,6 +165,9 @@
                   THRU 0400-DTL-LOG-SUC-FIN
 
                MOVE "CON_SUC" TO WS-TYP-LG
+
+               SET WS-ETT-BCL-FIN TO TRUE
+               SET LK-STT-OK TO TRUE
            END-IF.
 
            CALL "ajulog"
@@ -167,8 +177,6 @@
                WS-ID-UTL
                WS-AJU-RET
            END-CALL.
-       0150-LGQ-PRN-DEB.
-
        0150-LGQ-PRN-FIN.
       
        0200-DEP-VER-GBL-DEB.
