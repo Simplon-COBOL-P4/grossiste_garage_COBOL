@@ -1,6 +1,8 @@
       ******************************************************************
       *                             ENTÊTE                             *
-      *                                                                *
+      * Programme qui récupère les livraisons par page et les retourne *
+      * au programme appelant. Le programme prend en paramètre la      *
+      * quantité de données à retourner, ainsi que la page à retourner.*
       *                                                                *
       *----------------------------------------------------------------*
       *                           TRIGRAMMES                           *
@@ -9,7 +11,7 @@
       * FIL=FILTRE; VID=VIDE; TAB=TABLEAU; LIV=LIVRAISON; DAT=DATE;    *
       * STA=STATUT; CRS=COURS; TRM=TERMINE; TYP=TYPE; ENT=ENTRANT;     *
       * SOR=SORTANT; QTE=QUANTITE; OFS=OFFSET; LIN=LIGNE;              *
-      * EVA=EVALUATION; CSR= CURSEUR; AFC= AFFECTATION
+      * EVA=EVALUATION; CSR= CURSEUR; AFC= AFFECTATION.                *
       ******************************************************************
        
        IDENTIFICATION DIVISION.
