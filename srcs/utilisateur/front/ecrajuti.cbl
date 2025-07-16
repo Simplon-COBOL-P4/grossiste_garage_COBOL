@@ -137,7 +137,6 @@
            PERFORM 0150-EVA-CHX-UTI-DEB
               THRU 0150-EVA-CHX-UTI-FIN.
 
-           EXIT.
            
        0100-AFF-ECR-UTI-FIN.
       *-----------------------------------------------------------------
@@ -167,7 +166,6 @@
                    
 
            END-EVALUATE.
-           EXIT.
 
        0150-EVA-CHX-UTI-FIN.
       *-----------------------------------------------------------------
@@ -200,7 +198,6 @@
                   THRU 0156-APP-ENT-FIN
                
            END-IF.
-           EXIT.
            
        0155-CFM-MDP-UTI-FIN.
        
@@ -216,7 +213,6 @@
            ACCEPT WS-LRR 
            AT LINE 23 COL 21.
 
-           EXIT.
        0156-APP-ENT-FIN.
 
       *----------------------------------------------------------------- 
@@ -231,7 +227,6 @@
            PERFORM 0156-APP-ENT-DEB
               THRU 0156-APP-ENT-FIN.
                
-           EXIT.
 
        0157-MSG-ERR-CHX-FIN.
 
@@ -252,7 +247,6 @@
            PERFORM 0250-CDE-ERR-MSG-DEB
               THRU 0250-CDE-ERR-MSG-FIN.
 
-           EXIT.
        0200-APL-PRG-FIN.
 
 
@@ -312,5 +306,4 @@
                       THRU 0156-APP-ENT-FIN
 
            END-EVALUATE.
-           EXIT.
        0250-CDE-ERR-MSG-FIN.
