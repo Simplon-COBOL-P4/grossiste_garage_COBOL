@@ -49,7 +49,7 @@
        0100-APL-ECR-TTR-FIN.
 
        0200-APL-ECR-CNX-DEB.
-           CALL "conapl"
+           CALL "ecrcxuti"
                USING
                WS-COD-RET
            END-CALL.

@@ -6,10 +6,9 @@
       *
       * Trigrammes:
       *  ADM = Admin
-      *  APL = Application
       *  CDR = Cadre
       *  COD = Code
-      *  CON = Connexion
+      *  CX,CON = Connexion
       *  DEP = Deplacer
       *  DTL = Detail
       *  ECR = Ecran
@@ -41,7 +40,7 @@
       * WS-NBR-RST > nombre de tentative restant
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. conapl.
+       PROGRAM-ID. ecrcxuti.
        AUTHOR. Benoit.
        DATE-WRITTEN. 25-06-2025 (fr).
 
