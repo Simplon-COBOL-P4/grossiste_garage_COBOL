@@ -30,7 +30,7 @@ space := $(subst ,, )
 SRC_PATHS := $(shell find $(SRC_FOLDER) -type d)
 RUN_PATHS = $(patsubst $(SRC_FOLDER)%, $(LIBS_FOLDER)%, $(SRC_PATHS))
 # exporte les chemins vers tous les sous dossiers de libs séparés par des ":"
-export COB_LIBRARY_PATH := $(subst $(space)$(space),:,$(RUN_PATHS))
+export COB_LIBRARY_PATH := $(subst $(space),,$(subst $(space)$(space),:,$(RUN_PATHS)))
 
 CPY_PATHS := $(shell find $(COPYBOOKS_FOLDER) -type d)
 COB_CPY_PATH = $(subst $(space), -I ,$(CPY_PATHS))
