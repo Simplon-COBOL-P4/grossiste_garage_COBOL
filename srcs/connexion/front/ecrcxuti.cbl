@@ -36,8 +36,6 @@
       *
       * WS-NOM-UTL > nom de l'utilisateur
       * WS-MDP-UTL > mot de passe de l'utilisateur 
-      * WS-NBR-CON > nombre de connexions tentative
-      * WS-NBR-RST > nombre de tentative restant
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ecrcxuti.
@@ -52,9 +50,6 @@
 
        77  WS-COL-TXT           PIC 9(01) VALUE 7.  *> Blanc
        77  WS-COL-FND           PIC 9(01) VALUE 1.  *> Bleu
-
-       77  WS-NBR-CON           PIC 9(02).
-       77  WS-NBR-RST           PIC 9(02).
 
        01  WS-DTL-LG            PIC X(100).
        01  WS-TYP-LG            PIC X(12).
@@ -186,9 +181,9 @@
            MOVE SPACE TO WS-DTL-LG
 
            STRING
-               FUNCTION TRIM(WS-NOM-UTL) SPACE
-               WS-NBR-RST " restants."
-               DELIMITED BY SIZE 
+               FUNCTION TRIM(WS-NOM-UTL)
+               " a essaye de se connecter"
+               DELIMITED BY SIZE
                INTO WS-DTL-LG 
            END-STRING.
        0300-DTL-LOG-ERR-FIN.
@@ -198,8 +193,8 @@
 
            STRING
                FUNCTION TRIM(WS-NOM-UTL)
-               " connecte."
-               DELIMITED BY SIZE 
+               " a reussi a se connecter."
+               DELIMITED BY SIZE
                INTO WS-DTL-LG 
            END-STRING.
        0400-DTL-LOG-SUC-FIN.
