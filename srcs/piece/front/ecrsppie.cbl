@@ -91,6 +91,6 @@
                    DISPLAY "ERREUR DE SAISIE ! "  AT LINE 20 COLUMN 32
                    ACCEPT WS-LEU
 
-               END-IF.
+               END-IF
            END-IF.
        0200-SUP-PIE-FIN.

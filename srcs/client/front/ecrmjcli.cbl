@@ -125,9 +125,9 @@
                END-CALL                      
                                     
                DISPLAY S-ECR-AFG
-               MOVE "0"
+               MOVE "0" TO WS-CHX-ADM
                PERFORM UNTIL WS-CHX-ADM > "0"
-                   ACCEPT  S-ECR-AFG
+                   ACCEPT S-ECR-AFG
                    IF WS-CHX-ADM EQUAL 0
                        EXIT PROGRAM
                    END-IF

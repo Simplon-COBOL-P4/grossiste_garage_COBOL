@@ -54,7 +54,7 @@
       * Paragraphe pour permettre à l'utilisateur d'entrer un id client
       * et de choisir s'il veut le supprimer ou non
        0200-TRA-CMD-DEB.
-           PERFORM UNTIL WS-CMD
+           PERFORM UNTIL WS-CMD EQUAL 0
 
                ACCEPT S-SP-CLI
             
@@ -67,7 +67,7 @@
                        END-CALL
 
                    WHEN EQUAL 0 
-
+                       EXIT PROGRAM
                    WHEN OTHER
                        DISPLAY "commande incomprise" LINE 17 COLUMN 30 
 

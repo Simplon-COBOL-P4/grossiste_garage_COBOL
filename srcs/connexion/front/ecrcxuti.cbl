@@ -88,7 +88,7 @@
            05  LINE 23.
                10 COL 62 VALUE "Retour au menu".
                10 COL 77 VALUE "[".
-               10 COL 78 USING PIC X(01) WS-CHX.
+               10 COL 78 PIC X(01) USING WS-CHX.
                10 COL 79 VALUE "]".
            
            05  LINE 9  COL 30  PIC X(20) TO WS-NOM-UTL AUTO.
@@ -137,7 +137,7 @@
                USING
                WS-NOM-UTL
                WS-MDP-UTL
-               WS-ROL-UTL
+               WS-RLE-UTL
                WS-ID-UTL
                WS-LIR-RET
            END-CALL.

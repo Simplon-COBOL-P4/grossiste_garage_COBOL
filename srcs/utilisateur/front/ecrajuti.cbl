@@ -121,7 +121,7 @@
 
            PERFORM UNTIL WS-FIN-BCL-OUI
 
-               ACCEPT S-ECR-CRE-UTI.
+               ACCEPT S-ECR-CRE-UTI
 
                PERFORM 0150-EVA-CHX-UTI-DEB
                   THRU 0150-EVA-CHX-UTI-FIN

@@ -67,7 +67,7 @@
 
                DISPLAY S-MNU-PRN-COM
 
-               IF G-ROL-UTI EQUAL "ADMIN"
+               IF G-UTI-RLE EQUAL "ADMIN"
                    DISPLAY S-MNU-PRN-ADM
                END-IF
 
@@ -100,7 +100,7 @@
                WHEN 0 
                    SET WS-ETT-BCL-FIN TO TRUE
                WHEN OTHER
-                   IF G-RLE-UTI EQUAL "ADMIN"
+                   IF G-UTI-RLE EQUAL "ADMIN"
                        PERFORM 0300-EVA-CHX-ADM-DEB
                           THRU 0300-EVA-CHX-ADM-FIN
                    ELSE

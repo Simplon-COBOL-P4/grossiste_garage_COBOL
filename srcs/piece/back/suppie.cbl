@@ -22,11 +22,7 @@
        WORKING-STORAGE SECTION. 
 
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-           01 PG_IDT_PIE         PIC 9(20).
-           01 PG_NOM_PIE         PIC X(80).
-           01 PG_QTE_PIE         PIC 9(04).
-           01 PG_SUI_PIE         PIC 9(04).
-           01 PG_IDT_FOU         PIC 9(20).
+           01 PG-IDT-PIE         PIC 9(20).
        EXEC SQL END DECLARE SECTION END-EXEC.
 
        EXEC SQL INCLUDE SQLCA END-EXEC.
@@ -42,10 +38,10 @@
            EXIT PROGRAM. 
        
        0100-SUP-PIE-DEB.
-           MOVE LK-ID-PIE TO id_pie
+           MOVE LK-ID-PIE TO PG-IDT-PIE
            EXEC SQL 
                 DELETE FROM  piece 
-                WHERE id_pie = :id_pie
+                WHERE id_pie = :PG-IDT-PIE
            END-EXEC.
            EXEC SQL COMMIT END-EXEC.
            

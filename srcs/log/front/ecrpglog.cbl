@@ -36,17 +36,17 @@
        01  WS-UND-LIN              PIC X(78) VALUE ALL "_".  
 
        01  WS-NTT-LIN.
-           05 WS-LOG-LIN-1-JOU     PIC X(10) VALUE "   Date   ".
+           05 WS-NTT-LIN-1-JOU     PIC X(10) VALUE "   Date   ".
            05 FILLER               PIC X(01) VALUE ALL "|".
-           05 WS-LOG-LIN-1-HEU     PIC X(08) VALUE "   Heure  ".
+           05 WS-NTT-LIN-1-HEU     PIC X(08) VALUE "   Heure  ".
            05 FILLER               PIC X(01) VALUE ALL "|".
-           05 WS-LOG-LIN-1-ID-LOG  PIC Z(09)9(01) VALUE "  ID log  ".
+           05 WS-NTT-LIN-1-ID-LOG  PIC Z(09)9(01) VALUE "  ID log  ".
            05 FILLER               PIC X(01) VALUE ALL "|".
-           05 WS-LOG-LIN-1-ID-UTI  PIC Z(10) VALUE "  ID Uti. ".
+           05 WS-NTT-LIN-1-ID-UTI  PIC Z(10) VALUE "  ID Uti. ".
            05 FILLER               PIC X(01) VALUE ALL "|".
-           05 WS-LOG-LIN-1-TYP     PIC X(12) VALUE "  Type Log  ".
+           05 WS-NTT-LIN-1-TYP     PIC X(12) VALUE "  Type Log  ".
            05 FILLER               PIC X(01) VALUE ALL "|".
-           05 WS-LOG-LIN-1-DET-DEB PIC X(23) VALUE 
+           05 WS-NTT-LIN-1-DET-DEB PIC X(23) VALUE 
                "        Message        ".
 
        01  WS-LOG-LIN-1.
@@ -93,11 +93,11 @@
            05 LINE 23.
                10 COL 03 VALUE "Choix de la page".
                10 COL 20 VALUE "[".
-               10 COL 21 USING PIC 9(10) WS-NUM-PAG.
+               10 COL 21 PIC 9(10) USING WS-NUM-PAG.
                10 COL 31 VALUE "]".
                10 COL 62 VALUE "Retour au menu".
                10 COL 77 VALUE "[".
-               10 COL 78 USING PIC X(01) WS-CHX.
+               10 COL 78 PIC X(01) USING WS-CHX.
                10 COL 79 VALUE "]".
 
        01 S-AFF-ERR.
