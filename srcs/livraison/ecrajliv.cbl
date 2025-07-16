@@ -45,10 +45,7 @@
       * Le code d'erreur
        COPY ajuret REPLACING ==:PREFIX:== BY ==WS==.
 
-      *maquette
-      * https://github.com/Simplon-COBOL-P4/grossiste_garage_COBOL/blob/maquette/Maquette/Livraisons/28-Ecran%20ajout%20livraisons.txt
-
-      
+   
       * Variable nécessaire en cas de livraison sortante pour récupérer
       * la quantité de pièce qu'il y a en stock.
 
@@ -232,8 +229,6 @@
                    IF WS-AJU-RET NOT EQUAL 0
                        EXEC SQL ROLLBACK WORK END-EXEC
                    END-IF
-                   DISPLAY WS-QUA-PIE LINE 26 
-                   DISPLAY WS-QUA-PIE-SOR LINE 27 
       * Il faudrait après le call mettre à jour la quantité dans la
       * base de donnée. Mais aucun sous-programme ne permet 
       * actuellement de le faire.
@@ -284,19 +279,6 @@
        0500-IDT-LIV-DEB.
       * Comme ajuliv ne renvoie pas l'id de la dernière livraison,
       * on la récupère autrement.
-      * On tri les livraisons par ordre descendant et on récupère le
-      * premier qui arrive.
-      
-      *     EXEC SQL
-      *     SELECT id_liv 
-      *     INTO :WS-IDT-LIV
-      *     FROM livraison
-      *     ORDER BY id_liv DESC 
-      *     LIMIT 1
-      *     END-EXEC.
-
-      * On suppose que la récupération de l'id de livraison se 
-      * passe toujours bien.
            MOVE 5 TO WS-IDT-LIV.
        0500-IDT-LIV-FIN.
 
