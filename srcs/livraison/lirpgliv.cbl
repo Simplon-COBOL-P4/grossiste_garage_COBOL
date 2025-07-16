@@ -20,16 +20,34 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
        
+      * Déclaration des variables à utiliser en SQL. 
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-       01 PG-NBR-ELM                     PIC 9(02). *> Min 1 - Max 25
-       01 PG-OFS                         PIC 9(03).  
 
+      * Nombre d'éléments par page. 
+       01 PG-NBR-ELM                     PIC 9(02). *> Min 1 - Max 25
+
+      * Déclaration de l'offset pour la lecture avec curseur sur SQL. 
+       01 PG-OFS                         PIC 9(03).  
+       
+      * ID saisi à l'écran par l'utilisateur. Il peut correspondre à 
+      * l'ID de fournisseur, de client ou de la pièce selon le filtre
+      * utilisé. 
        01 PG-IDF-FOU-CLI-PIE             PIC 9(10).
        
+      * ID de livraison à renvoyer. 
        01 PG-IDF-LIV           PIC 9(10).
+
+      * ID du fournisseur ou du client selon le filtre. 
        01 PG-IDF-FOU-CLI       PIC 9(10).
+
+      * Nom du fournisseur ou du client selon le filtre. 
        01 PG-NOM-FOU-CLI       PIC X(50).
+
+      * Quantité de types de pièces dans la livraison pour les filtres
+      * vide, fournisseur et client, et quantité de pièces à livrer pour
+      * chaque type de pièces dans la livraison. 
        01 PG-QTE-PIE           PIC 9(10).
+
        01 PG-DAT-LIV           PIC X(10).
 
        01 PG-STA-LIV           PIC 9(01).
@@ -46,10 +64,11 @@
       * Le nombre de lignes ajouter dans le tableau.
        01 WS-NBR-LIN-TAB        PIC 9(02).
                
-       COPY lirret REPLACING ==:PREFIX:== BY ==WS==.
        
        LINKAGE SECTION.
       * Arguments d'entrée.
+
+      * Numéro de page voulu.
        77 LK-PGE                         PIC 9(10).
        77 LK-NBR-ELM                     PIC 9(02).
        77 LK-IDF-FOU-CLI-PIE             PIC 9(10).
@@ -75,19 +94,23 @@
                    
                10 LK-IDF-FOU-CLI       PIC 9(10).
                10 LK-NOM-FOU-CLI       PIC X(50).
+
       * Attention à l'ambivalence de cet argument, il peut etre le
       * nombre de variete de pieces dans une livraison, comme le nombre
       * de piece de l'ID demandé dans la livraison. 
                10 LK-QTE-PIE           PIC 9(10).
        
-
+      * Déclaration de la variable correspondant au code de retour sur 
+      * la lecture. 
+       COPY lirret REPLACING ==:PREFIX:== BY ==LK==.
+       
 
        PROCEDURE DIVISION USING LK-PGE,
                                 LK-NBR-ELM,
                                 LK-IDF-FOU-CLI-PIE,
                                 LK-FIL,
                                 LK-TAB,
-                                WS-LIR-RET.
+                                LK-LIR-RET.
            
 
            PERFORM 0050-AFC-IDF-FIL-DEB
@@ -108,6 +131,8 @@
        
        0050-AFC-IDF-FIL-DEB.
        
+      * Alimentation de la variable SQL correspondant à l'ID saisi à 
+      * l'écran.     
            MOVE LK-IDF-FOU-CLI-PIE
            TO   PG-IDF-FOU-CLI-PIE.
 
@@ -137,27 +162,28 @@
 
        0200-EVA-FIL-DEB.
 
+      * Evaluation du choix du filtre.
            EVALUATE TRUE 
-               
+
+      * Pas de filtre.         
                WHEN LK-FIL-VID
                
                    PERFORM 0300-CSR-FIL-VID-DEB
                       THRU 0300-CSR-FIL-VID-FIN
 
+      * Filtre fournisseur. 
                WHEN LK-FIL-FOU
 
                    PERFORM 0400-CSR-FIL-FOU-DEB
                       THRU 0400-CSR-FIL-FOU-FIN
                    
-                   SET LK-TYP-ENT TO TRUE 
-
+      * Filtre client. 
                WHEN LK-FIL-CLI
                    
                    PERFORM 0500-CSR-FIL-CLI-DEB
                       THRU 0500-CSR-FIL-CLI-FIN
 
-                   SET LK-TYP-SOR TO TRUE 
-
+      * Filtre pièces. 
                WHEN LK-FIL-PIE
                    
                    PERFORM 0600-CSR-FIL-PIE-DEB
@@ -173,7 +199,7 @@
        
        0300-CSR-FIL-VID-DEB.
 
-      * Déclaration du curseur pour la table livraison. 
+      * Déclaration du curseur pour le filtre vide. 
            EXEC SQL
                DECLARE curseur_liv CURSOR FOR 
                SELECT livraison.id_liv, 
@@ -190,15 +216,21 @@
                
                FROM livraison    
                
-               JOIN fournisseur 
-                 ON livraison.id_fou = fournisseur.id_fou 
+               LEFT JOIN fournisseur 
+                      ON livraison.id_fou = fournisseur.id_fou 
                
-               JOIN client
-                 ON livraison.id_cli = client.id_cli
+               LEFT JOIN client
+                      ON livraison.id_cli = client.id_cli
 
                JOIN livraison_piece
                  ON livraison.id_liv = livraison_piece.id_liv
-               GROUP BY livraison.id_liv
+               GROUP BY livraison.id_liv,
+                        livraison.date_deb_liv,
+                        livraison.statut_liv,
+                        fournisseur.nom_fou,
+                        client.nom_cli,
+                        fournisseur.id_fou,
+                        client.id_cli
 
                LIMIT :PG-NBR-ELM
                OFFSET :PG-OFS
@@ -213,7 +245,7 @@
       * En cas d'erreur lors de l'ouverture du curseur, le programme est
       * arrêté et le code d'erreur est renvoyé.
            IF SQLCODE NOT EQUAL 0
-               SET WS-LIR-RET-ERR TO TRUE 
+               SET LK-LIR-RET-ERR TO TRUE 
                EXIT PROGRAM
            END-IF.
            
@@ -223,7 +255,6 @@
       * Lecture du curseur tant que le SQLCODE n'est pas égal à 100, et 
       * donc qu'on ne se trouve pas au bout du curseur.
            PERFORM UNTIL SQLCODE = 100 
-               
                EXEC SQL
 
       * Récupération des données suivantes : id et nom du fournisseur  
@@ -243,31 +274,32 @@
                END-EXEC
        
       * Incrémentation du nombre de lignes du tableau.  
-               ADD 1 TO WS-NBR-LIN-TAB
+               IF SQLCODE NOT = 100
+                   ADD 1 TO WS-NBR-LIN-TAB
 
       * Les variables du tableau sont ensuite alimentées par les valeurs 
       * obtenues à l'aide du curseur.
-               MOVE PG-IDF-LIV
-               TO   LK-IDF-LIV(WS-NBR-LIN-TAB)
-
-               MOVE PG-QTE-PIE
-               TO   LK-QTE-PIE(WS-NBR-LIN-TAB)
-
-               MOVE PG-DAT-LIV
-               TO   LK-DAT-LIV(WS-NBR-LIN-TAB)
-
-               MOVE PG-STA-LIV
-               TO   LK-STA-LIV(WS-NBR-LIN-TAB)
-
-               MOVE PG-NOM-FOU-CLI 
-               TO   LK-NOM-FOU-CLI(WS-NBR-LIN-TAB)
-               
-               MOVE PG-IDF-FOU-CLI 
-               TO   LK-IDF-FOU-CLI(WS-NBR-LIN-TAB)
-               
-               MOVE PG-TYP-LIV 
-               TO   LK-TYP-LIV(WS-NBR-LIN-TAB)
-               
+                   MOVE PG-IDF-LIV
+                   TO   LK-IDF-LIV(WS-NBR-LIN-TAB)
+       
+                   MOVE PG-QTE-PIE
+                   TO   LK-QTE-PIE(WS-NBR-LIN-TAB)
+       
+                   MOVE PG-DAT-LIV
+                   TO   LK-DAT-LIV(WS-NBR-LIN-TAB)
+       
+                   MOVE PG-STA-LIV
+                   TO   LK-STA-LIV(WS-NBR-LIN-TAB)
+       
+                   MOVE PG-NOM-FOU-CLI 
+                   TO   LK-NOM-FOU-CLI(WS-NBR-LIN-TAB)
+                   
+                   MOVE PG-IDF-FOU-CLI 
+                   TO   LK-IDF-FOU-CLI(WS-NBR-LIN-TAB)
+                   
+                   MOVE PG-TYP-LIV 
+                   TO   LK-TYP-LIV(WS-NBR-LIN-TAB)
+               END-IF 
 
            END-PERFORM.
 
@@ -285,7 +317,7 @@
        
        0400-CSR-FIL-FOU-DEB.
 
-      * Déclaration du curseur pour la table fournisseur. 
+      * Déclaration du curseur pour le filtre fournisseur. 
            EXEC SQL
                DECLARE curseur_fou CURSOR FOR 
                SELECT livraison.id_liv, fournisseur.nom_fou,
@@ -293,16 +325,19 @@
                       livraison.date_deb_liv, livraison.statut_liv
                       
 
-               FROM fournisseur    
+               FROM livraison    
 
-               JOIN livraison 
-               ON  fournisseur.id_fou = livraison.id_fou
+               LEFT JOIN fournisseur 
+                      ON fournisseur.id_fou = livraison.id_fou
                
                JOIN livraison_piece
-               ON livraison.id_liv = livraison_piece.id_liv
+                 ON livraison.id_liv = livraison_piece.id_liv
 
                WHERE fournisseur.id_fou = :PG-IDF-FOU-CLI-PIE
-               GROUP BY livraison.id_liv
+               GROUP BY livraison.id_liv,
+                        fournisseur.nom_fou,
+                        livraison.date_deb_liv,
+                        livraison.statut_liv
 
                LIMIT :PG-NBR-ELM
                OFFSET :PG-OFS
@@ -317,7 +352,7 @@
       * En cas d'erreur lors de l'ouverture du curseur, le programme est
       * arrêté et le code d'erreur est renvoyé.
            IF SQLCODE NOT EQUAL 0
-               SET WS-LIR-RET-ERR TO TRUE 
+               SET LK-LIR-RET-ERR TO TRUE 
                EXIT PROGRAM
            END-IF.
            
@@ -344,25 +379,26 @@
                END-EXEC
        
       * Incrémentation du nombre de lignes du tableau.  
-               ADD 1 TO WS-NBR-LIN-TAB
+               IF SQLCODE NOT = 100
+                   ADD 1 TO WS-NBR-LIN-TAB
 
       * Les variables du tableau sont ensuite alimentées par les valeurs 
       * obtenues à l'aide du curseur.
-               MOVE PG-IDF-LIV
-               TO   LK-IDF-LIV(WS-NBR-LIN-TAB)
-
-               MOVE PG-NOM-FOU-CLI 
-               TO   LK-NOM-FOU-CLI(WS-NBR-LIN-TAB)
+                   MOVE PG-IDF-LIV
+                   TO   LK-IDF-LIV(WS-NBR-LIN-TAB)
        
-               MOVE PG-QTE-PIE
-               TO   LK-QTE-PIE(WS-NBR-LIN-TAB)
-
-               MOVE PG-DAT-LIV
-               TO   LK-DAT-LIV(WS-NBR-LIN-TAB)
+                   MOVE PG-NOM-FOU-CLI 
+                   TO   LK-NOM-FOU-CLI(WS-NBR-LIN-TAB)
+           
+                   MOVE PG-QTE-PIE
+                   TO   LK-QTE-PIE(WS-NBR-LIN-TAB)
        
-               MOVE PG-STA-LIV
-               TO   LK-STA-LIV(WS-NBR-LIN-TAB)
-       
+                   MOVE PG-DAT-LIV
+                   TO   LK-DAT-LIV(WS-NBR-LIN-TAB)
+           
+                   MOVE PG-STA-LIV
+                   TO   LK-STA-LIV(WS-NBR-LIN-TAB)
+               END-IF 
 
            END-PERFORM.
 
@@ -380,7 +416,7 @@
        
        0500-CSR-FIL-CLI-DEB.
 
-      * Déclaration du curseur pour la table client. 
+      * Déclaration du curseur pour le filtre client. 
            EXEC SQL
                DECLARE curseur_cli CURSOR FOR 
                SELECT livraison.id_liv, client.nom_cli,
@@ -388,16 +424,19 @@
                       livraison.date_deb_liv, livraison.statut_liv
                       
 
-               FROM client    
+               FROM livraison    
 
-               JOIN livraison 
-               ON  client.id_cli = livraison.id_cli
+               LEFT JOIN client 
+                      ON client.id_cli = livraison.id_cli
                
                JOIN livraison_piece
-               ON livraison.id_liv = livraison_piece.id_liv
+                 ON livraison.id_liv = livraison_piece.id_liv
 
                WHERE client.id_cli = :PG-IDF-FOU-CLI-PIE
-               GROUP BY livraison.id_liv
+               GROUP BY livraison.id_liv,
+                        livraison.date_deb_liv,
+                        livraison.statut_liv,
+                        client.nom_cli
 
                LIMIT :PG-NBR-ELM
                OFFSET :PG-OFS
@@ -412,7 +451,7 @@
       * En cas d'erreur lors de l'ouverture du curseur, le programme est
       * arrêté et le code d'erreur est renvoyé.
            IF SQLCODE NOT EQUAL 0
-               SET WS-LIR-RET-ERR TO TRUE 
+               SET LK-LIR-RET-ERR TO TRUE 
                EXIT PROGRAM
            END-IF.
 
@@ -439,25 +478,26 @@
                END-EXEC
        
       * Incrémentation du nombre de lignes du tableau.  
-               ADD 1 TO WS-NBR-LIN-TAB
+               IF SQLCODE NOT = 100
+                   ADD 1 TO WS-NBR-LIN-TAB
 
       * Les variables du tableau sont ensuite alimentées par les valeurs 
       * obtenues à l'aide du curseur.
-               MOVE PG-IDF-LIV
-               TO   LK-IDF-LIV(WS-NBR-LIN-TAB)
-
-               MOVE PG-NOM-FOU-CLI 
-               TO   LK-NOM-FOU-CLI(WS-NBR-LIN-TAB)
-
-               MOVE PG-QTE-PIE
-               TO   LK-QTE-PIE(WS-NBR-LIN-TAB)
+                   MOVE PG-IDF-LIV
+                   TO   LK-IDF-LIV(WS-NBR-LIN-TAB)
        
-               MOVE PG-DAT-LIV
-               TO   LK-DAT-LIV(WS-NBR-LIN-TAB)
+                   MOVE PG-NOM-FOU-CLI 
+                   TO   LK-NOM-FOU-CLI(WS-NBR-LIN-TAB)
        
-               MOVE PG-STA-LIV
-               TO   LK-STA-LIV(WS-NBR-LIN-TAB)
-       
+                   MOVE PG-QTE-PIE
+                   TO   LK-QTE-PIE(WS-NBR-LIN-TAB)
+           
+                   MOVE PG-DAT-LIV
+                   TO   LK-DAT-LIV(WS-NBR-LIN-TAB)
+           
+                   MOVE PG-STA-LIV
+                   TO   LK-STA-LIV(WS-NBR-LIN-TAB)
+               END-IF 
                
            END-PERFORM.
 
@@ -475,7 +515,7 @@
        
        0600-CSR-FIL-PIE-DEB.
 
-      * Déclaration du curseur pour la table pièce. 
+      * Déclaration du curseur pour le filtre pièce. 
            EXEC SQL
                DECLARE curseur_pie CURSOR FOR 
                SELECT livraison.id_liv, livraison_piece.qt_liv_pie,
@@ -491,11 +531,11 @@
                
                FROM livraison    
 
-               JOIN fournisseur 
-                 ON livraison.id_fou = fournisseur.id_fou 
+               LEFT JOIN fournisseur 
+                      ON livraison.id_fou = fournisseur.id_fou 
                
-               JOIN client
-                 ON livraison.id_cli = client.id_cli
+               LEFT JOIN client
+                      ON livraison.id_cli = client.id_cli
 
                JOIN livraison_piece
                  ON livraison.id_liv = livraison_piece.id_liv
@@ -515,7 +555,7 @@
       * En cas d'erreur lors de l'ouverture du curseur, le programme est
       * arrêté et le code d'erreur est renvoyé.
            IF SQLCODE NOT EQUAL 0
-               SET WS-LIR-RET-ERR TO TRUE 
+               SET LK-LIR-RET-ERR TO TRUE 
                EXIT PROGRAM
            END-IF.
            
@@ -545,31 +585,32 @@
                END-EXEC
        
       * Incrémentation du nombre de lignes du tableau.  
-               ADD 1 TO WS-NBR-LIN-TAB
+               IF SQLCODE NOT = 100
+                   ADD 1 TO WS-NBR-LIN-TAB
 
       * Les variables du tableau sont ensuite alimentées par les valeurs 
       * obtenues à l'aide du curseur.
-               MOVE PG-IDF-LIV
-               TO   LK-IDF-LIV(WS-NBR-LIN-TAB)
-
-               MOVE PG-QTE-PIE
-               TO   LK-QTE-PIE(WS-NBR-LIN-TAB)
-
-               MOVE PG-DAT-LIV
-               TO   LK-DAT-LIV(WS-NBR-LIN-TAB)
-
-               MOVE PG-STA-LIV
-               TO   LK-STA-LIV(WS-NBR-LIN-TAB)
-
-               MOVE PG-NOM-FOU-CLI 
-               TO   LK-NOM-FOU-CLI(WS-NBR-LIN-TAB)
-               
-               MOVE PG-IDF-FOU-CLI 
-               TO   LK-IDF-FOU-CLI(WS-NBR-LIN-TAB)
-               
-               MOVE PG-TYP-LIV 
-               TO   LK-TYP-LIV(WS-NBR-LIN-TAB)
-               
+                   MOVE PG-IDF-LIV
+                   TO   LK-IDF-LIV(WS-NBR-LIN-TAB)
+       
+                   MOVE PG-QTE-PIE
+                   TO   LK-QTE-PIE(WS-NBR-LIN-TAB)
+       
+                   MOVE PG-DAT-LIV
+                   TO   LK-DAT-LIV(WS-NBR-LIN-TAB)
+       
+                   MOVE PG-STA-LIV
+                   TO   LK-STA-LIV(WS-NBR-LIN-TAB)
+       
+                   MOVE PG-NOM-FOU-CLI 
+                   TO   LK-NOM-FOU-CLI(WS-NBR-LIN-TAB)
+                   
+                   MOVE PG-IDF-FOU-CLI 
+                   TO   LK-IDF-FOU-CLI(WS-NBR-LIN-TAB)
+                   
+                   MOVE PG-TYP-LIV 
+                   TO   LK-TYP-LIV(WS-NBR-LIN-TAB)
+               END-IF 
 
            END-PERFORM.
 
