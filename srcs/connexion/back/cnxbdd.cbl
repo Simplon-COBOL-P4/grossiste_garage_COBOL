@@ -8,7 +8,7 @@
       *                           TRIGRAMMES                           *
       *                                                                *
       * MDP=mot de passe; BDD=base de donnée; CON=connexion;           *
-      * COR=correct; BSE=base; DON=donnée                              *
+      * BSE=base; DON=donnée; STT=statut; ERR=erreur                   *
       ******************************************************************       
        IDENTIFICATION DIVISION.
        PROGRAM-ID. cnxbdd.
@@ -31,14 +31,14 @@
 
       * Il est à 0 si la connexion à la base de donnée se passe bien,
       * sinon il est à 1.
-       01 LK-COR PIC 9(01).
+       01 LK-STT                PIC 9(01).
+           88 LK-STT-OK                   VALUE 1.
+           88 LK-STT-ERR                  VALUE 2.
 
-       PROCEDURE DIVISION USING LK-COR.
-
+       PROCEDURE DIVISION USING LK-STT.
 
            PERFORM 0100-CON-BSE-DON-DEB
               THRU 0100-CON-BSE-DON-FIN.
-       
 
            EXIT PROGRAM.
 
@@ -48,14 +48,11 @@
                 USING :PG-BDD
            END-EXEC.
            
-           IF SQLCODE NOT = 0
-      * La connexion à la base de donnée échoue
-               MOVE 1 TO LK-COR
+           IF SQLCODE EQUAL 0
+               SET LK-STT-OK TO TRUE
            ELSE
-      * La connexion à la base de donnée réussi
-               MOVE 0 TO LK-COR
+               SET LK-STT-ERR TO TRUE
            END-IF.
-
       
        0100-CON-BSE-DON-FIN.
 
