@@ -59,15 +59,8 @@
                STOP RUN
            END-IF.
 
-           EVALUATE G-UTI-RLE
-               WHEN "ADMIN"
-                   CALL "ecradm"
-                   END-CALL
-               WHEN "STANDARD"
-                   CALL "ecrsta"
-                   END-CALL
-               WHEN OTHER
-                   STOP RUN
-           END-EVALUATE.
+           CALL "ecrmnprn"
+           END-CALL.
+
        0200-APL-ECR-CNX-FIN.
        
