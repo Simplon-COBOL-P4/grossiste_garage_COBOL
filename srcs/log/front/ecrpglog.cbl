@@ -86,9 +86,7 @@
        SCREEN SECTION.
        COPY ecrprn.
        01 S-MNU-LOG.
-           05 LINE 04.
-               10 COL 03 VALUE "Connecte en tant que : ".
-               10 COL 26 FROM G-UTI-RLE.
+           COPY ecrutlin.
            05 LINE 09 COL 02 FROM WS-UND-LIN.
            05 LINE 10 COL 02 FROM WS-NTT-LIN.
            05 LINE 11 COL 02 FROM WS-UND-LIN.
