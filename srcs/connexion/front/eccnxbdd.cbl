@@ -73,4 +73,3 @@
            END-IF.        
            
        0100-APL-PRG-FIN.
-           EXIT.           
