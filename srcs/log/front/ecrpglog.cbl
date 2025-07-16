@@ -66,7 +66,6 @@
            
 
       *Déclaration des variables indépendantes.
-       77  WS-RLE-UTI           PIC X(14) VALUE "ADMIN".
        77  WS-MAX-LIN           PIC 9(02) VALUE 6.
        77  WS-QTT-LIN           PIC 9(02).
        77  WS-LIN-IDX           PIC 9(02).
@@ -81,13 +80,15 @@
 
        COPY lirret REPLACING ==:PREFIX:== BY ==WS==.
 
+       COPY utiglb.
+
       * Déclaration de l'écran d'affichage.
        SCREEN SECTION.
        COPY ecrprn.
        01 S-MNU-LOG.
            05 LINE 04.
                10 COL 03 VALUE "Connecte en tant que : ".
-               10 COL 26 FROM WS-RLE-UTI.
+               10 COL 26 FROM G-UTI-RLE.
            05 LINE 09 COL 02 FROM WS-UND-LIN.
            05 LINE 10 COL 02 FROM WS-NTT-LIN.
            05 LINE 11 COL 02 FROM WS-UND-LIN.
