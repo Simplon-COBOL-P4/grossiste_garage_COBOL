@@ -90,8 +90,8 @@
                         END-CALL
 
                    WHEN 7 
-      * Appel du sous-programme ecruti.
-                        CALL 'ecruti'
+      * Appel du sous-programme ecrajuti.
+                        CALL 'ecrajuti'
                         END-CALL
 
                    WHEN 0 

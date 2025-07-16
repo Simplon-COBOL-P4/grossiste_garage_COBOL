@@ -21,7 +21,7 @@
       ******************************************************************
        
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. ecruti.
+       PROGRAM-ID. ecrajuti.
        AUTHOR. ThomasD.
        DATE-WRITTEN. 25-06-2025 (fr).
        
