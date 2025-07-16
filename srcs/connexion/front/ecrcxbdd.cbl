@@ -71,11 +71,10 @@
            END-CALL.
 
            IF LK-STT-ERR THEN
-              DISPLAY 'Connexion echouee.' AT LINE 23 COL 3
-              ACCEPT WS-NUL AT LINE 23 COL 20
+               DISPLAY 'Connexion echouee.' AT LINE 23 COL 3
            ELSE 
-              DISPLAY 'Connexion etablie' AT LINE 23 COL 3
-              ACCEPT WS-NUL AT LINE 23 COL 20
+               DISPLAY 'Connexion etablie' AT LINE 23 COL 3
            END-IF.
+           ACCEPT WS-NUL AT LINE 23 COL 20.
            
        0100-APL-PRG-FIN.
