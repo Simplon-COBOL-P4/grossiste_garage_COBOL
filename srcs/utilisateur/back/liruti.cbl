@@ -28,11 +28,13 @@
        01 LK-RLE-UTL      PIC X(14).
        01 LK-ID-UTL       PIC 9(10).
       
+       COPY lirret REPLACING ==:PREFIX:== BY ==LK==.
 
        PROCEDURE DIVISION USING LK-NOM-UTL,
                                 LK-MDP-UTL,
                                 LK-RLE-UTL,
-                                LK-ID-UTL.
+                                LK-ID-UTL,
+                                LK-LIR-RET.
 
       * RETOURNE LES DONNEES.
            PERFORM 0100-RET-DON-DEB
@@ -61,7 +63,14 @@
            and mdp_uti = encode(digest(:PG-MDP-UTL, 'sha256'), 
            'hex')
        END-EXEC.
-       EXEC SQL COMMIT WORK END-EXEC.
+
+           IF SQLCODE EQUAL 0 THEN
+               EXEC SQL COMMIT END-EXEC
+               SET LK-LIR-RET-OK TO TRUE
+           ELSE
+               EXEC SQL ROLLBACK END-EXEC
+               SET LK-LIR-RET-ERR TO TRUE
+           END-IF.
        0100-RET-DON-FIN.
 
        0200-DEP-LES-VAR-DEB.

@@ -22,7 +22,7 @@
        WORKING-STORAGE SECTION.
        01 WS-ROL     PIC X(14).
 
-       EXEC SQL INCLUDE SQLCA END-EXEC.
+       COPY lirret REPLACING ==:PREFIX:== BY ==WS==.
 
        LINKAGE SECTION.
 
@@ -54,9 +54,10 @@
                LK-MDP
                WS-ROL
                LK-ID
+               WS-LIR-RET
            END-CALL.
 
-           IF SQLCODE = 0 THEN
+           IF WS-LIR-RET-OK THEN
       * L'utilisateur est dans la table.
                EVALUATE WS-ROL
                    WHEN "ADMIN"
@@ -71,5 +72,4 @@
                SET LK-STT-ERR TO TRUE
            END-IF.
        0200-SQL-FIN.
-
            
