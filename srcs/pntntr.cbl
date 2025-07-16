@@ -9,7 +9,7 @@
       * POINT=PNT; ENTRÉE=NTR; APPEL=APL; ÉCRAN=ECR; TITRE=TTR;        *
       * CONNEXION=CNX; BASE-DE-DONNÉE=BDD; CODE=COD; RETOUR=RET        *
       * STATUT=STT; ERREUR=ERR; ADMIN=ADM; STANDARD=STD; CHOIX=CHX;    *
-      * MESSAGE=MSG;                                                   *
+      * MESSAGE=MSG; STATUT=STT;                                       *
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. pntntr.
@@ -18,13 +18,14 @@
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       01  WS-COD-RET          PIC 9(01).
-           88 WS-STT-ERR                 VALUE 0.
-           88 WS-STT-ADM                 VALUE 1.
-           88 WS-STT-STD                 VALUE 2.
+       01 WS-STT                PIC 9(01).
+           88 WS-STT-OK                   VALUE 1.
+           88 WS-STT-ERR                  VALUE 2.
 
-       01 WS-CHX              PIC 9(01).
-       01 WS-MSG              PIC X(40).
+       01 WS-CHX                PIC 9(01).
+       01 WS-MSG                PIC X(40).
+
+       COPY utiglb.
 
        PROCEDURE DIVISION.
            
@@ -39,10 +40,10 @@
        0100-APL-ECR-TTR-DEB.
            CALL "ecrcxbdd"
                USING
-               WS-COD-RET
+               WS-STT
            END-CALL.
 
-           IF WS-COD-RET NOT EQUAL 0
+           IF WS-STT-ERR
                STOP RUN
            END-IF.
 
@@ -51,23 +52,21 @@
        0200-APL-ECR-CNX-DEB.
            CALL "ecrcxuti"
                USING
-               WS-COD-RET
+               WS-STT
            END-CALL.
 
-           EVALUATE TRUE
-               WHEN WS-STT-ADM
+           IF WS-STT-ERR THEN
+               STOP RUN
+           END-IF.
+
+           EVALUATE G-UTI-RLE
+               WHEN "ADMIN"
                    CALL "ecradm"
-                       USING
-                       WS-CHX
-                       WS-MSG
                    END-CALL
-               WHEN WS-STT-STD
+               WHEN "STANDARD"
                    CALL "ecrsta"
-                       USING
-                       WS-CHX
-                       WS-MSG
                    END-CALL
-               WHEN WS-STT-ERR
+               WHEN OTHER
                    STOP RUN
            END-EVALUATE.
        0200-APL-ECR-CNX-FIN.

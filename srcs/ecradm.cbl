@@ -15,13 +15,7 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
       * Variables temporaires utilisées uniquement dans ce programme
-       01 WS-TMP-CHX          PIC X(01) VALUE SPACES.
-       01 WS-TMP-MSG          PIC X(40) VALUE SPACES.
-
-       LINKAGE SECTION.
-      * Les variables reçues du programme principal
-       01 LK-CHX              PIC 9(01).
-       01 LK-MSG              PIC X(40).
+       01 WS-CHX          PIC X(01) VALUE SPACES.
 
        SCREEN SECTION.
       * l'écran de l’administrateur avec le menu
@@ -42,18 +36,15 @@
 
            05 LINE 22 COLUMN 52 VALUE "[".
            05 LINE 22 COLUMN 54 VALUE "]".
-           05 LINE 22 COLUMN 53 PIC X(01) TO   WS-TMP-CHX.
-           05 LINE 23 COLUMN 30 PIC X(40) FROM WS-TMP-MSG.
+           05 LINE 22 COLUMN 53 PIC X(01) TO WS-CHX.
 
       ******************************************************************       
-       PROCEDURE DIVISION USING LK-CHX LK-MSG.
+       PROCEDURE DIVISION.
       
            PERFORM 0100-CHX-FCT-DEB
               THRU 0100-CHX-FCT-FIN. 
-      
 
            EXIT PROGRAM.
-
 
       ******************************************************************
       *                           PARAGRAPHES                          *
@@ -61,14 +52,12 @@
        0100-CHX-FCT-DEB.
 
       * Boucle jusqu'à ce que l'utilisateur tape 0 pour déconnexion
-           PERFORM UNTIL WS-TMP-CHX = 0
-               MOVE SPACES TO WS-TMP-MSG
+           PERFORM UNTIL WS-CHX = 0
 
                DISPLAY S-FND-ECR
-               DISPLAY E-MNU-ADM
                ACCEPT  E-MNU-ADM
 
-               EVALUATE WS-TMP-CHX
+               EVALUATE WS-CHX
                    WHEN 1 
       * Appel du sous-programme de gestion du stock.
 
@@ -95,21 +84,7 @@
                         END-CALL
 
                    WHEN 0 
-                       MOVE "Deconnexion..."              TO WS-TMP-MSG
                    WHEN OTHER 
-                       MOVE "Choix invalide. Reessayez."  TO WS-TMP-MSG
                END-EVALUATE
            END-PERFORM.
-      * On transmet le choix et le message au programme principal.
-      * On copie le contenu de TMP-CHOIX dans L-CHOIX pour que le 
-      * programme principal sache ce que l'utilisateur a choisi.
-           MOVE WS-TMP-CHX   TO LK-CHX.
-      * On copie TMP-MSG dans L-MSG pour que le programme principal 
-      * récupère ce message.
-           MOVE WS-TMP-MSG   TO LK-MSG.
-
-
-
        0100-CHX-FCT-FIN.
-           EXIT.
-              

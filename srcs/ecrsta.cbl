@@ -16,13 +16,7 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
       * Variables temporaires utilisées uniquement dans ce programme
-       01 WS-TMP-CHX          PIC X(01) VALUE SPACES.
-       01 WS-TMP-MSG          PIC X(40) VALUE SPACES.
-
-       LINKAGE SECTION.
-      * Les variables reçues du programme principal
-       01 LK-CHX              PIC 9(01).
-       01 LK-MSG              PIC X(40).
+       01 WS-CHX              PIC 9(01).
 
        SCREEN SECTION.
        COPY ecrprn.
@@ -42,11 +36,10 @@
 
            05 LINE 21 COLUMN 52 VALUE "[".
            05 LINE 21 COLUMN 54 VALUE "]".
-           05 LINE 21 COLUMN 53 PIC X(01) TO   WS-TMP-CHX.
-           05 LINE 22 COLUMN 30 PIC X(40) FROM WS-TMP-MSG.
+           05 LINE 21 COLUMN 53 PIC X(01) TO WS-CHX.
 
       ******************************************************************       
-       PROCEDURE DIVISION USING LK-CHX LK-MSG.
+       PROCEDURE DIVISION.
       
            PERFORM 0100-CHX-UTI-DEB
               THRU 0100-CHX-UTI-FIN. 
@@ -61,49 +54,31 @@
        0100-CHX-UTI-DEB.
 
       * Boucle jusqu'à ce que l'utilisateur tape 0 pour déconnexion
-           PERFORM UNTIL WS-TMP-CHX = 0
-               MOVE SPACES TO WS-TMP-MSG
+           PERFORM UNTIL WS-CHX = 0
 
                DISPLAY S-FND-ECR
-               DISPLAY S-E-MNU-UTI
                ACCEPT  S-E-MNU-UTI
 
-               EVALUATE WS-TMP-CHX
+               EVALUATE WS-CHX
                    WHEN 1 
-                       MOVE "Gestion du stock."           TO WS-TMP-MSG
       * Appel du sous-programme de gestion du stock.
 
                    WHEN 2 
-                       MOVE "Gestion des clients."        TO WS-TMP-MSG
       * Appel du sous-programme de gestion des clients.
 
                    WHEN 3 
-                       MOVE "Gestion des fournisseurs."   TO WS-TMP-MSG
       * Appel du sous-programme de gestion des fournisseurs.
 
                    WHEN 4 
-                       MOVE "Gestion des livraisons."     TO WS-TMP-MSG
       * Appel du sous-programme de gestion des livraisons.
 
                    WHEN 5 
-                       MOVE "Generation de document."     TO WS-TMP-MSG
       * Appel du sous-programme de génération de document.
 
                    WHEN 0 
-                       MOVE "Deconnexion..."              TO WS-TMP-MSG
       * Appel du sous-programme de l'écran de connexion                 
                    WHEN OTHER 
-                       MOVE "Choix invalide. Reessayez."  TO WS-TMP-MSG
                END-EVALUATE
            END-PERFORM.
-      * On transmet le choix et le message au programme principal.
-      * On copie le contenu de TMP-CHOIX dans L-CHOIX pour que le 
-      * programme principal sache ce que l'utilisateur a choisi.
-           MOVE WS-TMP-CHX   TO LK-CHX.
-      * On copie TMP-MSG dans L-MSG pour que le programme principal 
-      * récupère ce message.
-           MOVE WS-TMP-MSG   TO LK-MSG.
 
        0100-CHX-UTI-FIN.
-           EXIT.
-              

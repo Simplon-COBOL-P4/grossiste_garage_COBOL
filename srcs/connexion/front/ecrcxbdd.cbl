@@ -38,21 +38,23 @@
        77 WS-NUL               PIC X(01).
 
        LINKAGE SECTION.
-       77 LK-COD-RET          PIC 9(01).
+       01 LK-STT                PIC 9(01).
+           88 LK-STT-OK                   VALUE 1.
+           88 LK-STT-ERR                  VALUE 2.
       
        SCREEN SECTION.
        COPY ecrprn.
        
        01 S-ECR-SSI.
-           05  LINE 21 COL 3   PIC X(36) VALUE  'Demarrage du processus 
-      -                                                  'de connexion'. 
-           05  LINE 22 COL 3   PIC X(34) VALUE  'Connexion a la base de 
-      -                                                    'donnees...'.
+           05  LINE 21 COL 3   PIC X(36)
+               VALUE  'Demarrage du processus de connexion'. 
+           05  LINE 22 COL 3   PIC X(34) 
+               VALUE  'Connexion a la base de donnees...'.
 
       ******************************************************************
       *
       ******************************************************************
-       PROCEDURE DIVISION USING LK-COD-RET.
+       PROCEDURE DIVISION USING LK-STT.
 
            PERFORM 0100-APL-PRG-DEB
               THRU 0100-APL-PRG-FIN.
@@ -63,13 +65,17 @@
            DISPLAY S-FND-ECR.
            DISPLAY S-ECR-SSI.
 
-           CALL 'cnxbdd' USING LK-COD-RET.
-           IF LK-COD-RET <> 0 THEN
+           CALL 'cnxbdd'
+               USING
+               LK-STT
+           END-CALL.
+
+           IF LK-STT-ERR THEN
               DISPLAY 'Connexion echouee.' AT LINE 23 COL 3
               ACCEPT WS-NUL AT LINE 23 COL 20
            ELSE 
               DISPLAY 'Connexion etablie' AT LINE 23 COL 3
               ACCEPT WS-NUL AT LINE 23 COL 20
-           END-IF.        
+           END-IF.
            
        0100-APL-PRG-FIN.
