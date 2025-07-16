@@ -37,7 +37,7 @@
            STOP RUN.
 
        0100-APL-ECR-TTR-DEB.
-           CALL "eccnxbdd"
+           CALL "ecrcxbdd"
                USING
                WS-COD-RET
            END-CALL.

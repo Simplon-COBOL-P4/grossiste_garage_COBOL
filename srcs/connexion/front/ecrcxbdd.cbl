@@ -14,7 +14,7 @@
       *  PRG = Programme
       *  RET = Retour
       *  SSI = Saisie
-      *  eccnxbdd = ec-ecran  cnx-connexion  bdd-base de donnée
+      *  ecrcxbdd = ecr-ecran  cx-connexion  bdd-base de donnée
       *
       *SCREEN-SECTION:
       *  ECR-SSI  Ecran-Saisie ou Saisie Ecran
@@ -25,7 +25,7 @@
       * 
       ******************************************************************
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. eccnxbdd.
+       PROGRAM-ID. ecrcxbdd.
        AUTHOR.    Benoit.
        DATE-WRITTEN. 25-06-2025 (fr).
 
