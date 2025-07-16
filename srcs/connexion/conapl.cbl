@@ -149,8 +149,7 @@
            END-CALL.
 
            IF WS-LIR-RET-ERR THEN
-               DISPLAY 'Identifiant et/ou mot de passe incorrecte'
-                   AT LINE 22 COL 10
+               DISPLAY ECR-SSI-02
 
                PERFORM 0300-DTL-LOG-ERR-DEB
                   THRU 0300-DTL-LOG-ERR-FIN
