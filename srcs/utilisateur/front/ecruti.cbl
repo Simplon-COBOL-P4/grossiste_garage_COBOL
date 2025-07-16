@@ -4,7 +4,7 @@
       *                                                                *
       * Sous-programme permettant de créer un utilisateur en entrant   *
       * toutes les informations nécessaires à l'aide de la SCREEN      *
-      * SECTION. Le programme appellera le sous-programme creuti afin  *
+      * SECTION. Le programme appellera le sous-programme ajuuti afin  *
       * d'insérer les informations dans la base de données.            *
       *                                                                *
       *                                                                *
@@ -241,7 +241,7 @@
       * base de données. 
        0200-APL-PRG-DEB.
        
-           CALL "creuti" USING WS-IDF-UTI
+           CALL "ajuuti" USING WS-IDF-UTI
                                WS-MDP-UTI
                                WS-ROL-UTI
            END-CALL. 

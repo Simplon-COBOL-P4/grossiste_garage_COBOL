@@ -9,14 +9,14 @@
       *----------------------------------------------------------------*
       *                           TRIGRAMMES                           *
       *                                                                *
-      * creuti=Création utilisateur, CRE=création; UTI=utilisateur     *
+      * ajuuti=Création utilisateur, CRE=création; UTI=utilisateur     *
       * IDF=IDENTIFIANT; UTI=UTILISATEUR; MDP=MOT DE PASSE; ROL=ROLE;  *
       * AFC=AFFECTATION; VAR=VARIABLE; DEB=DEBUT; INS=INSERTION        *
       ****************************************************************** 
        
        
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. creuti.
+       PROGRAM-ID. ajuuti.
        AUTHOR. ThomasD.
        DATE-WRITTEN. 24-06-2025 (fr).
        
