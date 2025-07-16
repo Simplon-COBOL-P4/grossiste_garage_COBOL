@@ -31,7 +31,6 @@
        01  PG-JOU     PIC X(10).
        01  PG-TYP     PIC X(12). 
        01  PG-IDU     PIC 9(10).
-       01  PG-NOM     PIC X(80).
        01  PG-OFS     PIC 9(10).
        01  PG-MAX-LIN PIC 9(10).
        EXEC SQL END DECLARE SECTION END-EXEC.
@@ -48,12 +47,11 @@
        01  LK-LOG-TAB.
            05  LK-LOG OCCURS 25 TIMES.
                10  LK-LOG-ID    PIC 9(10).
-               10  LK-LOG-DET   PIC X(30).
+               10  LK-LOG-DET   PIC X(100).
                10  LK-LOG-HEU   PIC X(08).
                10  LK-LOG-JOU   PIC X(10).
                10  LK-LOG-TYP   PIC X(12).
                10  LK-UTI-ID    PIC 9(10).
-               10  LK-UTI-NOM   PIC X(30).
 
        77  LK-NUM-PAG           PIC 9(10).
        77  LK-MAX-LIN           PIC 9(02).
@@ -100,12 +98,10 @@
            EXEC SQL 
                DECLARE CUR_LOGS CURSOR FOR
                SELECT id_logs, detail_log, heure_log, date_log, 
-                   type_log, logs.id_uti, nom_uti 
+                   type_log, id_uti
                FROM logs
                LIMIT :PG-MAX-LIN
                OFFSET :PG-OFS
-               LEFT JOIN utilisateur
-               ON logs.id_uti = utilisateur.id_uti
            END-EXEC.
        0200-DEC-CUR-FIN.    
 
@@ -124,7 +120,7 @@
 
                EXEC SQL
                    FETCH CUR_LOGS INTO :PG-IDL, :PG-DET, :PG-HEU, 
-                       :PG-JOU, :PG-TYP, :PG-IDU, :PG-NOM
+                       :PG-JOU, :PG-TYP, :PG-IDU
                END-EXEC
                
                IF SQLCODE = 0
@@ -135,7 +131,6 @@
                    MOVE PG-JOU TO LK-LOG-JOU(WS-IDX)
                    MOVE PG-TYP TO LK-LOG-TYP(WS-IDX)
                    MOVE PG-IDU TO LK-UTI-ID(WS-IDX)
-                   MOVE PG-NOM TO LK-UTI-NOM(WS-IDX)
                ELSE
                    IF SQLCODE NOT EQUAL 100
                        SET LK-LIR-RET-ERR TO TRUE
