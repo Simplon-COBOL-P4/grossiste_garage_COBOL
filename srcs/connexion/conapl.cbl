@@ -4,17 +4,19 @@
       * de passe via un écran de saisie puis taper sur la touche ENTREE.
       * Seules 3 tentative de connexion sont autorisées.
       *
-      * Trigram:
+      * Trigrammes:
       *  ADM = Admin
       *  APL = Application
       *  CDR = Cadre
       *  COD = Code
       *  CON = Connexion
+      *  DEP = Deplacer
       *  DTL = Detail
       *  ECR = Ecran
       *  EFC = Efface
       *  ERR = Erreur
       *  FND = Fond
+      *  GBL = Global
       *  ID  = Identifiant
       *  LG  = Log
       *  MDP = Mot De Passe
@@ -29,8 +31,8 @@
       *  TXT = Test
       *  TYP = Type
       *  UTL = Utilisateur
-
-
+      *  VER = Vers
+      *
       * WS-NOM-UTL > nom de l'utilisateur
       * WS-MDP-UTL > mot de passe de l'utilisateur 
       * WS-NBR-CON > nombre de connexions tentative
@@ -67,6 +69,8 @@
        77  WS-CDR-007           PIC X(01) VALUE ']'.
 
        77  WS-CDR-008           PIC X(14) VALUE 'Mot de passe :'.
+
+       COPY utiglb.
 
        LINKAGE SECTION.
        01  LK-COD-RET           PIC 9(01).
@@ -147,6 +151,8 @@
                        WS-ID-UTL
                    END-CALL
                ELSE
+                   PERFORM 0200-DEP-VER-GBL-DEB
+                      THRU 0200-DEP-VER-GBL-FIN
                    MOVE "CON_SUC" TO WS-TYP-LG
                    MOVE SPACE TO WS-DTL-LG
                    STRING
@@ -167,5 +173,14 @@
        0100-CON-FIN.
        EXIT.
       
-           
+       0200-DEP-VER-GBL-DEB.
+           MOVE WS-NOM-UTL TO G-UTI-NOM.
+           MOVE WS-ID-UTL TO G-UTI-ID.
+           EVALUATE TRUE
+               WHEN LK-STT-ADM
+                   MOVE "ADMIN" TO G-UTI-RLE
+               WHEN LK-STT-STD
+                   MOVE "STANDARD" TO G-UTI-RLE
+           END-EVALUATE.
+       0200-DEP-VER-GBL-FIN.    
 
