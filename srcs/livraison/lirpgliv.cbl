@@ -9,7 +9,7 @@
       * FIL=FILTRE; VID=VIDE; TAB=TABLEAU; LIV=LIVRAISON; DAT=DATE;    *
       * STA=STATUT; CRS=COURS; TRM=TERMINE; TYP=TYPE; ENT=ENTRANT;     *
       * SOR=SORTANT; QTE=QUANTITE; OFS=OFFSET; LIN=LIGNE;              *
-      * EVA=EVALUATION; CSR= CURSEUR
+      * EVA=EVALUATION; CSR= CURSEUR; AFC= AFFECTATION
       ******************************************************************
        
        IDENTIFICATION DIVISION.
@@ -24,7 +24,8 @@
        01 PG-NBR-ELM                     PIC 9(02). *> Min 1 - Max 25
        01 PG-OFS                         PIC 9(03).  
 
-
+       01 PG-IDF-FOU-CLI-PIE             PIC 9(10).
+       
        01 PG-IDF-LIV           PIC 9(10).
        01 PG-IDF-FOU-CLI       PIC 9(10).
        01 PG-NOM-FOU-CLI       PIC X(50).
@@ -35,7 +36,6 @@
            88 PG-STA-EN-CRS                   VALUE 0.
            88 PG-STA-TRM                      VALUE 1.
        
-
        01 PG-TYP-LIV           PIC 9(01).
                    88 PG-TYP-ENT                      VALUE 0.
                    88 PG-TYP-SOR                      VALUE 1.
@@ -90,6 +90,9 @@
                                 WS-LIR-RET.
            
 
+           PERFORM 0050-AFC-IDF-FIL-DEB
+              THRU 0050-AFC-IDF-FIL-FIN.
+
            PERFORM 0100-OFS-DEB
               THRU 0100-OFS-FIN.
 
@@ -102,6 +105,17 @@
       ******************************************************************
       *                         PARAGRAPHES                            * 
       ****************************************************************** 
+       
+       0050-AFC-IDF-FIL-DEB.
+       
+           MOVE LK-IDF-FOU-CLI-PIE
+           TO   PG-IDF-FOU-CLI-PIE.
+
+           EXIT.
+
+       0050-AFC-IDF-FIL-FIN.
+       
+      *-----------------------------------------------------------------
 
        0100-OFS-DEB.
 
@@ -162,11 +176,12 @@
       * Déclaration du curseur pour la table livraison. 
            EXEC SQL
                DECLARE curseur_liv CURSOR FOR 
-               SELECT livraison.id_liv, livraison_piece.qt_liv_pie
+               SELECT livraison.id_liv, 
+                      COUNT(livraison.id_liv) AS nbr_typ_pie,
                       livraison.date_deb_liv, livraison.statut_liv,
                       COALESCE(fournisseur.nom_fou, client.nom_cli) 
                       AS nom_fou_cli,
-                      COALESCE(fournisseur.nom_fou, client.nom_cli) 
+                      COALESCE(fournisseur.id_fou, client.id_cli) 
                       AS id_fou_cli,
                       CASE 
                           WHEN client.id_cli IS NOT NULL THEN 1
@@ -174,7 +189,7 @@
                       END AS type_liv
                
                FROM livraison    
-
+               
                JOIN fournisseur 
                  ON livraison.id_fou = fournisseur.id_fou 
                
@@ -183,6 +198,7 @@
 
                JOIN livraison_piece
                  ON livraison.id_liv = livraison_piece.id_liv
+               GROUP BY livraison.id_liv
 
                LIMIT :PG-NBR-ELM
                OFFSET :PG-OFS
@@ -210,9 +226,10 @@
                
                EXEC SQL
 
-      * Récupération des données suivantes : nom du fournisseur, id, 
-      * date de début et statut de livraison ainsi que la quantité de 
-      * types de pièces dans une livraison. 
+      * Récupération des données suivantes : id et nom du fournisseur  
+      * ou client selon le type de livraison, id, date de début et   
+      * statut de livraison, la quantité de types de pièces dans une
+      * livraison ainsi que le type de livraison. 
                    FETCH curseur_liv into 
                    :PG-IDF-LIV,
                    :PG-QTE-PIE,
@@ -230,27 +247,33 @@
 
       * Les variables du tableau sont ensuite alimentées par les valeurs 
       * obtenues à l'aide du curseur.
-               MOVE PG-NOM-FOU-CLI 
-               TO   LK-NOM-FOU-CLI(WS-NBR-LIN-TAB)
-       
                MOVE PG-IDF-LIV
                TO   LK-IDF-LIV(WS-NBR-LIN-TAB)
-       
-               MOVE PG-DAT-LIV
-               TO   LK-DAT-LIV(WS-NBR-LIN-TAB)
-       
-               MOVE PG-STA-LIV
-               TO   LK-STA-LIV(WS-NBR-LIN-TAB)
-       
+
                MOVE PG-QTE-PIE
                TO   LK-QTE-PIE(WS-NBR-LIN-TAB)
 
+               MOVE PG-DAT-LIV
+               TO   LK-DAT-LIV(WS-NBR-LIN-TAB)
+
+               MOVE PG-STA-LIV
+               TO   LK-STA-LIV(WS-NBR-LIN-TAB)
+
+               MOVE PG-NOM-FOU-CLI 
+               TO   LK-NOM-FOU-CLI(WS-NBR-LIN-TAB)
+               
+               MOVE PG-IDF-FOU-CLI 
+               TO   LK-IDF-FOU-CLI(WS-NBR-LIN-TAB)
+               
+               MOVE PG-TYP-LIV 
+               TO   LK-TYP-LIV(WS-NBR-LIN-TAB)
+               
 
            END-PERFORM.
 
       * Fermeture du curseur.
            EXEC SQL
-               CLOSE curseur_fou
+               CLOSE curseur_liv
            END-EXEC.    
 
            SET LK-LIR-RET-OK TO TRUE.     
@@ -266,7 +289,7 @@
            EXEC SQL
                DECLARE curseur_fou CURSOR FOR 
                SELECT livraison.id_liv, fournisseur.nom_fou,
-                      livraison_piece.qt_liv_pie,
+                      COUNT(livraison.id_liv) AS nbr_typ_pie,
                       livraison.date_deb_liv, livraison.statut_liv
                       
 
@@ -277,6 +300,9 @@
                
                JOIN livraison_piece
                ON livraison.id_liv = livraison_piece.id_liv
+
+               WHERE fournisseur.id_fou = :PG-IDF-FOU-CLI-PIE
+               GROUP BY livraison.id_liv
 
                LIMIT :PG-NBR-ELM
                OFFSET :PG-OFS
@@ -358,7 +384,7 @@
            EXEC SQL
                DECLARE curseur_cli CURSOR FOR 
                SELECT livraison.id_liv, client.nom_cli,
-                      livraison_piece.qt_liv_pie,
+                      COUNT(livraison.id_liv) AS nbr_typ_pie,
                       livraison.date_deb_liv, livraison.statut_liv
                       
 
@@ -369,6 +395,9 @@
                
                JOIN livraison_piece
                ON livraison.id_liv = livraison_piece.id_liv
+
+               WHERE client.id_cli = :PG-IDF-FOU-CLI-PIE
+               GROUP BY livraison.id_liv
 
                LIMIT :PG-NBR-ELM
                OFFSET :PG-OFS
@@ -446,7 +475,110 @@
        
        0600-CSR-FIL-PIE-DEB.
 
+      * Déclaration du curseur pour la table pièce. 
+           EXEC SQL
+               DECLARE curseur_pie CURSOR FOR 
+               SELECT livraison.id_liv, livraison_piece.qt_liv_pie,
+                      livraison.date_deb_liv, livraison.statut_liv,
+                      COALESCE(fournisseur.nom_fou, client.nom_cli) 
+                      AS nom_fou_cli,
+                      COALESCE(fournisseur.id_fou, client.id_cli) 
+                      AS id_fou_cli,
+                      CASE 
+                          WHEN client.id_cli IS NOT NULL THEN 1
+                          WHEN fournisseur.id_fou IS NOT NULL THEN 0 
+                      END AS type_liv
+               
+               FROM livraison    
 
+               JOIN fournisseur 
+                 ON livraison.id_fou = fournisseur.id_fou 
+               
+               JOIN client
+                 ON livraison.id_cli = client.id_cli
+
+               JOIN livraison_piece
+                 ON livraison.id_liv = livraison_piece.id_liv
+               
+               WHERE livraison_piece.id_pie = :PG-IDF-FOU-CLI-PIE
+
+               LIMIT :PG-NBR-ELM
+               OFFSET :PG-OFS
+               FOR READ ONLY
+           END-EXEC.           
+
+      * Ouverture du curseur.
+           EXEC SQL
+               OPEN curseur_pie
+           END-EXEC. 
+
+      * En cas d'erreur lors de l'ouverture du curseur, le programme est
+      * arrêté et le code d'erreur est renvoyé.
+           IF SQLCODE NOT EQUAL 0
+               SET WS-LIR-RET-ERR TO TRUE 
+               EXIT PROGRAM
+           END-IF.
+           
+      * Initialisation du nombre de lignes du tableau. 
+           MOVE 0 TO WS-NBR-LIN-TAB.
+
+      * Lecture du curseur tant que le SQLCODE n'est pas égal à 100, et 
+      * donc qu'on ne se trouve pas au bout du curseur.
+           PERFORM UNTIL SQLCODE = 100 
+               
+               EXEC SQL
+
+      * Récupération des données suivantes : id et nom du fournisseur  
+      * ou client selon le type de livraison, id, date de début et   
+      * statut de livraison, la quantité de pièces livrées pour un type
+      * de pièce dans une livraison ainsi que le type de livraison.
+                   FETCH curseur_pie into 
+                   :PG-IDF-LIV,
+                   :PG-QTE-PIE,
+                   :PG-DAT-LIV,
+                   :PG-STA-LIV,
+                   :PG-NOM-FOU-CLI,
+                   :PG-IDF-FOU-CLI,
+                   :PG-TYP-LIV
+                   
+
+               END-EXEC
+       
+      * Incrémentation du nombre de lignes du tableau.  
+               ADD 1 TO WS-NBR-LIN-TAB
+
+      * Les variables du tableau sont ensuite alimentées par les valeurs 
+      * obtenues à l'aide du curseur.
+               MOVE PG-IDF-LIV
+               TO   LK-IDF-LIV(WS-NBR-LIN-TAB)
+
+               MOVE PG-QTE-PIE
+               TO   LK-QTE-PIE(WS-NBR-LIN-TAB)
+
+               MOVE PG-DAT-LIV
+               TO   LK-DAT-LIV(WS-NBR-LIN-TAB)
+
+               MOVE PG-STA-LIV
+               TO   LK-STA-LIV(WS-NBR-LIN-TAB)
+
+               MOVE PG-NOM-FOU-CLI 
+               TO   LK-NOM-FOU-CLI(WS-NBR-LIN-TAB)
+               
+               MOVE PG-IDF-FOU-CLI 
+               TO   LK-IDF-FOU-CLI(WS-NBR-LIN-TAB)
+               
+               MOVE PG-TYP-LIV 
+               TO   LK-TYP-LIV(WS-NBR-LIN-TAB)
+               
+
+           END-PERFORM.
+
+      * Fermeture du curseur.
+           EXEC SQL
+               CLOSE curseur_pie
+           END-EXEC.    
+
+           SET LK-LIR-RET-OK TO TRUE.
 
 
 
