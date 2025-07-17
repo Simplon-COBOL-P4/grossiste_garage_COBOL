@@ -1,4 +1,4 @@
-Nom : leclog.cbl
+Nom : lirpglog.cbl
 
 But : Sous-programme permettant récupérer les logs en BDD 
 
