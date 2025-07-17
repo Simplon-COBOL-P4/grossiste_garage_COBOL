@@ -1,4 +1,4 @@
-Nom : ecrlog.cbl
+Nom : ecrpglog.cbl
 
 But : Sous-programme permettant d'appeler un sous programme pour récupérer les logs en BDD de les afficher  
 
