@@ -25,6 +25,9 @@
        01 WS-OPT-IVL            PIC X(76) VALUE
            "Cette option n'existe pas".
 
+       01 WS-EN-DEV             PIC X(76) VALUE
+           "Option en cours de developpement".
+
        COPY ctxerr.
 
        COPY utiglb.
@@ -101,13 +104,14 @@
                    END-CALL
                WHEN 3 
       * Appel du sous-programme de gestion des fournisseurs.
-
+                   
                WHEN 4 
       * Appel du sous-programme de gestion des livraisons.
 
                WHEN 5 
       * Appel du sous-programme de génération de document.
-
+                   PERFORM 0600-ERR-EN-DEV-DEB
+                      THRU 0600-ERR-EN-DEV-FIN
                WHEN 0 
                    SET WS-ETT-BCL-FIN TO TRUE
                WHEN OTHER
@@ -150,3 +154,8 @@
            SET WS-CTX-AFF-ERR TO TRUE.
            MOVE WS-OPT-IVL TO WS-MSG-ERR.
        0500-ERR-OPT-IVL-FIN.
+
+       0600-ERR-EN-DEV-DEB.
+           SET WS-CTX-AFF-ERR TO TRUE.
+           MOVE WS-EN-DEV TO WS-MSG-ERR.
+       0600-ERR-EN-DEV-FIN.
