@@ -10,7 +10,7 @@ Paramètres d’entrée :
 
 Paramètres de sortie :
 
-Fichiers utilisés : ecrprn.cpy pour l'aafichage de l'écran, ecridliv.cbl pour l'écran d'affichage d'une livraison par id, ecrpgliv.cbl pour l'écran d'affichage des livraison par pages 
+Fichiers utilisés : ecrprn.cpy pour l'affichage de l'écran, ecridliv.cbl pour l'écran d'affichage d'une livraison par id, ecrpgliv.cbl pour l'écran d'affichage des livraison par pages 
 
 Traitement : 
 1) Affichage de l'écran
