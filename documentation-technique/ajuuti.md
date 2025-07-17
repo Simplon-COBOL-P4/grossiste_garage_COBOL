@@ -14,6 +14,6 @@ Fichiers utilisés : ajuret.cpy pour récupérer le code retour.
 
 Traitement :
 
-1. Affectation des variables à utiliser dans la requête SQL.
+1. Affectation des variables PG-NOM-UTI, PG-MDP-UTI, PG-ROL-UTI à utiliser dans la requête SQL avec les arguments d'entrée correspondant.
 2. Insertion des valeurs reçues dans la table `utilisateur` de la base de données.  
 3. COMMIT ou ROLLBACK de la requête SQL selon le code retour AJU-RET-OK ou AJU-RET-ERR.
