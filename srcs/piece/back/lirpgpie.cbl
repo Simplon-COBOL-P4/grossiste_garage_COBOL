@@ -1,7 +1,7 @@
       ******************************************************************
       *                             ENTÊTE                             *
       *                                                                *
-      * lirpie lis la database pour récupèrer les pièces et fournisseur*
+      * lirpgpie lis la database pour récupèrer les pièces et fournisseur*
       *                                                                *
       *                                                                *
       *                           TRIGRAMMES                           *
@@ -13,7 +13,7 @@
       ******************************************************************
        
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. lirpie.
+       PROGRAM-ID. lirpgpie.
        AUTHOR. lucas.
        DATE-WRITTEN. 26-06-25 (fr).
 
@@ -139,7 +139,7 @@
 
 OCESQL     CALL "OCESQLCursorDeclare" USING
 OCESQL          BY REFERENCE SQLCA
-OCESQL          BY REFERENCE "lirpie_curseur" & X"00"
+OCESQL          BY REFERENCE "lirpgpie_curseur" & X"00"
 OCESQL          BY REFERENCE PG-QRY
 OCESQL     END-CALL.
 

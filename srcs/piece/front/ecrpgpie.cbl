@@ -269,7 +269,7 @@
 
            MOVE WS-LIN-QTE TO WS-QTE.
 
-           CALL "lirpie"
+           CALL "lirpgpie"
                USING
                WS-TRI,
                WS-SNS-TRI,
