@@ -84,7 +84,7 @@
                    END-CALL
 
                WHEN 2
-                   CALL "affpie"
+                   CALL "ecrpgpie"
                    END-CALL
 
                WHEN 0

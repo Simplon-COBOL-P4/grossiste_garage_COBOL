@@ -33,7 +33,7 @@
       ******************************************************************
        
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. affpie.
+       PROGRAM-ID. ecrpgpie.
        AUTHOR. Benoit.
        DATE-WRITTEN. 02-07-2025 (fr).
 
