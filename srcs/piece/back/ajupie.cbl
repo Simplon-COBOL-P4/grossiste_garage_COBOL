@@ -37,10 +37,13 @@
        01  LK-PIE-MIN                   PIC 9(10).
        01  LK-ID-FOU                    PIC 9(10).
 
+       COPY ajuret REPLACING ==:PREFIX:== BY ==LK==.
+
        PROCEDURE DIVISION USING LK-PIE-NOM,
                                 LK-PIE-QTE,
                                 LK-PIE-MIN,
-                                LK-ID-FOU.
+                                LK-ID-FOU,
+                                LK-AJU-RET.
 
       *    Paragraphe pour l'ajout de pièces à la BDD.
            PERFORM 0100-AJU-PIE-DEB
@@ -72,16 +75,21 @@
 
       *    Sortie de parapgraphe.
        0100-AJU-PIE-FIN.
-           EXIT.
       
       *    Parapgraphe COMMIT pour la requête SQL.
        0200-COM-DEB.
-           IF SQLCODE = 0
-           EXEC SQL COMMIT END-EXEC
-           ELSE
-           EXEC SQL ROLLBACK END-EXEC
-           END-IF.
+           EVALUATE SQLCODE
+               WHEN 0
+                   EXEC SQL COMMIT END-EXEC
+                   SET LK-AJU-RET-OK TO TRUE
 
-      *    Sortie de paragraphe.
+               WHEN -400
+                   EXEC SQL ROLLBACK END-EXEC
+                   SET LK-AJU-RET-FK-ERR TO TRUE
+
+               WHEN OTHER
+                   EXEC SQL ROLLBACK END-EXEC
+                   SET LK-AJU-RET-ERR TO TRUE
+
+           END-EVALUATE.
        0200-COM-FIN.
-           EXIT.

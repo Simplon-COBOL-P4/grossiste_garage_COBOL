@@ -24,32 +24,29 @@
       * Le numéro de la commande entrer par l'utilisateur
        01 WS-CMD PIC 9(01).
 
-       LINKAGE SECTION.
-      * Arguments d'entrée.
-      * Rôle de l'utilisateur, ADMIN ou STANDARD actuellement.
-       01 LK-ROL                  PIC X(14).
+       COPY utiglb.
 
        SCREEN SECTION.
        COPY ecrprn.
       * La maquette pour l'utilisateur standard est 
       * 13-Ecran gestion clients(utilisateur).txt.
        01 S-ECR-ST.
-               05 LINE 04 COLUMN 02 VALUE "Connecte en tant que : ".
-               05 LINE 09 COLUMN 30 VALUE "Gestion des clients".
-               05 LINE 13 COLUMN 30 VALUE "1 - Ajouter un client".
-               05 LINE 14 COLUMN 30 VALUE "2 - Afficher un client".
-               05 LINE 19 COLUMN 30 VALUE "0 - Retour au menu ".
-               05 LINE 22 COLUMN 30 VALUE "Entrez votre choix : [_]".
-               05 LINE 22 COLUMN 52 PIC Z TO WS-CMD.
+           COPY ecrutlin.
+           05 LINE 09 COLUMN 30 VALUE "Gestion des clients".
+           05 LINE 13 COLUMN 30 VALUE "1 - Ajouter un client".
+           05 LINE 14 COLUMN 30 VALUE "2 - Afficher un client".
+           05 LINE 19 COLUMN 30 VALUE "0 - Retour au menu ".
+           05 LINE 22 COLUMN 30 VALUE "Entrez votre choix : [_]".
+           05 LINE 22 COLUMN 52 PIC Z TO WS-CMD.
 
       * La maquette pour l'admin est 
       * 12-Ecran gestion clients(admin).txt.
        01 S-ECR-AD.
-               05 LINE 04 COLUMN 02 VALUE "Connecte en tant que : ". 
-               05 LINE 15 COLUMN 30 VALUE "3 - Modifier un client".
-               05 LINE 16 COLUMN 30 VALUE "4 - Supprimer un client".
+           05 LINE 04 COLUMN 02 VALUE "Connecte en tant que : ". 
+           05 LINE 15 COLUMN 30 VALUE "3 - Modifier un client".
+           05 LINE 16 COLUMN 30 VALUE "4 - Supprimer un client".
        
-       PROCEDURE DIVISION USING LK-ROL.
+       PROCEDURE DIVISION.
            
            PERFORM 0100-AFF-ECR-DEB
                THRU 0100-AFF-ECR-FIN.
@@ -64,7 +61,7 @@
        0100-AFF-ECR-DEB.
            DISPLAY S-FND-ECR.
            DISPLAY S-ECR-ST.
-           IF LK-ROL EQUAL "ADMIN"
+           IF G-UTI-RLE EQUAL "ADMIN"
                DISPLAY S-ECR-AD
                DISPLAY "admin" AT LINE 04 COLUMN 25
            ELSE
@@ -83,10 +80,10 @@
                    WHEN EQUAL 2
                        CALL "ecrchcli"
                        END-CALL
-                   WHEN EQUAL 3 AND LK-ROL EQUAL "ADMIN"
+                   WHEN EQUAL 3 AND G-UTI-RLE EQUAL "ADMIN"
                        CALL "ecrmjcli"
                        END-CALL
-                   WHEN EQUAL 4 AND LK-ROL EQUAL "ADMIN"
+                   WHEN EQUAL 4 AND G-UTI-RLE EQUAL "ADMIN"
                        CALL "ecrspcli"
                        END-CALL
                    WHEN 0

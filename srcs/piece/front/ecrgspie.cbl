@@ -18,16 +18,17 @@
        WORKING-STORAGE SECTION.
        01 WS-CHX-MNU            PIC 9(01).
 
-       LINKAGE SECTION.
-      * Arguments d'entrée.
-      * Rôle de l'utilisateur, ADMIN ou STANDARD actuellement.
-       01 LK-RLE                PIC X(14).
+       01 WS-OPT-IVL            PIC X(76) VALUE
+           "Cette option n'existe pas".
+
+       COPY ctxerr.
+
+       COPY utiglb.
 
        SCREEN SECTION.
        COPY ecrprn.
        01 S-MNU-STD.
-           05 LINE 04 COLUMN 03 VALUE "Connecte en tant que : " .
-           05 LINE 04 COLUMN 26 FROM LK-RLE.
+           COPY ecrutlin.
            05 LINE 10 COLUMN 30 VALUE "Gestion du stock".
            05 LINE 12 COLUMN 30 VALUE "1 - Ajouter une piece".
            05 LINE 13 COLUMN 30 VALUE "2 - Afficher une piece".
@@ -41,9 +42,11 @@
        01 S-MNU-ADM.
            05 LINE 15 COLUMN 30 VALUE "4 - Supprimer une piece".
            
+       01 S-MSG-ERR.
+           05 LINE 23 COLUMN 03 FROM WS-MSG-ERR.
 
       ******************************************************************     
-       PROCEDURE DIVISION USING LK-RLE.
+       PROCEDURE DIVISION.
 
            PERFORM 0100-AFF-MNU-STD-DEB
               THRU 0100-AFF-MNU-STD-FIN.
@@ -58,9 +61,12 @@
                DISPLAY S-FND-ECR
                DISPLAY S-MNU-STD
 
-               IF LK-RLE EQUAL "ADMIN" THEN
+               IF G-UTI-RLE EQUAL "ADMIN" THEN
                    DISPLAY S-MNU-ADM
                END-IF
+
+               PERFORM 0400-AFF-ERR-CND-DEB
+                  THRU 0400-AFF-ERR-CND-FIN
 
                ACCEPT S-MNU-STD
 
@@ -70,7 +76,7 @@
                         END-CALL  
 
                    WHEN 2
-                        CALL "affpie"
+                        CALL "ecrchpie"
                         END-CALL 
 
                    WHEN 3
@@ -81,20 +87,36 @@
                        EXIT PROGRAM
 
                    WHEN OTHER
-                       IF LK-RLE EQUAL "ADMIN" THEN
+                       IF G-UTI-RLE EQUAL "ADMIN" THEN
                            PERFORM 0200-EVA-ADM-CHX-DEB
                               THRU 0200-EVA-ADM-CHX-FIN
+                       ELSE
+                           PERFORM 0500-ERR-OPT-IVL-DEB
+                              THRU 0500-ERR-OPT-IVL-FIN
                        END-IF
                END-EVALUATE
            END-PERFORM.
        0100-AFF-MNU-STD-FIN.
-           EXIT.
 
        0200-EVA-ADM-CHX-DEB.
            EVALUATE WS-CHX-MNU
                WHEN 4
                    CALL "ecrsppie"
                    END-CALL
+               WHEN OTHER
+                   PERFORM 0500-ERR-OPT-IVL-DEB
+                      THRU 0500-ERR-OPT-IVL-FIN
            END-EVALUATE.
        0200-EVA-ADM-CHX-FIN.
-           EXIT.
+
+       0400-AFF-ERR-CND-DEB.
+           IF WS-CTX-AFF-ERR THEN
+               DISPLAY S-MSG-ERR
+               SET WS-CTX-OK TO TRUE
+           END-IF.
+       0400-AFF-ERR-CND-FIN.
+
+       0500-ERR-OPT-IVL-DEB.
+           SET WS-CTX-AFF-ERR TO TRUE.
+           MOVE WS-OPT-IVL TO WS-MSG-ERR.
+       0500-ERR-OPT-IVL-FIN.

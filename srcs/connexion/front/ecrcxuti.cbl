@@ -91,7 +91,7 @@
            05  LINE 13 COL 50  PIC X(01) VALUE "]".
 
            05  LINE 23.
-               10 COL 62 VALUE "Retour au menu".
+               10 COL 69 VALUE "Quitter".
                10 COL 77 VALUE "[".
                10 COL 78 PIC X(01) USING WS-CHX.
                10 COL 79 VALUE "]".

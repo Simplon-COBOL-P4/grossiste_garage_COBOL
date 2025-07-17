@@ -37,12 +37,15 @@
        01 LK-ID-FOR          PIC 9(10).
        01 LK-NOM-FOR         PIC X(50).
 
+       COPY lirret REPLACING ==:PREFIX:== BY ==LK==.
+
        PROCEDURE DIVISION USING LK-NOM-PIE,
                                 LK-ID-PIE,
                                 LK-QNT-PIE,
                                 LK-SEU-PIE,
                                 LK-ID-FOR,
-                                LK-NOM-FOR.
+                                LK-NOM-FOR,
+                                LK-LIR-RET.
 
       ******************************************************************
       *                    Programme principal                         *
@@ -87,7 +90,9 @@
                MOVE PG-SEU-PIE   TO LK-SEU-PIE
                MOVE PG-ID-FOR    TO LK-ID-FOR
                MOVE PG-NOM-FOR   TO LK-NOM-FOR
+               SET LK-LIR-RET-OK TO TRUE
+           ELSE
+               SET LK-LIR-RET-ERR TO TRUE
            END-IF.
 
        0100-LIR-ID-PIE-FIN.
-           EXIT.

@@ -5,6 +5,8 @@
       * TRIGRAMMES :                                                   *
       * CHOIX = CHX ; PRINCIPAL = PRN ; COMMUN = COM ;                 *
       * ECRAN = E ; MENU = MN, MNU ; ADMIN = ADM ; FONCTIONNALITE = FCT*
+      * CONTEXTE = CTX ; ERREUR = ERR ; OPTION = OPT ; INVALIDE = IVL ;*
+      * CONDITIONNELLEMENT = CND ;                                     *
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID. ecrmnprn.
@@ -14,11 +16,16 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
       * Variables temporaires utilisées uniquement dans ce programme
-       01 WS-CHX          PIC X(01) VALUE SPACES.
+       01 WS-CHX                PIC X(01) VALUE SPACES.
 
        01 WS-ETT-BCL            PIC 9(01).
            88 WS-ETT-BCL-ENC              VALUE 1.
            88 WS-ETT-BCL-FIN              VALUE 2.
+
+       01 WS-OPT-IVL            PIC X(76) VALUE
+           "Cette option n'existe pas".
+
+       COPY ctxerr.
 
        COPY utiglb.
 
@@ -46,7 +53,7 @@
            05 LINE 18 COLUMN 30 VALUE "7 - Creer un compte utilisateur".
 
        01 S-MSG-ERR.
-           05 LINE 23 COLUMN 02 VALUE "Cette option n'existe pas".
+           05 LINE 23 COLUMN 03 FROM WS-MSG-ERR.
 
       ******************************************************************       
        PROCEDURE DIVISION.
@@ -60,19 +67,20 @@
       *                           PARAGRAPHES                          *
       ******************************************************************
        0100-CHX-FCT-DEB.
-           DISPLAY S-FND-ECR
            SET WS-ETT-BCL-ENC TO TRUE
       * Boucle jusqu'à ce que l'utilisateur tape 0 pour déconnexion
            PERFORM UNTIL WS-ETT-BCL-FIN
-
+               DISPLAY S-FND-ECR
                DISPLAY S-MNU-PRN-COM
 
                IF G-UTI-RLE EQUAL "ADMIN"
                    DISPLAY S-MNU-PRN-ADM
                END-IF
+               
+               PERFORM 0400-AFF-ERR-CND-DEB
+                  THRU 0400-AFF-ERR-CND-FIN
 
                ACCEPT S-MNU-PRN-COM
-               DISPLAY S-FND-ECR
 
                PERFORM 0200-EVA-CHX-DEB
                   THRU 0200-EVA-CHX-FIN
@@ -106,8 +114,8 @@
                        PERFORM 0300-EVA-CHX-ADM-DEB
                           THRU 0300-EVA-CHX-ADM-FIN
                    ELSE
-                       PERFORM 0400-AFF-ERR-DEB
-                          THRU 0400-AFF-ERR-FIN
+                       PERFORM 0500-ERR-OPT-IVL-DEB
+                          THRU 0500-ERR-OPT-IVL-FIN
                    END-IF
            END-EVALUATE.
        0200-EVA-CHX-FIN.
@@ -125,11 +133,19 @@
                    END-CALL
 
                WHEN OTHER
-                   PERFORM 0400-AFF-ERR-DEB
-                      THRU 0400-AFF-ERR-FIN
+                   PERFORM 0500-ERR-OPT-IVL-DEB
+                      THRU 0500-ERR-OPT-IVL-FIN
            END-EVALUATE.
        0300-EVA-CHX-ADM-FIN.
 
-       0400-AFF-ERR-DEB.
-           DISPLAY S-MSG-ERR.
-       0400-AFF-ERR-FIN.
+       0400-AFF-ERR-CND-DEB.
+           IF WS-CTX-AFF-ERR THEN
+               DISPLAY S-MSG-ERR
+               SET WS-CTX-OK TO TRUE
+           END-IF.
+       0400-AFF-ERR-CND-FIN.
+
+       0500-ERR-OPT-IVL-DEB.
+           SET WS-CTX-AFF-ERR TO TRUE.
+           MOVE WS-OPT-IVL TO WS-MSG-ERR.
+       0500-ERR-OPT-IVL-FIN.

@@ -40,13 +40,37 @@
        01 WS-MQR                    PIC 9(03) VALUE 0.
            88 WS-MQR-SUC                      VALUE 111.
       
-       
+       01 WS-ERR-VAL          PIC X(76) VALUE
+           "Erreur de validation".
+
+       01 WS-OPT-IVL            PIC X(76) VALUE
+           "Cette option n'existe pas".
+
+       01 WS-ERR-SQL            PIC X(76) VALUE
+           "Une erreur est survenue lors de la requete".
+
+       01 WS-SUC-AJU            PIC X(76) VALUE
+           "L'insertion s'est deroulee correctement".
+
+       01 WS-ERR-SQL-FK         PIC X(76) VALUE
+           "L'ID du fournisseur n'existe pas".
+
+       01 WS-ETT-BCL            PIC 9(01).
+           88 WS-ETT-BCL-ENC              VALUE 1.
+           88 WS-ETT-BCL-FIN              VALUE 2.
+
+       COPY ajuret REPLACING ==:PREFIX:== BY ==WS==.
+
+       COPY ctxerr.
+
+       COPY utiglb.
+
        SCREEN SECTION.
        COPY ecrprn.
 
       *    Ajout des éléments propres à l'écran d'ajout de pièce.
        01 S-ECR-AJ-PCS.
-           05 LINE 04 COLUMN 01 VALUE "| Connecte en tant que : ".
+           COPY ecrutlin.
 
            05 LINE 09 COLUMN 03 VALUE "Nom :".
            05 LINE 10 COLUMN 03 VALUE "[".
@@ -60,16 +84,18 @@
            05 LINE 16 COLUMN 03 VALUE "ID fournisseur :".
            05 LINE 16 COLUMN 25 VALUE "[".
            05 LINE 16 COLUMN 36 VALUE "]".
-           05 LINE 21 COLUMN 33 VALUE "Ajouter au stock".
-           05 LINE 22 COLUMN 30 VALUE "1 - Oui   0 - Annuler".
-           05 LINE 23 COLUMN 40 VALUE "[".
-           05 LINE 23 COLUMN 42 VALUE "]".
+           05 LINE 21 COLUMN 30 VALUE "1 - Ajouter  0 - Annuler".
+           05 LINE 22 COLUMN 40 VALUE "[".
+           05 LINE 22 COLUMN 42 VALUE "]".
 
            05 LINE 10 COLUMN 04     PIC X(50) TO WS-NOM-PIE.
            05 LINE 12 COLUMN 26     PIC X(10) TO WS-QTE-PIE.
            05 LINE 14 COLUMN 26     PIC X(10) TO WS-MIN-PIE.
            05 LINE 16 COLUMN 26     PIC X(10) TO WS-ID-FOU.
-           05 LINE 23 COLUMN 41     PIC X(01) TO WS-CHX.
+           05 LINE 22 COLUMN 41     PIC X(01) TO WS-CHX.
+
+       01 S-MSG-ERR.
+           05 LINE 23 COLUMN 03 FROM WS-MSG-ERR.
 
        PROCEDURE DIVISION.
       *    le déroulé du programme, après les vérifications ajupie est
@@ -86,33 +112,37 @@
            PERFORM 0050-INI-VAR-DEB
               THRU 0050-INI-VAR-FIN.
 
-           PERFORM 0100-AFF-ECR-DEB
-              THRU 0100-AFF-ECR-FIN.
+           PERFORM UNTIL WS-ETT-BCL-FIN
 
-           PERFORM UNTIL WS-CHX = 0  
+               PERFORM 0100-AFF-ECR-DEB
+                  THRU 0100-AFF-ECR-FIN
 
-               PERFORM 0150-ACP-ECR-DEB
-                  THRU 0150-ACP-ECR-FIN
-
-               PERFORM 0200-VER-QTE-DEB
-                  THRU 0200-VER-QTE-FIN
-           
-               PERFORM 0300-VER-MIN-DEB
-                  THRU 0300-VER-MIN-FIN
-           
-               PERFORM 0400-VER-FOU-DEB
-                  THRU 0400-VER-FOU-FIN
-
-               PERFORM 0500-VLD-ECR-DEB
-                  THRU 0500-VLD-ECR-FIN
-
+               EVALUATE WS-CHX
+                   WHEN 1
+                       PERFORM 0200-VER-QTE-DEB
+                          THRU 0200-VER-QTE-FIN
+                   
+                       PERFORM 0300-VER-MIN-DEB
+                          THRU 0300-VER-MIN-FIN
+                   
+                       PERFORM 0400-VER-FOU-DEB
+                          THRU 0400-VER-FOU-FIN
+                
+                       PERFORM 0500-VLD-ECR-DEB
+                          THRU 0500-VLD-ECR-FIN
+                   WHEN 0
+                       SET WS-ETT-BCL-FIN TO TRUE
+                   WHEN OTHER
+                       PERFORM 0800-ERR-OPT-IVL-DEB
+                          THRU 0800-ERR-OPT-IVL-FIN
+               END-EVALUATE
            END-PERFORM.
        0025-BCL-PCP-FIN.
 
 
       *    Paragraphe pour initialiser les variables.
-       0050-INI-VAR-DEB. 
-           MOVE 1        TO WS-CHX.
+       0050-INI-VAR-DEB.
+           SET WS-ETT-BCL-ENC TO TRUE.
            MOVE SPACE    TO WS-NOM-PIE. 
            MOVE SPACE    TO WS-QTE-PIE.
            MOVE SPACE    TO WS-MIN-PIE.
@@ -124,18 +154,10 @@
        0100-AFF-ECR-DEB.
            DISPLAY S-FND-ECR.
            DISPLAY S-ECR-AJ-PCS.
-       0100-AFF-ECR-FIN.
-
-      *    Paragraphe pour accepter l'écran.         
-       0150-ACP-ECR-DEB.
+           PERFORM 0600-AFF-ERR-CND-DEB
+              THRU 0600-AFF-ERR-CND-FIN.
            ACCEPT  S-ECR-AJ-PCS.
-
-           IF WS-CHX = 0
-               EXIT PROGRAM
-           END-IF.
-
-      *    Paragraphe de sortie.      
-       0150-ACP-ECR-FIN.
+       0100-AFF-ECR-FIN.
 
       *    Paragraphe pour vérifier que la quantité enregistrée est
       *    bien au format numérique.
@@ -184,16 +206,58 @@
                    WS-QTE-PIE-NUM
                    WS-MIN-PIE-NUM
                    WS-ID-FOU-NUM
-               
+                   WS-AJU-RET
                END-CALL
 
+               EVALUATE TRUE
+                   WHEN WS-AJU-RET-OK
+                       PERFORM 1000-SUC-AJU-DEB
+                          THRU 1000-SUC-AJU-FIN
+                   WHEN WS-AJU-RET-ERR
+                       PERFORM 0900-ERR-SQL-DEB
+                          THRU 0900-ERR-SQL-FIN
+                   WHEN WS-AJU-RET-FK-ERR
+                       PERFORM 1100-ERR-SQL-FK-DEB
+                          THRU 1100-ERR-SQL-FK-FIN
+               END-EVALUATE
+
            ELSE
-
-               DISPLAY 'ERREUR DE VALIDATION' AT LINE 23 COL 28
-
+               PERFORM 0700-ERR-VAL-DEB
+                  THRU 0700-ERR-VAL-FIN
            END-IF.
 
            MOVE 0 TO WS-MQR.
            
-      *    Paragraphe de sortie.
        0500-VLD-ECR-FIN.
+
+       0600-AFF-ERR-CND-DEB.
+           IF WS-CTX-AFF-ERR THEN
+               DISPLAY S-MSG-ERR
+               SET WS-CTX-OK TO TRUE
+           END-IF.
+       0600-AFF-ERR-CND-FIN.
+
+       0700-ERR-VAL-DEB.
+           SET WS-CTX-AFF-ERR TO TRUE.
+           MOVE WS-ERR-VAL TO WS-MSG-ERR.
+       0700-ERR-VAL-FIN.
+
+       0800-ERR-OPT-IVL-DEB.
+           SET WS-CTX-AFF-ERR TO TRUE.
+           MOVE WS-OPT-IVL TO WS-MSG-ERR.
+       0800-ERR-OPT-IVL-FIN.
+
+       0900-ERR-SQL-DEB.
+           SET WS-CTX-AFF-ERR TO TRUE.
+           MOVE WS-ERR-SQL TO WS-MSG-ERR.
+       0900-ERR-SQL-FIN.
+
+       1000-SUC-AJU-DEB.
+           SET WS-CTX-AFF-ERR TO TRUE.
+           MOVE WS-SUC-AJU TO WS-MSG-ERR.
+       1000-SUC-AJU-FIN.
+
+       1100-ERR-SQL-FK-DEB.
+           SET WS-CTX-AFF-ERR TO TRUE.
+           MOVE WS-ERR-SQL-FK TO WS-MSG-ERR.
+       1100-ERR-SQL-FK-FIN.
