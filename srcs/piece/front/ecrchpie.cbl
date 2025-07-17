@@ -43,7 +43,7 @@
            05 LINE 22 COLUMN 30 VALUE "Entrez votre choix : [".
            05 LINE 22 COLUMN 53 VALUE "]".
       
-           05 LINE 22 COLUMN 52 TO WS-CHX.
+           05 LINE 22 COLUMN 52 USING WS-CHX.
 
        01 S-MSG-ERR.
            05 LINE 23 COLUMN 03 FROM WS-MSG-ERR.
@@ -58,6 +58,8 @@
        0100-BCL-DEB.
            SET WS-ETT-BCL-ENC TO TRUE.
            PERFORM UNTIL WS-ETT-BCL-FIN
+               MOVE 0 TO WS-CHX
+
                PERFORM 0200-AFF-ECR-DEB
                   THRU 0200-AFF-ECR-FIN
 

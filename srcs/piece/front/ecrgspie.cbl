@@ -37,7 +37,7 @@
            05 LINE 22 COLUMN 30 VALUE "Entrez votre choix : ".
            05 LINE 22 COLUMN 52 VALUE "[".
            05 LINE 22 COLUMN 54 VALUE "]".
-           05 LINE 22 COLUMN 53 PIC X(01) TO WS-CHX-MNU.
+           05 LINE 22 COLUMN 53 PIC 9(01) USING WS-CHX-MNU.
 
        01 S-MNU-ADM.
            05 LINE 15 COLUMN 30 VALUE "4 - Supprimer une piece".
@@ -59,6 +59,8 @@
       ******************************************************************
        0100-AFF-MNU-STD-DEB.
            PERFORM UNTIL 1 = 0
+               MOVE 0 TO WS-CHX-MNU
+
                DISPLAY S-FND-ECR
                DISPLAY S-MNU-STD
 

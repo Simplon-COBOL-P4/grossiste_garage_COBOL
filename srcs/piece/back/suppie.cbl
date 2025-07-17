@@ -22,7 +22,7 @@
        WORKING-STORAGE SECTION. 
 
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-           01 PG-IDT-PIE         PIC 9(20).
+       01 PG-IDT-PIE          PIC 9(10).
        EXEC SQL END DECLARE SECTION END-EXEC.
 
        EXEC SQL INCLUDE SQLCA END-EXEC.
@@ -30,7 +30,11 @@
        LINKAGE SECTION.
        77  LK-ID-PIE          PIC 9(10).
 
-       PROCEDURE DIVISION USING LK-ID-PIE.
+       COPY supret REPLACING ==:PREFIX:== BY ==LK==.
+
+
+       PROCEDURE DIVISION USING LK-ID-PIE,
+                                LK-SUP-RET.
 
            PERFORM 0100-SUP-PIE-DEB 
               THRU 0100-SUP-PIE-FIN.
@@ -43,8 +47,13 @@
                 DELETE FROM  piece 
                 WHERE id_pie = :PG-IDT-PIE
            END-EXEC.
-           EXEC SQL COMMIT END-EXEC.
-           
-       0100-SUP-PIE-FIN.
-           EXIT.
 
+           EVALUATE SQLCODE
+               WHEN 0
+                   EXEC SQL COMMIT END-EXEC
+                   SET LK-SUP-RET-OK TO TRUE
+               WHEN OTHER
+                   EXEC SQL ROLLBACK END-EXEC
+                   SET LK-SUP-RET-ERR TO TRUE
+           END-EVALUATE.
+       0100-SUP-PIE-FIN.

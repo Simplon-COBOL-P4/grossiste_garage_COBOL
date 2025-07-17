@@ -46,7 +46,7 @@
 
            05 LINE 22 COLUMN 52 VALUE "[".
            05 LINE 22 COLUMN 54 VALUE "]".
-           05 LINE 22 COLUMN 53 PIC X(01) TO WS-CHX.
+           05 LINE 22 COLUMN 53 PIC X(01) USING WS-CHX.
 
        01 S-MNU-PRN-ADM.
            05 LINE 17 COLUMN 30 VALUE "6 - Journal de logs".
@@ -70,6 +70,7 @@
            SET WS-ETT-BCL-ENC TO TRUE
       * Boucle jusqu'à ce que l'utilisateur tape 0 pour déconnexion
            PERFORM UNTIL WS-ETT-BCL-FIN
+               MOVE SPACE TO WS-CHX
                DISPLAY S-FND-ECR
                DISPLAY S-MNU-PRN-COM
 
