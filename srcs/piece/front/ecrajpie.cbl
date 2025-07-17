@@ -34,6 +34,7 @@
       *    Déclaration de variables complémentaires nécessaires à 
       *    l'éxécution du programme.
        01 WS-CHX                    PIC X(01).
+           88 WS-CHX-VID                  VALUE " ".
 
       *    Des marqueurs pour vérifier que les données saisies sont 
       *    correctes.
@@ -42,9 +43,6 @@
       
        01 WS-ERR-VAL          PIC X(76) VALUE
            "Erreur de validation".
-
-       01 WS-OPT-IVL            PIC X(76) VALUE
-           "Cette option n'existe pas".
 
        01 WS-ERR-SQL            PIC X(76) VALUE
            "Une erreur est survenue lors de la requete".
@@ -84,15 +82,16 @@
            05 LINE 16 COLUMN 03 VALUE "ID fournisseur :".
            05 LINE 16 COLUMN 25 VALUE "[".
            05 LINE 16 COLUMN 36 VALUE "]".
-           05 LINE 21 COLUMN 30 VALUE "1 - Ajouter  0 - Annuler".
-           05 LINE 22 COLUMN 40 VALUE "[".
-           05 LINE 22 COLUMN 42 VALUE "]".
+           05 LINE 22.
+               10 COLUMN 70 VALUE "Retour ".
+               10 COLUMN 77 VALUE "[".
+               10 COLUMN 78 PIC X(01) USING WS-CHX.
+               10 COLUMN 79 VALUE "]".
 
            05 LINE 10 COLUMN 04     PIC X(50) TO WS-NOM-PIE.
            05 LINE 12 COLUMN 26     PIC X(10) TO WS-QTE-PIE.
            05 LINE 14 COLUMN 26     PIC X(10) TO WS-MIN-PIE.
            05 LINE 16 COLUMN 26     PIC X(10) TO WS-ID-FOU.
-           05 LINE 22 COLUMN 41     PIC X(01) TO WS-CHX.
 
        01 S-MSG-ERR.
            05 LINE 23 COLUMN 03 FROM WS-MSG-ERR.
@@ -117,8 +116,8 @@
                PERFORM 0100-AFF-ECR-DEB
                   THRU 0100-AFF-ECR-FIN
 
-               EVALUATE WS-CHX
-                   WHEN 1
+               EVALUATE TRUE
+                   WHEN WS-CHX-VID
                        PERFORM 0200-VER-QTE-DEB
                           THRU 0200-VER-QTE-FIN
                    
@@ -130,11 +129,8 @@
                 
                        PERFORM 0500-VLD-ECR-DEB
                           THRU 0500-VLD-ECR-FIN
-                   WHEN 0
-                       SET WS-ETT-BCL-FIN TO TRUE
                    WHEN OTHER
-                       PERFORM 0800-ERR-OPT-IVL-DEB
-                          THRU 0800-ERR-OPT-IVL-FIN
+                       SET WS-ETT-BCL-FIN TO TRUE
                END-EVALUATE
            END-PERFORM.
        0025-BCL-PCP-FIN.
@@ -143,6 +139,7 @@
       *    Paragraphe pour initialiser les variables.
        0050-INI-VAR-DEB.
            SET WS-ETT-BCL-ENC TO TRUE.
+           SET WS-CHX-VID TO TRUE.
            MOVE SPACE    TO WS-NOM-PIE. 
            MOVE SPACE    TO WS-QTE-PIE.
            MOVE SPACE    TO WS-MIN-PIE.
@@ -241,11 +238,6 @@
            SET WS-CTX-AFF-ERR TO TRUE.
            MOVE WS-ERR-VAL TO WS-MSG-ERR.
        0700-ERR-VAL-FIN.
-
-       0800-ERR-OPT-IVL-DEB.
-           SET WS-CTX-AFF-ERR TO TRUE.
-           MOVE WS-OPT-IVL TO WS-MSG-ERR.
-       0800-ERR-OPT-IVL-FIN.
 
        0900-ERR-SQL-DEB.
            SET WS-CTX-AFF-ERR TO TRUE.

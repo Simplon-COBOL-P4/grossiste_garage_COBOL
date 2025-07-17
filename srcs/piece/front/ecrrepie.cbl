@@ -25,10 +25,9 @@
        01 WS-NOM-FOR              PIC X(50).
 
        01 WS-IDT-OU-NOM           PIC X(50).
-       01 WS-RE                   PIC X(01).
-
-       01 WS-OPT-IVL              PIC X(76) VALUE
-           "Cette option n'existe pas".
+       01 WS-CHX                  PIC X(01).
+           88 WS-CHX-VID                  VALUE " ".
+           
 
        01 WS-ERR-SQL-NOM-ID       PIC X(76) VALUE
            "Le nom/ID de la piece n'existe pas".
@@ -61,10 +60,11 @@
            05 LINE 07 COLUMN 25 PIC X(50) TO WS-IDT-OU-NOM.
            05 LINE 08 COLUMN 02 VALUE "_________________________________
       -     "_____________________________________________".
-           05 LINE 21 COLUMN 30 VALUE "1 - Rechercher  0 - Retour".
-           05 LINE 22 COLUMN 40 VALUE "[".
-           05 LINE 22 COLUMN 42 VALUE "]".
-           05 LINE 22 COLUMN 41 PIC X(01) TO WS-RE.
+           05 LINE 22.
+               10 COLUMN 70 VALUE "Retour ".
+               10 COLUMN 77 VALUE "[".
+               10 COLUMN 78 PIC X(01) USING WS-CHX.
+               10 COLUMN 79 VALUE "]".
 
       * Cette écran ne sera affiché que lorsque l'utilisateur aura
       * entrer l'id ou le nom
@@ -113,20 +113,18 @@
 
        0200-TRA-COM-DEB.
            SET WS-ETT-BCL-ENC TO TRUE.
+           SET WS-CHX-VID TO TRUE.
            PERFORM UNTIL WS-ETT-BCL-FIN
 
                PERFORM 0100-AFF-ECR-DEB
                   THRU 0100-AFF-ECR-FIN
 
-               EVALUATE WS-RE
-                   WHEN 1
+               EVALUATE TRUE
+                   WHEN WS-CHX-VID
                        PERFORM 0300-APL-PRG-DEB
                           THRU 0300-APL-PRG-FIN
-                   WHEN 0
-                       SET WS-ETT-BCL-FIN TO TRUE
                    WHEN OTHER
-                       PERFORM 0800-ERR-OPT-IVL-DEB
-                          THRU 0800-ERR-OPT-IVL-FIN
+                       SET WS-ETT-BCL-FIN TO TRUE
                END-EVALUATE
            END-PERFORM.
 
@@ -200,11 +198,6 @@
            SET WS-CTX-AFF-ERR TO TRUE.
            MOVE WS-ERR-SQL-NOM-ID TO WS-MSG-ERR.
        0700-ERR-SQL-NOM-ID-FIN.
-
-       0800-ERR-OPT-IVL-DEB.
-           SET WS-CTX-AFF-ERR TO TRUE.
-           MOVE WS-OPT-IVL TO WS-MSG-ERR.
-       0800-ERR-OPT-IVL-FIN.
 
        0900-SUC-LIR-DEB.
            SET WS-CTX-AFF-ERR TO TRUE.

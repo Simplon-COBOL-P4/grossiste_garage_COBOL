@@ -82,11 +82,13 @@
        01 LK-TYP-CHG           PIC 9(01).
            88 LK-AJT                       VALUE 0.
            88 LK-RTI                       VALUE 1.
+       
+       COPY majret REPLACING ==:PREFIX:== BY ==LK==.
 
-
-       PROCEDURE DIVISION USING LK-IDF-PIE
-                                LK-QTE-PIE
-                                LK-TYP-CHG.
+       PROCEDURE DIVISION USING LK-IDF-PIE,
+                                LK-QTE-PIE,
+                                LK-TYP-CHG
+                                LK-MAJ-RET.
                                 
 
            PERFORM 0100-AFC-VAR-DEB
@@ -130,7 +132,6 @@
            MOVE 'piece'
            TO   WS-TYP-LOG.
 
-           EXIT.
        0100-AFC-VAR-FIN.
 
       *-----------------------------------------------------------------
@@ -172,7 +173,6 @@
 
            END-IF.
        
-           EXIT.
        0200-CHX-TYP-CHG-FIN.
 
       *-----------------------------------------------------------------
@@ -194,12 +194,13 @@
 
               MOVE 'Ajout'
               TO   WS-OPR-QTE-PIE
+              SET LK-MAJ-RET-OK TO TRUE
 
            ELSE
               EXEC SQL ROLLBACK END-EXEC 
+              SET LK-MAJ-RET-ERR TO TRUE
            END-IF.
 
-           EXIT.
        0300-MAJ-AJT-QTE-FIN.
 
       *-----------------------------------------------------------------
@@ -243,18 +244,20 @@
             
          
                IF SQLCODE = 0 
-                  EXEC SQL COMMIT END-EXEC 
-                  MOVE 'Retrait'
-                  TO   WS-OPR-QTE-PIE 
+                   EXEC SQL COMMIT END-EXEC 
+                   MOVE 'Retrait'
+                   TO   WS-OPR-QTE-PIE 
+                   SET LK-MAJ-RET-OK TO TRUE
 
                ELSE
-                  EXEC SQL ROLLBACK END-EXEC 
+                   EXEC SQL ROLLBACK END-EXEC 
+                   SET LK-MAJ-RET-ERR TO TRUE
                   
                END-IF
-       
+           ELSE
+               SET LK-MAJ-RET-ERR TO TRUE
            END-IF.
            
-           EXIT.
        0350-MAJ-RTI-QTE-FIN.
 
       *----------------------------------------------------------------- 
@@ -278,7 +281,6 @@
 
            END-IF. 
 
-           EXIT.
        0400-CHX-MSG-LOG-FIN.
       *----------------------------------------------------------------- 
        
@@ -299,7 +301,6 @@
                   INTO WS-MSG-LOG
            END-STRING.
 
-           EXIT.
        0450-GEN-LOG-OK-FIN.
       *----------------------------------------------------------------- 
       
@@ -316,8 +317,6 @@
                   INTO WS-MSG-LOG
            END-STRING.
            
-           EXIT.
-
        0460-GEN-LOG-KO-FIN.
 
       *----------------------------------------------------------------- 
@@ -336,8 +335,6 @@
                WS-IDF-UTI
                WS-AJU-RET   
            END-CALL.
-
-           EXIT.
 
        0500-APL-CRE-LOG-FIN.
 
