@@ -41,6 +41,7 @@
 
        01 S-MNU-ADM.
            05 LINE 15 COLUMN 30 VALUE "4 - Supprimer une piece".
+           05 LINE 16 COLUMN 30 VALUE "5 - Ajouter Entree/Sortie".
            
        01 S-MSG-ERR.
            05 LINE 23 COLUMN 03 FROM WS-MSG-ERR.
@@ -80,7 +81,7 @@
                         END-CALL 
 
                    WHEN 3
-                        CALL "ecrmjpie"
+                        CALL "ecrmjinf"
                         END-CALL 
 
                    WHEN 0
@@ -102,6 +103,9 @@
            EVALUATE WS-CHX-MNU
                WHEN 4
                    CALL "ecrsppie"
+                   END-CALL
+               WHEN 5
+                   CALL "ecrmjpie"
                    END-CALL
                WHEN OTHER
                    PERFORM 0500-ERR-OPT-IVL-DEB

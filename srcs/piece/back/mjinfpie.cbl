@@ -60,14 +60,13 @@
        01 LK-SUL-PIE               PIC 9(10).
        01 LK-IDF-FOU-PIE           PIC 9(10).
 
-
-
+       COPY majret REPLACING ==:PREFIX:== BY ==LK==.
 
        PROCEDURE DIVISION USING LK-IDF-PIE,
                                 LK-NOM-PIE,
                                 LK-SUL-PIE,
-                                LK-IDF-FOU-PIE.
-           
+                                LK-IDF-FOU-PIE,
+                                LK-MAJ-RET.
 
            PERFORM 0100-INI-VAR-DEB
               THRU 0100-INI-VAR-FIN.
@@ -115,7 +114,6 @@
            MOVE 'piece'
            TO   WS-TYP-LOG.
 
-           EXIT.
        0100-INI-VAR-FIN.
 
       *----------------------------------------------------------------- 
@@ -135,13 +133,21 @@
       * Si la requête est valide alors elle est exécutée, sinon elle ne 
       * l'est pas.
 
-           IF SQLCODE = 0
-               EXEC SQL COMMIT END-EXEC
-           ELSE
-               EXEC SQL ROLLBACK END-EXEC
-           END-IF.
+           EVALUATE SQLCODE
+               WHEN 0
+                   EXEC SQL COMMIT END-EXEC
+                   SET LK-MAJ-RET-OK TO TRUE
 
-           EXIT.
+               WHEN -400
+                   EXEC SQL ROLLBACK END-EXEC
+                   SET LK-MAJ-RET-FK-ERR TO TRUE
+
+               WHEN OTHER
+                   EXEC SQL ROLLBACK END-EXEC
+                   SET LK-MAJ-RET-ERR TO TRUE
+
+           END-EVALUATE.
+
        0200-SQL-FIN.
 
       *----------------------------------------------------------------- 
@@ -159,7 +165,6 @@
            INTO WS-MSG-LOG
            END-STRING.
 
-           EXIT.
        0300-GEN-LOG-FIN.
 
       *----------------------------------------------------------------- 
@@ -179,7 +184,6 @@
                WS-AJU-RET
            END-CALL.
 
-           EXIT.
 
        0400-APL-CRE-LOG-FIN.
 
