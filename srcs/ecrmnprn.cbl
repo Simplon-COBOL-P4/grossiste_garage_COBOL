@@ -49,7 +49,7 @@
 
            05 LINE 22 COLUMN 52 VALUE "[".
            05 LINE 22 COLUMN 54 VALUE "]".
-           05 LINE 22 COLUMN 53 PIC X(01) USING WS-CHX.
+           05 LINE 22 COLUMN 53 PIC X(01) USING WS-CHX AUTO.
 
        01 S-MNU-PRN-ADM.
            05 LINE 17 COLUMN 30 VALUE "6 - Journal de logs".
@@ -107,7 +107,8 @@
                    
                WHEN 4 
       * Appel du sous-programme de gestion des livraisons.
-
+                   CALL "ecrgsliv"
+                   END-CALL
                WHEN 5 
       * Appel du sous-programme de génération de document.
                    PERFORM 0600-ERR-EN-DEV-DEB
