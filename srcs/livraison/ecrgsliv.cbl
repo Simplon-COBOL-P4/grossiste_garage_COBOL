@@ -34,6 +34,9 @@
        01 WS-ERR-OPT-IVL        PIC X(76) VALUE
            "Cette option n'existe pas".
 
+       01 WS-EN-DEV             PIC X(76) VALUE
+           "Option en cours de developpement".
+
        01 WS-ETT-BCL            PIC 9(01).
            88 WS-ETT-BCL-ENC              VALUE 1.
            88 WS-ETT-BCL-FIN              VALUE 2.
@@ -50,12 +53,15 @@
            05 LINE 09 COL 30 VALUE 'Gestion des livraisons'.
            05 LINE 11 COL 30 VALUE '1 - Ajouter une livraison'.
            05 LINE 12 COL 30 VALUE '2 - Afficher une livraison'.
+           05 LINE 12 COLUMN 03 VALUE "EN COURS DE DEVELOPPEMENT".
            05 LINE 19 COL 30 VALUE '0 - Retour au menu'.
            05 LINE 22 COL 30 VALUE 'Entrez votre choix : [ ]'.
 
        01  S-ECR-ADM.
-           05 LINE 13 COL 30 VALUE '3 - Modifier uune livraison'.
+           05 LINE 13 COL 30 VALUE '3 - Modifier une livraison'.
+           05 LINE 13 COLUMN 03 VALUE "EN COURS DE DEVELOPPEMENT".
            05 LINE 14 COL 30 VALUE '4 - Supprimer une livraison'.
+           05 LINE 14 COLUMN 03 VALUE "EN COURS DE DEVELOPPEMENT".
 
        01  S-ECR-CHX.
            05 LINE 22 COL 52 PIC X(01) USING WS-CHX AUTO.
@@ -96,8 +102,10 @@
                        CALL "ecrajliv"
                        END-CALL
                    WHEN 2
-                       CALL "ecrchliv"
-                       END-CALL
+                       PERFORM 0600-ERR-EN-DEV-DEB
+                          THRU 0600-ERR-EN-DEV-FIN
+      *                CALL "ecrchliv"
+      *                END-CALL
                    WHEN OTHER
                        IF G-UTI-RLE EQUAL "ADMIN" THEN
                            PERFORM 0250-EVA-ADM-DEB
@@ -114,12 +122,15 @@
        0250-EVA-ADM-DEB.
            EVALUATE WS-CHX
                WHEN '3'
-                   CALL "ecrmjliv"
-                   END-CALL
-            
+                   PERFORM 0600-ERR-EN-DEV-DEB
+                      THRU 0600-ERR-EN-DEV-FIN
+      *            CALL "ecrmjliv"
+      *            END-CALL
                WHEN '4'
-                   CALL "ecrspliv"
-                   END-CALL
+                   PERFORM 0600-ERR-EN-DEV-DEB
+                      THRU 0600-ERR-EN-DEV-FIN
+      *            CALL "ecrspliv"
+      *            END-CALL
                WHEN OTHER
                    PERFORM 0400-ERR-OPT-IVL-DEB
                       THRU 0400-ERR-OPT-IVL-FIN
@@ -137,3 +148,8 @@
            SET WS-CTX-AFF-ERR TO TRUE.
            MOVE WS-ERR-OPT-IVL TO WS-MSG-ERR.
        0400-ERR-OPT-IVL-FIN.
+
+       0600-ERR-EN-DEV-DEB.
+           SET WS-CTX-AFF-ERR TO TRUE.
+           MOVE WS-EN-DEV TO WS-MSG-ERR.
+       0600-ERR-EN-DEV-FIN.

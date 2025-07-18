@@ -40,9 +40,12 @@
            COPY ecrutlin.
           
            05 LINE 12 COLUMN 30 VALUE "1 - Gestion du stock".
+           05 LINE 13 COLUMN 03 VALUE "EN COURS DE DEVELOPPEMENT".
            05 LINE 13 COLUMN 30 VALUE "2 - Gestion des clients".
+           05 LINE 14 COLUMN 03 VALUE "EN COURS DE DEVELOPPEMENT".
            05 LINE 14 COLUMN 30 VALUE "3 - Gestion des fournisseurs".
            05 LINE 15 COLUMN 30 VALUE "4 - Gestion des livraisons".
+           05 LINE 16 COLUMN 03 VALUE "EN COURS DE DEVELOPPEMENT".
            05 LINE 16 COLUMN 30 VALUE "5 - Generer un document".
            05 LINE 20 COLUMN 30 VALUE "0 - Deconnexion".
            05 LINE 22 COLUMN 30 VALUE "Entrez votre choix : ".
@@ -100,11 +103,12 @@
                    END-CALL
                WHEN 2 
       * Appel du sous-programme de gestion des clients.
-                   CALL "ecrgscli"
-                   END-CALL
+                   PERFORM 0600-ERR-EN-DEV-DEB
+                      THRU 0600-ERR-EN-DEV-FIN
                WHEN 3 
       * Appel du sous-programme de gestion des fournisseurs.
-                   
+                   PERFORM 0600-ERR-EN-DEV-DEB
+                      THRU 0600-ERR-EN-DEV-FIN
                WHEN 4 
       * Appel du sous-programme de gestion des livraisons.
                    CALL "ecrgsliv"
