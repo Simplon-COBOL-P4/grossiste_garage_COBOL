@@ -43,7 +43,7 @@
            05 LINE 22 COLUMN 30 VALUE "Entrez votre choix : [".
            05 LINE 22 COLUMN 53 VALUE "]".
       
-           05 LINE 22 COLUMN 52 USING WS-CHX.
+           05 LINE 22 COLUMN 52 USING WS-CHX AUTO.
 
        01 S-MSG-ERR.
            05 LINE 23 COLUMN 03 FROM WS-MSG-ERR.

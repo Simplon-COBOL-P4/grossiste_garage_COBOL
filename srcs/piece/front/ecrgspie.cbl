@@ -37,7 +37,7 @@
            05 LINE 22 COLUMN 30 VALUE "Entrez votre choix : ".
            05 LINE 22 COLUMN 52 VALUE "[".
            05 LINE 22 COLUMN 54 VALUE "]".
-           05 LINE 22 COLUMN 53 PIC 9(01) USING WS-CHX-MNU.
+           05 LINE 22 COLUMN 53 PIC 9(01) USING WS-CHX-MNU AUTO.
 
        01 S-MNU-ADM.
            05 LINE 15 COLUMN 30 VALUE "4 - Supprimer une piece".

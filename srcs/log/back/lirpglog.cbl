@@ -67,23 +67,34 @@
            PERFORM 0100-INI-VAR-DEB
            THRU    0100-INI-VAR-FIN.
 
+      *    DISPLAY "1" LINE 2 COL 2.
+      *    ACCEPT WS-IDX.
+
       * Déclaration du curseur.
            PERFORM 0200-DEC-CUR-DEB
            THRU    0200-DEC-CUR-FIN.
 
+      *    DISPLAY "2" LINE 2 COL 2.
+      *    ACCEPT WS-IDX.
       * Ouverture du curseur.
            PERFORM 0300-OPN-CUR-DEB
            THRU    0300-OPN-CUR-FIN.
 
+      *    DISPLAY "3" LINE 2 COL 2.
+      *    ACCEPT WS-IDX.
       * Affectation des données en bdd avec celle du sous programme 
       * précédent.
            PERFORM 0400-FET-LOG-DEB
            THRU    0400-FET-LOG-FIN.
 
+      *    DISPLAY "4" LINE 2 COL 2.
+      *    ACCEPT WS-IDX.
       * Fermeture du curseur.     
            PERFORM 0500-CLS-CUR-DEB
            THRU    0500-CLS-CUR-FIN.
                
+      *    DISPLAY "5" LINE 2 COL 2.
+      *    ACCEPT WS-IDX.
            EXIT PROGRAM.
 
       ******************************************************************     
@@ -95,7 +106,7 @@
        0100-INI-VAR-FIN.   
 
        0200-DEC-CUR-DEB.
-           EXEC SQL 
+           EXEC SQL
                DECLARE CUR_LOGS CURSOR FOR
                SELECT id_logs, detail_log, heure_log, date_log, 
                    type_log, id_uti
@@ -122,6 +133,10 @@
                    FETCH CUR_LOGS INTO :PG-IDL, :PG-DET, :PG-HEU, 
                        :PG-JOU, :PG-TYP, :PG-IDU
                END-EXEC
+
+      *        DISPLAY SQLSTATE LINE 2 COL 2
+      *        ACCEPT LK-MAX-LIN
+
                
                IF SQLCODE = 0
                    ADD 1 TO WS-IDX
@@ -137,6 +152,8 @@
                        EXIT PROGRAM
                    END-IF
                END-IF
+      *        DISPLAY WS-IDX LINE 2 COL 2
+      *        ACCEPT LK-MAX-LIN
                
            END-PERFORM.
            MOVE WS-IDX TO LK-MAX-LIN.
