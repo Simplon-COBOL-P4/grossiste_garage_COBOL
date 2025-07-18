@@ -18,7 +18,7 @@
        DATA DIVISION.
        WORKING-STORAGE SECTION.
        EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-       01 PG-IDF-LIV              PIC 9(10).
+       01 PG-IDF-LIV               PIC 9(10).
        01 PG-IDF-PIE               PIC 9(10).
        01 PG-QTE-PIE               PIC 9(10).
        EXEC SQL END DECLARE SECTION END-EXEC.
@@ -26,7 +26,7 @@
 
        LINKAGE SECTION.
       * Arguments d'entrée.
-       01 LK-IDF-LIV              PIC 9(10).
+       01 LK-IDF-LIV               PIC 9(10).
        01 LK-IDF-PIE               PIC 9(10).
        01 LK-QTE-PIE               PIC 9(10).
       * Arguments de sortie.
@@ -49,7 +49,7 @@
        0100-AJU-LIV-PIE-DEB.
 
        0110-DEP-VAR-DEB.
-           MOVE LK-IDF-LIV   TO PG-IDF-LIV.
+           MOVE LK-IDF-LIV    TO PG-IDF-LIV.
            MOVE LK-IDF-PIE    TO PG-IDF-PIE.
            MOVE LK-QTE-PIE    TO PG-QTE-PIE.
        0110-DEP-VAR-FIN.
