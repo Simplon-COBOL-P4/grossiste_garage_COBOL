@@ -29,19 +29,24 @@
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       77 WS-CHO                PIC X(01).
-       77 WS-ERR                PIC X(01).
+       01 WS-CHX                PIC 9(01).
 
-       LINKAGE SECTION.
-      * Arguments d'entrée.
-       01 LK-ROL                   PIC X(14).
+       01 WS-ERR-OPT-IVL        PIC X(76) VALUE
+           "Cette option n'existe pas".
 
+       01 WS-ETT-BCL            PIC 9(01).
+           88 WS-ETT-BCL-ENC              VALUE 1.
+           88 WS-ETT-BCL-FIN              VALUE 2.
+
+       COPY ctxerr.
+
+       COPY utiglb.
        SCREEN SECTION.
        COPY ecrprn.
 
        01  S-ECR-CMN.
-           05 LINE 04 COL 03 VALUE 'Connecte en tant que : '.
-           05 LINE 04 COL 26 PIC X(14) FROM LK-ROL.
+           COPY ecrutlin.
+
            05 LINE 09 COL 30 VALUE 'Gestion des livraisons'.
            05 LINE 11 COL 30 VALUE '1 - Ajouter une livraison'.
            05 LINE 12 COL 30 VALUE '2 - Afficher une livraison'.
@@ -52,72 +57,83 @@
            05 LINE 13 COL 30 VALUE '3 - Modifier uune livraison'.
            05 LINE 14 COL 30 VALUE '4 - Supprimer une livraison'.
 
-       01  S-ECR-CHO.
-           05 LINE 22 COL 52 PIC X(01) TO WS-CHO AUTO.
+       01  S-ECR-CHX.
+           05 LINE 22 COL 52 PIC X(01) USING WS-CHX AUTO.
 
+       01 S-MSG-ERR.
+           05 LINE 23 COLUMN 03 FROM WS-MSG-ERR.
 
-
-       PROCEDURE DIVISION USING LK-ROL.
-           PERFORM 0100-AFC-ECR-DEB
-              THRU 0100-AFC-ECR-FIN.
-           PERFORM 0200-ACC-ECR-DEB
-              THRU 0200-ACC-ECR-FIN.
+       PROCEDURE DIVISION.
+       
+           PERFORM 0200-BCL-DEB
+              THRU 0200-BCL-FIN.
 
            EXIT PROGRAM.
 
        0100-AFC-ECR-DEB.
            DISPLAY S-FND-ECR.
            DISPLAY S-ECR-CMN.
-           IF LK-ROL = 'ADMIN' THEN
-              DISPLAY S-ECR-ADM
+           IF G-UTI-RLE EQUAL "ADMIN"
+               DISPLAY S-ECR-ADM
            END-IF.
 
-       0100-AFC-ECR-FIN.
-           EXIT.
+           PERFORM 0300-AFF-ERR-CND-DEB
+              THRU 0300-AFF-ERR-CND-FIN.
 
-       0200-ACC-ECR-DEB.
-           MOVE ' ' TO WS-CHO.
-           PERFORM UNTIL WS-CHO = '0'
-             ACCEPT S-ECR-CHO
-             EVALUATE WS-CHO
-                WHEN '0'
-                    CONTINUE
-                WHEN '1'
-                    CALL "ecrajliv"
-                    END-CALL
-                WHEN '2'
-                    CALL "ecrchliv"
-                    END-CALL
-                WHEN '3'
-                    IF LK-ROL = 'ADMIN' THEN
-                        CALL "ecrmjliv"
-                        END-CALL
-                    ELSE 
-                        PERFORM 0300-AFC-ERR-DEB
-                           THRU 0300-AFC-ERR-FIN
-                    END-IF
-                WHEN '4'
-                    IF LK-ROL = 'ADMIN' THEN
-                        CALL "ecrspliv"
-                        END-CALL
-                    ELSE 
-                        PERFORM 0300-AFC-ERR-DEB
-                           THRU 0300-AFC-ERR-FIN
-                    END-IF
-                WHEN OTHER
-                     PERFORM 0300-AFC-ERR-DEB
-                        THRU 0300-AFC-ERR-FIN
-             END-EVALUATE
+           ACCEPT S-ECR-CHX.
+       0100-AFC-ECR-FIN.
+
+       0200-BCL-DEB.
+           SET WS-ETT-BCL-ENC TO TRUE.
+           PERFORM UNTIL WS-ETT-BCL-FIN
+               MOVE 0 TO WS-CHX
+               PERFORM 0100-AFC-ECR-DEB
+                  THRU 0100-AFC-ECR-FIN
+               EVALUATE WS-CHX
+                   WHEN 0
+                       SET WS-ETT-BCL-FIN TO TRUE
+                   WHEN 1
+                       CALL "ecrajliv"
+                       END-CALL
+                   WHEN 2
+                       CALL "ecrchliv"
+                       END-CALL
+                   WHEN OTHER
+                       IF G-UTI-RLE EQUAL "ADMIN" THEN
+                           PERFORM 0250-EVA-ADM-DEB
+                              THRU 0250-EVA-ADM-FIN
+                       ELSE
+                           PERFORM 0400-ERR-OPT-IVL-DEB
+                              THRU 0400-ERR-OPT-IVL-FIN
+                       END-IF
+               END-EVALUATE
            END-PERFORM.
 
-       0200-ACC-ECR-FIN.
-           EXIT.
+       0200-BCL-FIN.
 
-       0300-AFC-ERR-DEB.
-           DISPLAY 'Veuillez saisir une des options existants' AT LINE 
-                                                              23 COL 30. 
-           ACCEPT WS-ERR AT LINE 23 COL 71.
-           DISPLAY '                                          ' AT LINE 
-                                                              23 COL 30. 
-       0300-AFC-ERR-FIN.
-           EXIT.    
+       0250-EVA-ADM-DEB.
+           EVALUATE WS-CHX
+               WHEN '3'
+                   CALL "ecrmjliv"
+                   END-CALL
+            
+               WHEN '4'
+                   CALL "ecrspliv"
+                   END-CALL
+               WHEN OTHER
+                   PERFORM 0400-ERR-OPT-IVL-DEB
+                      THRU 0400-ERR-OPT-IVL-FIN
+           END-EVALUATE.
+       0250-EVA-ADM-FIN.
+
+       0300-AFF-ERR-CND-DEB.
+           IF WS-CTX-AFF-ERR THEN
+               DISPLAY S-MSG-ERR
+               SET WS-CTX-OK TO TRUE
+           END-IF.
+       0300-AFF-ERR-CND-FIN.
+
+       0400-ERR-OPT-IVL-DEB.
+           SET WS-CTX-AFF-ERR TO TRUE.
+           MOVE WS-ERR-OPT-IVL TO WS-MSG-ERR.
+       0400-ERR-OPT-IVL-FIN.
